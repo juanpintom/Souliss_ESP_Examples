@@ -15,11 +15,16 @@
     #define VNET_DEBUG  	  1
 //Changed Webinterface with the new one
 #include <ESP8266WiFi.h>
+#include <DNSServer.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <Ticker.h>
 #include <EEPROM.h>
 #include <WiFiUdp.h>
+
+const byte DNS_PORT = 53;
+DNSServer dnsServer;
+IPAddress apIP(192, 168, 4, 1);
 
 #define LOG Serial
 
@@ -76,6 +81,7 @@ void setup()
                 WiFi.mode(WIFI_AP);
                 WiFi.softAP(ACCESS_POINT_NAME);
                 LOG.println(WiFi.softAPIP());
+                dnsServer.start(DNS_PORT, "*", apIP);
 
 	}
 	else
@@ -104,7 +110,11 @@ void setup()
               	server.on ( "/admin/values", send_network_configuration_values_html );
               	server.on ( "/admin/connectionstate", send_connection_state_values_html );
               	server.on ( "/admin/rstvalues", send_reset_values_html);
-                server.onNotFound ( []() { LOG.println("Page Not Found"); server.send ( 400, "text/html", "Page not Found" );   }  );
+              //server.onNotFound ( []() { LOG.println("Page Not Found"); server.send ( 400, "text/html", "Page not Found" );   }  );
+              	server.onNotFound ( []() { LOG.println("admin.html"); server.send ( 200, "text/html",  reinterpret_cast<const __FlashStringHelper *>(PAGE_AdminMainPage));   }  );
+26     webServer.send(200, "text/html", responseHTML); 
+27   }); 
+
               	server.begin();
               	LOG.println( "HTTP server started" );
 
@@ -127,6 +137,7 @@ void loop()
                         LOG.println(WiFi.localIP());
 		}
 	}
+	dnsServer.processNextRequest();
 	server.handleClient();
         
     //**************************************************************************************************
