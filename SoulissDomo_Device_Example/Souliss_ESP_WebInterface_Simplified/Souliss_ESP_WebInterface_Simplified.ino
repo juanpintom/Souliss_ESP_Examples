@@ -112,9 +112,6 @@ void setup()
               	server.on ( "/admin/rstvalues", send_reset_values_html);
               //server.onNotFound ( []() { LOG.println("Page Not Found"); server.send ( 400, "text/html", "Page not Found" );   }  );
               	server.onNotFound ( []() { LOG.println("admin.html"); server.send ( 200, "text/html",  reinterpret_cast<const __FlashStringHelper *>(PAGE_AdminMainPage));   }  );
-26     webServer.send(200, "text/html", responseHTML); 
-27   }); 
-
               	server.begin();
               	LOG.println( "HTTP server started" );
 
