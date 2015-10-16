@@ -37,6 +37,7 @@
 
 #include "Souliss.h"
 #include "Functions.h"
+#include "SetupAndLoop.h"
 
 #include "Page_General.h"
 
@@ -51,24 +52,6 @@ void setup()
     server.on ( "/", send_general_html  );
     server.on ( "/general.html", send_general_html  );
     server.on ( "/admin/generalvalues", send_general_configuration_values_html);
-    
-    /*pinMode(4,INPUT);
-    Serial.print("digitalRead: ");
-    Serial.println(digitalRead(4));
-    if(!digitalRead(4)){
-        //EEPROM.begin(512);
-        // write a 0 to all 512 bytes of the EEPROM
-        for (int i = 0; i < 512; i++)
-          EEPROM.write(i, 0);
-
-        // turn the LED on when we're done
-        pinMode(15, OUTPUT);
-        digitalWrite(15, HIGH);
-        Serial.println("EEPROM DELETED");
-        EEPROM.commit();
-        //EEPROM.end();
-        delay(3000);
-    } */
     
     // Read the IP configuration from the EEPROM, if not available start
     // the node as access point
