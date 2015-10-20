@@ -215,6 +215,7 @@ void fastGeneral(){
                     LOG.print("Dallas: ");
                     LOG.println(dallas);
                   }
+                  SendEmoncms(DALLAS);
                   Souliss_ImportAnalog(memory_map, DALLAS, &dallas);
             }      
         }

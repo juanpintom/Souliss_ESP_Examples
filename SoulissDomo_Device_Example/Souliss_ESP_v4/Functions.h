@@ -5,8 +5,8 @@ int valorPWM;
 
 #define LOG Serial
 
-#define PCB
-//#define STRIPBOARD
+//#define PCB
+#define STRIPBOARD
 
 //Autocalibrate Capacitive Sensors ON
 #define AUTOCALIBRATE         1
@@ -15,7 +15,7 @@ boolean DEBUG_CAPSENSE = 0;
 boolean DEBUG_CAPSENSE_ALL = 0;
 boolean DEBUG_PRESSURE = 0;
 boolean DEBUG_GETLUX   = 0;
-boolean DEBUG_DALLAS   = 0;
+boolean DEBUG_DALLAS   = 1;
 
 //COPIED TO Souliss webconfig.h
 byte byte0;
@@ -124,6 +124,46 @@ DallasTemperature sensors(&ourWire); //Se instancia la librerÃ­a DallasTempera
 //#define ALTITUDE 20.0 // Altitude of reading location in meters
 // You will need to create an SFE_BMP180 object, here called "pressure":
 SFE_BMP180 pressure;
+
+// ******************************************************************************************************************
+// *************************************************  EMONCMS FUNCTION ***************************************************
+// ******************************************************************************************************************
+char serveremon[] = "emoncms.org";
+char path[] = "/input/post.json?json=";
+char input[] = "testesp";
+char apikey[] = "xxxxxxxxxxxxxxxxxxxxxxxxx";
+int port = 80; // port 80 is the default for HTTP
+WiFiClient client;
+
+void SendEmoncms(byte SLOT){
+  
+  float value = mOutputAsFloat(SLOT);
+  LOG.println(value);
+  
+  if (client.connect(serveremon, port))
+  {
+    Serial.println("connected");
+    // Make a HTTP request:
+    client.print("POST ");
+    client.print(path);
+    client.print(input);
+    client.print(":");
+    client.print(value);
+    client.print("&apikey=");
+    client.print(apikey);
+    client.println(" HTTP/1.1");
+    client.print("Host: ");
+    client.println(serveremon);
+    client.println("Connection: close");
+    client.println();
+  }
+  else
+  {
+    // if you didn't get a connection to the server:
+    Serial.println("connection failed");
+  }
+}
+
 
 
 // ******************************************************************************************************************

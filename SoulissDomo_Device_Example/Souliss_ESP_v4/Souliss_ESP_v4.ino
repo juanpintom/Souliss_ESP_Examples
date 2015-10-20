@@ -137,11 +137,13 @@ void loop()
         UPDATESLOW();
 
         slowGeneral();
-
+        
         // If running as Peer
         if (!IsRuntimeGateway())
             SLOW_PeerJoin();
     } 
     OTA_Process();
 }    
+
+
 
