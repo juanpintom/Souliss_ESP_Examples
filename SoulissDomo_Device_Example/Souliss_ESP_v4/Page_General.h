@@ -29,6 +29,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 		<option value="2">PIR_MODE</option>
 		<option value="3">RGB_MODE</option>
                 <option value="4">PIR_ALARM_MODE</option>
+                <option value="5">THERMOSTAT_MODE</option>
 	</select>
 	</td></tr>
 	

@@ -38,6 +38,7 @@ boolean PWM_MODE;
 boolean PIR_MODE;
 boolean RGB_MODE;
 boolean ALARM_MODE;
+boolean THERMOSTAT_MODE;
 
 #define LIGHT_ON_CYCLE 10    		// Light ON for 10 cycles if triggered by a PIR sensor
 
@@ -64,6 +65,7 @@ byte RELAY0;
 byte RELAY1;
 byte PRESSURE0;
 byte BMP180TEMP;
+byte THERMOSTAT;
 
 //**********************  PIN VARIABLES  *************************
 byte ALARMP;
@@ -82,6 +84,10 @@ byte RELAY0P;
 byte RELAY1P;
 byte SDAP;
 byte SCLP;
+byte THERM_HEATERP;
+byte THERM_FAN1P;
+byte THERM_FAN2P;
+byte THERM_FAN3P;
 
 // **************************************************************************
 
@@ -131,11 +137,11 @@ SFE_BMP180 pressure;
 char serveremon[] = "emoncms.org";
 char path[] = "/input/post.json?json=";
 char input[] = "testesp";
-char apikey[] = "xxxxxxxxxxxxxxxxxxxxxxxxx";
+char apikey[] = "YOUR API HERE";
 int port = 80; // port 80 is the default for HTTP
 WiFiClient client;
 
-void SendEmoncms(byte SLOT){
+void SendEmoncms(String inputstring, byte SLOT){
   
   float value = mOutputAsFloat(SLOT);
   LOG.println(value);
@@ -146,7 +152,7 @@ void SendEmoncms(byte SLOT){
     // Make a HTTP request:
     client.print("POST ");
     client.print(path);
-    client.print(input);
+    client.print(inputstring);
     client.print(":");
     client.print(value);
     client.print("&apikey=");
@@ -238,6 +244,12 @@ void PINS_CONFIG(){
         LEDGP = 2;//16;      //LED STRIP ON PIN 13
         LEDBP = 15;      //LED STRIP ON PIN 15
     }
+    if(THERMOSTAT_MODE){
+        THERM_HEATERP = 5;
+        THERM_FAN1P = 2;
+        THERM_FAN2P = 15;
+        THERM_FAN3P = 13;  //USING DHT PIN FOR TESTING PURPOSES 
+    }
     
     //PIN OPTIONS FOR CAPACITIVE - RELAY OR BMP180
     if(CAPACITIVE){
@@ -309,6 +321,12 @@ void SLOT_CONFIG(){
       NEXTSLOT = LEDRGB + 4;
       LOG.print("LEDRGB: ");
       LOG.println(LEDRGB);        
+  }
+  if(THERMOSTAT_MODE){
+      THERMOSTAT = NEXTSLOT;
+      NEXTSLOT = THERMOSTAT + 5;
+      LOG.print("THERMOSTAT: ");
+      LOG.println(THERMOSTAT);     
   }
   
   if(LDR_SENSOR){
@@ -420,44 +438,53 @@ bool EEPROM_CONFIG(){
     LOG.print("\r\n");
     
     // PWM PIR RGB OPTIONS:
-    //switch (configuration[EEPROM_START+1]) {  
+    //switch (configuration[EEPROM_START+1]) {
+    PWM_MODE = false;
+    PIR_MODE = false;
+    RGB_MODE = false;
+    ALARM_MODE = false;  
+    THERMOSTAT_MODE = false;
     switch (byte1) {
         case 0:
-            PWM_MODE = false;
-            PIR_MODE = false;
-            RGB_MODE = false;
-            ALARM_MODE = false;
+            //PWM_MODE = false;
+            //PIR_MODE = false;
+            //RGB_MODE = false;
+            //ALARM_MODE = false;
             break;
         case 1:
             PWM_MODE = true;
-            PIR_MODE = false;
-            RGB_MODE = false;
-            ALARM_MODE = false;
+            //PIR_MODE = false;
+            //RGB_MODE = false;
+            //ALARM_MODE = false;
             break;
         case 2:
-            PWM_MODE = false;
+            //PWM_MODE = false;
             PIR_MODE = true;
-            RGB_MODE = false;
-            ALARM_MODE = false;
+            //RGB_MODE = false;
+            //ALARM_MODE = false;
             break;
         case 3:
-            PWM_MODE = false;
-            PIR_MODE = false;
+            //PWM_MODE = false;
+            //PIR_MODE = false;
             RGB_MODE = true;
-            ALARM_MODE = false;
+            //ALARM_MODE = false;
             break;
         case 4:
-            PWM_MODE = false;
+            //PWM_MODE = false;
             PIR_MODE = true;
-            RGB_MODE = false;
+            //RGB_MODE = false;
             ALARM_MODE = true;
             break;
+        case 5:
+            THERMOSTAT_MODE = true;
+            break;    
     }
     LOG.print(PWM_MODE);
     LOG.print(PIR_MODE);
     LOG.print(RGB_MODE);
     LOG.print(ALARM_MODE);
-    LOG.print(" PPR (PWM-PIR-RGB-ALARM)");
+    LOG.print(THERMOSTAT_MODE);
+    LOG.print(" PPRAT (PWM-PIR-RGB-ALARM-THERMOSTAT)");
     LOG.print("\r\n");
     
     // CAPACITIVE RELAY BMP180 OPTIONS

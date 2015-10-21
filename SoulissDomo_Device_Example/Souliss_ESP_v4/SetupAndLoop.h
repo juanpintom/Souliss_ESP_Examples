@@ -45,7 +45,10 @@ void setupGeneral(){
     if(RGB_MODE){
         Set_LED_Strip(LEDRGB);
     }        
+    if(THERMOSTAT_MODE){
+        Set_Thermostat(THERMOSTAT);
     
+    }
     if(RELAY){
         Set_SimpleLight(RELAY0);
         Set_SimpleLight(RELAY1);
@@ -102,6 +105,12 @@ void setupGeneral(){
             pinMode(LEDRP, OUTPUT);
             pinMode(LEDGP, OUTPUT);
             pinMode(LEDBP, OUTPUT);
+    }
+    if(THERMOSTAT_MODE){
+            pinMode(THERM_HEATERP, OUTPUT);
+            pinMode(THERM_FAN1P, OUTPUT);
+            pinMode(THERM_FAN1P, OUTPUT);  
+            pinMode(THERM_FAN2P, OUTPUT);          
     }
         
         
@@ -184,6 +193,21 @@ void fastGeneral(){
                 analogWrite(LEDGP, mOutput(LEDRGB+2));
                 analogWrite(LEDBP, mOutput(LEDRGB+3));
             }
+            if(THERMOSTAT_MODE){
+                Logic_Thermostat(THERMOSTAT);
+            
+                // Start the heater and the fans
+                nDigOut(THERM_HEATERP, Souliss_T3n_HeatingOn, THERMOSTAT);   // Heater
+                nDigOut(THERM_FAN1P, Souliss_T3n_FanOn1   , THERMOSTAT);   // Fan1
+                nDigOut(THERM_FAN2P, Souliss_T3n_FanOn2   , THERMOSTAT);   // Fan2
+                nDigOut(THERM_FAN3P, Souliss_T3n_FanOn3   , THERMOSTAT);   // Fan3
+                
+                // We are not handling the cooling mode, if enabled by the user, force it back
+                // to disable
+                if(mOutput(THERMOSTAT) & Souliss_T3n_CoolingOn)
+                    mOutput(THERMOSTAT) &= ~Souliss_T3n_CoolingOn;
+                }
+                
         }
         
         FAST_110ms(){
@@ -215,9 +239,14 @@ void fastGeneral(){
                     LOG.print("Dallas: ");
                     LOG.println(dallas);
                   }
-                  SendEmoncms(DALLAS);
+                  String dallasstring = "dallas";
+                  SendEmoncms("Dallas_Sensor", DALLAS);
                   Souliss_ImportAnalog(memory_map, DALLAS, &dallas);
-            }      
+                  if(THERMOSTAT_MODE){
+                     Souliss_ImportAnalog(memory_map, THERMOSTAT+1, &dallas);  //IMPORTED FROM DALLAS SENSOR FOR NOW     
+                  }
+            } 
+            
         }
         FAST_2110ms()
         {
