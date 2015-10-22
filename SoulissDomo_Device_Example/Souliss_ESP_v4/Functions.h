@@ -220,7 +220,7 @@ void PINS_CONFIG(){
         SCLP = 4;//12;
         SDAP = 5;//14;
     }
-    if(BUTTONS){
+    if(BUTTONS || BUTTONS_PULLUP){
     	BUT0P = 4;
     	BUT1P = 5;
     }
@@ -273,7 +273,7 @@ void PINS_CONFIG(){
         SCLP = 12;
         SDAP = 14;
     }
-    if(BUTTONS){
+    if(BUTTONS || BUTTONS_PULLUP){
     	BUT0P = 12;
     	BUT1P = 14;
     }
