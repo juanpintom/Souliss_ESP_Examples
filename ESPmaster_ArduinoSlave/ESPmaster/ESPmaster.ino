@@ -7,10 +7,6 @@
 
 
 *****************************************************/
-
-
-
-
 //---------------------------------------------------
 // 1.     Configure the framework
 //---------------------------------------------------
@@ -19,7 +15,7 @@
 #include "conf/IPBroadcast.h"
 
 
-#define SSID "Radio"
+#define XSSID "Radio"
 #define PAS  "AAAAAAAA"  
 //---------------------------------------------------
 // 2.     Include framework code and libraries
@@ -46,7 +42,6 @@ bool lastSLOT1;
 bool lastSLOT2;
 bool lastSLOT3;
 
-
 byte pinConf[22];//0,1 serial(not used)
                 //D2-D13
                 //A0[14]-A7[21]
@@ -54,19 +49,17 @@ String inputString= "";   // a string to hold incoming data
 int inputInt[3];
 bool stringComplete = false; // whether the string is complete
 byte indeX=0;
-
-
+///* if no needed
 int nVar[10];
-bool dr[15];
-int ar[8];
-float floaT;
-
+//*/
+bool dr[14];
+float ar[8];
 
 //=======================================================
 void setup()
 {
     Initialize();
-    SetAPoint();//*********************SetAccessPoint**********//
+    SetAPoint();//**************SetAccessPoint*********//
     SetAsGateway(myvNet_dhcp); 
   //----------------------------------------------------
   //S2. Set vNet Address    
@@ -75,27 +68,25 @@ void setup()
   //----------------------------------------------------
   // S4. Set the typicals for this node
   //----------------------------------------------------
-    Set_SimpleLight(SLOT0);        // Define a simple LED light logic
-    Set_SimpleLight(SLOT1);        // Define a simple LED light logic
-    Set_SimpleLight(SLOT2);        // Define a simple LED light logic
-    Set_SimpleLight(SLOT3);        // Define a simple LED light logic
+    Set_SimpleLight(SLOT0); 
+    Set_SimpleLight(SLOT1); 
+    Set_SimpleLight(SLOT2);  
+    Set_SimpleLight(SLOT3); 
     Set_T51(SLOT4);
-
 
    Serial.begin(9600);
 
-
    delay(3000);   //wait arduino on
    Serial.println("8.0.0.");//clear arduino pinConf
+                            //?ever needed
    Serial.println("7.14.5.");//conf.A0.analog in
-   Serial.println("7.3.3.");//configure.pin5.digOut start high
-   Serial.println("7.4.3.");//pin4
+   Serial.println("7.3.3."); //conf.pin5.digOut start high
+   Serial.println("7.4.3."); //pin4
    Serial.println("7.5.3.");
    Serial.println("7.6.3.");
-   Serial.println("9.0.0.");//reset arduino if needed
+   Serial.println("9.0.0."); //reset arduino if needed
    delay(4000); //wait arduino after reset
 }
-
 
 //=======================================================
 void loop()
@@ -108,7 +99,7 @@ void loop()
         Logic_SimpleLight(SLOT0);
           if(mOutput(SLOT0)!=lastSLOT0){
             Serial.print("1.6.");
-            Serial.print(!mOutput(SLOT0));//! pq son reles invertidos(=lowDigOut)
+            Serial.print(!mOutput(SLOT0));//! Relay(=lowDigOut)
             Serial.println(".");
             lastSLOT0=mOutput(SLOT0);}
         Logic_SimpleLight(SLOT1);        
@@ -129,15 +120,12 @@ void loop()
             Serial.print(!mOutput(SLOT3));
             Serial.println(".");
             lastSLOT3=mOutput(SLOT3);}
-            
         }
-
 
       FAST_50ms() {
         Read_T51(SLOT4);
         Serial.print("4.14.0.");
-        floaT=ar[0];
-        ImportAnalog(SLOT4,&floaT);
+        ImportAnalog(SLOT4,&ar[0]);
         }
       FAST_GatewayComms(); 
     }
@@ -155,16 +143,10 @@ void loop()
           ar[inputInt[1]-14]=inputInt[2];}
       break;
 ///* if no need
-      case 5:           //store nVar
-      break;
       case 6:           //get nVar
         nVar[inputInt[1]]=inputInt[2];    
       break;
 //*/
-      case 7://configure pin
-        if((1<inputInt[1]<22)&&(0<inputInt[2]<6)&&(pinConf[inputInt[1]]!=inputInt[2])){
-          pinConf[inputInt[1]]=inputInt[2];}
-      break;
       case 8:
         if (1<inputInt[1]<22){//read arduino
           pinConf[inputInt[1]]=inputInt[2];    
@@ -178,13 +160,8 @@ void loop()
     inputInt[2]=0;
     stringComplete = false;
   }//if stringcomplete
-
-
-
-
 }  
-
-
+//=======================================================
 void serialEvent() {
   while (Serial.available()) {
     char inChar = (char)Serial.read();
@@ -207,9 +184,6 @@ void serialEvent() {
   Start the node as an access point 
   
   from SSLibrary/Base/NetworkSetup.ccp lin250+
-
-
-WiFi.softAP(_apname,_apname); //WiFi.softAP("ssid","password");
 */  
 /**************************************************************************/ 
 void SetAPoint()
@@ -218,18 +192,8 @@ void SetAPoint()
   uint8_t ipaddr[4];
   uint8_t gateway[4];   
   
-/*  // Use a static access point name with a dynamic number
-  char _time[9] = __TIME__;
-  char _apname[18]= "Souliss_000000000";
-  
-  // Build the access point name
-  for(i=0;i<8;i++)
-    _apname[i+9] = _time[i];
-*/  
   WiFi.mode(WIFI_AP);
-//  WiFi.softAP(_apname,_apname);////********************************/////
-  WiFi.softAP(SSID,PASS);
-
+  WiFi.softAP(XSSID,PASS);
 
   IPAddress lIP  = WiFi.softAPIP();
   
@@ -238,7 +202,6 @@ void SetAPoint()
     ipaddr[i]  = lIP[i];
     gateway[i] = lIP[i];
   } 
-
 
   myvNet_dhcp = ipaddr[3];
   
