@@ -47,7 +47,7 @@ boolean CAPACITIVE;
 boolean RELAY;          
 boolean BMP180;  
 boolean BUTTONS;
-
+boolean BUTTONS_PULLUP;
 
 //**********************  SLOTS VARIABLES  ***********************
 byte ALARM;
@@ -505,6 +505,7 @@ bool EEPROM_CONFIG(){
     BMP180 = false;
     DEBUG_CAPSENSE = false;
     BUTTONS = false;
+    BUTTONS_PULLUP = false;
     
     switch (byte2) { 
         case 0:
@@ -529,7 +530,7 @@ bool EEPROM_CONFIG(){
             BUTTONS = true;
             break; 
         case 6:
-            BUTTONS = true;
+            BUTTONS_PULLUP = true;
             break; 
     }
     LOG.print(CAPACITIVE);
