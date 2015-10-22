@@ -41,6 +41,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 		<option value="3">PRESSURE SENSOR</option>
 		<option value="4">CAPACITIVE_DEBUG</option>
 		<option value="5">BUTTONS</option>
+		<option value="6">BUTTONS_PULLUP</option>
 	</select>
 	</td></tr>
         <tr>
