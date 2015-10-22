@@ -1,4 +1,4 @@
-/*
+/* Sketch by Jose Manuel Loureiro 
  * Arduino slave
  * 
  * flash 5556 bytes (17% 328P)
