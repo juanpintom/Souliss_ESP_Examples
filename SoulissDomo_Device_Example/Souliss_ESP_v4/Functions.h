@@ -48,6 +48,7 @@ boolean RELAY;
 boolean BMP180;  
 boolean BUTTONS;
 boolean BUTTONS_PULLUP;
+boolean ALARM_ENDSTOP;
 
 //**********************  SLOTS VARIABLES  ***********************
 byte ALARM;
@@ -220,7 +221,7 @@ void PINS_CONFIG(){
         SCLP = 4;//12;
         SDAP = 5;//14;
     }
-    if(BUTTONS || BUTTONS_PULLUP){
+    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP){
     	BUT0P = 4;
     	BUT1P = 5;
     }
@@ -273,7 +274,7 @@ void PINS_CONFIG(){
         SCLP = 12;
         SDAP = 14;
     }
-    if(BUTTONS || BUTTONS_PULLUP){
+    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP){
     	BUT0P = 12;
     	BUT1P = 14;
     }
@@ -287,7 +288,7 @@ void SLOT_CONFIG(){
   int NEXTSLOT = 0;
   LOG.println("SLOT CONFIG");  
   
-  if(ALARM_MODE){
+  if(ALARM_MODE || ALARM_ENDSTOP){
       ALARM = NEXTSLOT;
       NEXTSLOT = ALARM + 1;
       LOG.print("ALARM: ");
@@ -397,41 +398,32 @@ void SLOT_CONFIG(){
 bool EEPROM_CONFIG(){
     
     //EEPROM CONFIGURATION READ.
-
+    DHT_SENSOR = false;
+    LDR_SENSOR = false;
+    DALLAS_SENSOR = false;
     // DHT LDR DALLAS OPTIONS:
     switch (byte0) {  
         case 0:
-            DHT_SENSOR = false;
-            LDR_SENSOR = false;
-            DALLAS_SENSOR = false;  
+            //NONE
             break;
         case 1:
             DHT_SENSOR = true;
-            LDR_SENSOR = false;
-            DALLAS_SENSOR = false;  
             break;
         case 2:
-            DHT_SENSOR = false;
             LDR_SENSOR = true;
-            DALLAS_SENSOR = false;  
             break;
         case 3:
-            DHT_SENSOR = false;
-            LDR_SENSOR = false;
             DALLAS_SENSOR = true;  
             break;
         case 4:
             DHT_SENSOR = true;
             LDR_SENSOR = true;
-            DALLAS_SENSOR = false;  
             break;
         case 5:
             DHT_SENSOR = true;
-            LDR_SENSOR = false;
             DALLAS_SENSOR = true;  
             break;
         case 6:
-            DHT_SENSOR = false;
             LDR_SENSOR = true;
             DALLAS_SENSOR = true;  
             break;
@@ -457,33 +449,19 @@ bool EEPROM_CONFIG(){
     THERMOSTAT_MODE = false;
     switch (byte1) {
         case 0:
-            //PWM_MODE = false;
-            //PIR_MODE = false;
-            //RGB_MODE = false;
-            //ALARM_MODE = false;
+            //NONE
             break;
         case 1:
             PWM_MODE = true;
-            //PIR_MODE = false;
-            //RGB_MODE = false;
-            //ALARM_MODE = false;
             break;
         case 2:
-            //PWM_MODE = false;
             PIR_MODE = true;
-            //RGB_MODE = false;
-            //ALARM_MODE = false;
             break;
         case 3:
-            //PWM_MODE = false;
-            //PIR_MODE = false;
             RGB_MODE = true;
-            //ALARM_MODE = false;
             break;
         case 4:
-            //PWM_MODE = false;
             PIR_MODE = true;
-            //RGB_MODE = false;
             ALARM_MODE = true;
             break;
         case 5:
@@ -509,9 +487,7 @@ bool EEPROM_CONFIG(){
     
     switch (byte2) { 
         case 0:
-            CAPACITIVE = false;
-            RELAY = false;
-            BMP180 = false;
+            //NONE
             break;
         case 1:
             CAPACITIVE = true;
@@ -532,13 +508,17 @@ bool EEPROM_CONFIG(){
         case 6:
             BUTTONS_PULLUP = true;
             break; 
+        case 7:
+            ALARM_ENDSTOP = true;
+            break;     
     }
     LOG.print(CAPACITIVE);
     LOG.print(RELAY);
     LOG.print(BMP180);
     LOG.print(DEBUG_CAPSENSE);
     LOG.print(BUTTONS);
-    LOG.print(" CRBDB (CAP-RELAY-BMP180-DEBUG-BUTTONS)");
+    LOG.print(ALARM_ENDSTOP);
+    LOG.print(" CRBDB (CAP-RELAY-BMP180-DEBUG-BUTTONS-ALARM_ENDSTOP)");
     LOG.print("\r\n");
     
     return 1;
