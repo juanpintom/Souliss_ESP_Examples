@@ -45,7 +45,8 @@ boolean THERMOSTAT_MODE;
 //Enable this to use PINS 4, 5 for CAPACITIVE BUTTONS, RELAY1 and RELAY2 or on BMP180 pressure sensor (I2C)
 boolean CAPACITIVE;     
 boolean RELAY;          
-boolean BMP180;       
+boolean BMP180;  
+boolean BUTTONS;
 
 
 //**********************  SLOTS VARIABLES  ***********************
@@ -84,6 +85,8 @@ byte RELAY0P;
 byte RELAY1P;
 byte SDAP;
 byte SCLP;
+byte BUT0P;
+byte BUT1P;
 byte THERM_HEATERP;
 byte THERM_FAN1P;
 byte THERM_FAN2P;
@@ -217,6 +220,10 @@ void PINS_CONFIG(){
         SCLP = 4;//12;
         SDAP = 5;//14;
     }
+    if(BUTTONS){
+    	BUT0P = 4;
+    	BUT1P = 5;
+    }
   #endif
 
   #ifdef STRIPBOARD    //PCB NUEVA
@@ -265,6 +272,10 @@ void PINS_CONFIG(){
     if(BMP180){
         SCLP = 12;
         SDAP = 14;
+    }
+    if(BUTTONS){
+    	BUT0P = 12;
+    	BUT1P = 14;
     }
   #endif
 
@@ -489,41 +500,41 @@ bool EEPROM_CONFIG(){
     
     // CAPACITIVE RELAY BMP180 OPTIONS
     //switch (configuration[EEPROM_START+2]) {
+    CAPACITIVE = false;
+    RELAY = false;
+    BMP180 = false;
+    DEBUG_CAPSENSE = false;
+    BUTTONS = false;
+    
     switch (byte2) { 
         case 0:
             CAPACITIVE = false;
             RELAY = false;
             BMP180 = false;
-            
             break;
         case 1:
             CAPACITIVE = true;
-            RELAY = false;
-            BMP180 = false;
-            DEBUG_CAPSENSE = false;
             break;
         case 2:
-            CAPACITIVE = false;
             RELAY = true;
-            BMP180 = false;
             break;
         case 3:
-            CAPACITIVE = false;
-            RELAY = false;
-            BMP180 = true;
+	    BMP180 = true;
             break;
         case 4:
             CAPACITIVE = true;
-            RELAY = false;
-            BMP180 = false;
             DEBUG_CAPSENSE = true;
             break;    
-            
+        case 5:
+            BUTTONS = true;
+            break; 
     }
     LOG.print(CAPACITIVE);
     LOG.print(RELAY);
     LOG.print(BMP180);
-    LOG.print(" CRB (CAP-RELAY-BMP180)");
+    LOG.print(DEBUG_CAPSENSE);
+    LOG.print(BUTTONS);
+    LOG.print(" CRBDB (CAP-RELAY-BMP180-DEBUG-BUTTONS)");
     LOG.print("\r\n");
     
     return 1;
