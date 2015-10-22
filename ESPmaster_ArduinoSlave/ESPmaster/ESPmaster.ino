@@ -1,4 +1,5 @@
 /****************************************************
+ *   Sketch by Jose Manuel Loureiro 
               ESP Self Wifi & Gateway, no router
 
 
