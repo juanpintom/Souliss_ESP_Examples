@@ -528,6 +528,9 @@ bool EEPROM_CONFIG(){
         case 5:
             BUTTONS = true;
             break; 
+        case 6:
+            BUTTONS = true;
+            break; 
     }
     LOG.print(CAPACITIVE);
     LOG.print(RELAY);
