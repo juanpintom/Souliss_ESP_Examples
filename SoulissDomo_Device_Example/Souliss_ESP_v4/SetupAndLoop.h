@@ -173,13 +173,13 @@ void fastGeneral(){
                 //analogWrite(LEDPWMP1, mOutput(LEDPWM1+1)*4);
                 analogWrite(LEDPWMP1, mOutput(LEDPWM1+1));
             }
-
+            
+            if( ALARM_ENDSTOP && mOutput(ALARM) == Souliss_T4n_Antitheft ){   //  IF Alarm is Armed
+                LowDigIn(BUT0P, Souliss_T4n_Alarm, ALARM);                  //  Handle the Endstop to the Antitheft  
+                LowDigIn(BUT1P, Souliss_T4n_Alarm, ALARM);                  //  Handle the Endstop to the Antitheft
+            }
+            
             if(PIR_MODE){
-                if( ALARM_ENDSTOP && mOutput(ALARM) == Souliss_T4n_Antitheft ){   //  IF Alarm is Armed
-                   LowDigIn(BUT0P, Souliss_T4n_Alarm, ALARM);                  //  Handle the Endstop to the Antitheft  
-                   LowDigIn(BUT1P, Souliss_T4n_Alarm, ALARM);                  //  Handle the Endstop to the Antitheft
-                }
-                
                 if( ALARM_MODE && mOutput(ALARM) == Souliss_T4n_Antitheft ){   //  IF Alarm is Armed
                    DigIn(PIRP,Souliss_T4n_Alarm,ALARM);                        //  Handle the PIR to the Antitheft               
                 }else {                                                        //  IF Alarm isnt Armed
