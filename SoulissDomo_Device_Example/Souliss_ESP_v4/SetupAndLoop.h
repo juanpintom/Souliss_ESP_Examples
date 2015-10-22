@@ -112,8 +112,15 @@ void setupGeneral(){
             pinMode(THERM_FAN1P, OUTPUT);  
             pinMode(THERM_FAN2P, OUTPUT);          
     }
-        
-        
+    if(BUTTONS){
+            pinMode(BUT0P, INPUT);
+            pinMode(BUT1P, INPUT);
+    }
+    if(BUTTONS_PULLUP){
+            pinMode(BUT0P, INPUT_PULLUP);
+            pinMode(BUT1P, INPUT_PULLUP);
+    }
+    
     if(BMP180){
       //Wire.begin(SDAP,SCLP);
       delay(200);
@@ -148,7 +155,15 @@ void fastGeneral(){
                     Souliss_CapSense(LEDPWM0,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, CAP0P, cap_thresold, 1500);
                     Souliss_CapSense(LEDPWM1,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, CAP1P, cap_thresold, 1500);
                     if(DEBUG_CAPSENSE_ALL) LOG.println("");
-                }                
+                }  
+                if(BUTTONS){
+                    DigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDPWM0);
+                    DigIn(BUT1P, Souliss_T1n_ToggleCmd, LEDPWM1);
+                }
+                if(BUTTONS_PULLUP){
+                    LowDigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDPWM0);
+                    LowDigIn(BUT1P, Souliss_T1n_ToggleCmd, LEDPWM1);
+                }
                 
                 Logic_DimmableLight(LEDPWM0);                        
                 //analogWrite(LEDPWMP0, mOutput(LEDPWM0+1)*4);
@@ -184,7 +199,15 @@ void fastGeneral(){
                 if(CAPACITIVE){
                     Souliss_CapSense(LEDRGB,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch,CAP0P, cap_thresold, 1500);
                     Souliss_CapSense(LEDRGB,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch,CAP1P, cap_thresold, 1500);
-                }  
+                } 
+                if(BUTTONS){
+                    DigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDRGB);
+                    DigIn(BUT1P, Souliss_T1n_BrightSwitch, LEDRGB);
+                }
+                if(BUTTONS_PULLUP){
+                    LowDigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDRGB);
+                    LowDigIn(BUT1P, Souliss_T1n_BrightSwitch, LEDRGB);
+                }
                 Logic_LED_Strip(LEDRGB);
                 //analogWrite(LEDRP, mOutput(LEDRGB+1)*4);
                 //analogWrite(LEDGP, mOutput(LEDRGB+2)*4);
