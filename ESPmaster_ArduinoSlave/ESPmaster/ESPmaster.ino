@@ -24,8 +24,6 @@
 #include <ESP8266WiFi.h>
 #include <EEPROM.h>
 #include <WiFiUdp.h>
-
-
 //----------------------------------------------------
 // 4. Slots
 //----------------------------------------------------
@@ -42,9 +40,8 @@ bool lastSLOT1;
 bool lastSLOT2;
 bool lastSLOT3;
 
-byte pinConf[22];//0,1 serial(not used)
+byte pinConf[14];//0,1 serial(not used)
                 //D2-D13
-                //A0[14]-A7[21]
 String inputString= "";   // a string to hold incoming data
 int inputInt[3];
 bool stringComplete = false; // whether the string is complete
@@ -148,7 +145,7 @@ void loop()
       break;
 //*/
       case 8:
-        if (1<inputInt[1]<22){//read arduino
+        if (1<inputInt[1]<14){//read arduino pinConf
           pinConf[inputInt[1]]=inputInt[2];    
         }
       break;
