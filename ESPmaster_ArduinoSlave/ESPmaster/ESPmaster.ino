@@ -70,7 +70,7 @@ bool Arduino(byte command, byte variable = 255, byte option = 255){
     return 1;
   }
     
-  if(command == digital_write || command == analog_write || command == store_variable){
+  if(command == digital_write || command == analog_write || command == store_variable || command == configure_pin){
     if(variable != 255 && option != 255){
       Serial.print(command);Serial.print(".");
       Serial.print(variable);Serial.print(".");
