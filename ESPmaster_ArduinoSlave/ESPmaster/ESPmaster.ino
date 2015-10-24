@@ -13,7 +13,7 @@
 
 
 #define XSSID "Radio"
-#define PAS  "AAAAAAAA"  
+#define PASS  "AAAAAAAA"  
 //---------------------------------------------------
 // 2.     Include framework code and libraries
 //---------------------------------------------------
@@ -127,7 +127,6 @@ void setup()
    delay(3000);   //wait arduino on
    Serial.println("8.0.0.");//clear arduino pinConf
                             //?ever needed
-   Serial.println("7.14.5.");//conf.A0.analog in
    Serial.println("7.3.3."); //conf.pin5.digOut start high
    Serial.println("7.4.3."); //pin4
    Serial.println("7.5.3.");
