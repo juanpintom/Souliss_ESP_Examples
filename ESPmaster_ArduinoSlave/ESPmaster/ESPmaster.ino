@@ -60,36 +60,9 @@ reset arduino         9     0(else)   0(esle) */
 #define store_variable      5
 #define get_variable        6  //x.0
 #define configure_pin       7
-#define send_eeprom_values  8.0.0
-#define clear_pinConf       8.1.0
-#define reset_arduino       9.0.0
-
-bool Arduino(byte command, byte variable = 255, byte option = 255){
-  if(command == send_eeprom_values || command == clear_pinConf || command == reset_arduino) {
-    Serial.println(command);
-    return 1;
-  }
-    
-  if(command == digital_write || command == analog_write || command == store_variable || command == configure_pin){
-    if(variable != 255 && option != 255){
-      Serial.print(command);Serial.print(".");
-      Serial.print(variable);Serial.print(".");
-      Serial.print(option);Serial.print(".");
-      Serial.println("");
-      return 1;
-    }
-  }
-  if(command == digital_read || command == analog_read || command == get_variable){
-    if(variable != 255)
-      Serial.print(command);Serial.print(".");
-      Serial.print(variable);Serial.print(".");
-      Serial.print("0);Serial.print(".");
-      Serial.println("");
-      return 1;
-    }
-  }
-  return 0;
-}
+#define send_eeprom_values  8.0
+#define clear_pinConf       8.1
+#define reset_arduino       9.0
 
 byte pinConf[14];//0,1 serial(not used)
                 //D2-D13
@@ -261,4 +234,33 @@ void SetAPoint()
   U16 vNet_address = (U16)ipaddr[i-1];      
   DEFAULT_BASEIPADDRESS[i-1]=0;     
   Souliss_SetAddress(vNet_address, DYNAMICADDR_SUBNETMASK, 0);  
+}
+
+bool esclavo(byte command, byte variable = 255, byte option = 255){
+  if(command == send_eeprom_values || command == clear_pinConf || command == reset_arduino) {
+    Serial.println(command);Serial.print(".");
+      Serial.print("0");Serial.print(".");
+      Serial.println("");
+    return 1;
+  }
+    
+  if(command == digital_write || command == analog_write || command == store_variable || command == configure_pin){
+    if(variable != 255 && option != 255){
+      Serial.print(command);Serial.print(".");
+      Serial.print(variable);Serial.print(".");
+      Serial.print(option);Serial.print(".");
+      Serial.println("");
+      return 1;
+    }
+  }
+  if(command == digital_read || command == analog_read || command == get_variable){
+    if(variable != 255){
+      Serial.print(command);Serial.print(".");
+      Serial.print(variable);Serial.print(".");
+      Serial.print("0");Serial.print(".");
+      Serial.println("");
+      return 1;
+    }
+  }
+  return 0;
 }
