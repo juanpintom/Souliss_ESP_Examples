@@ -49,7 +49,7 @@ analog read           4     pin       0(else)
 store variable        5     nVar      value
 get  variable         6     nvar      0(else)
 configure pin         7     pin       confVal
-send eeprom values    8     0         0(else)
+Get pinConf           8     0         0(else)
 clear pinConf         8     1         0(else)
 reset arduino         9     0(else)   0(esle) */
 
