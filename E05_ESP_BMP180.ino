@@ -46,46 +46,39 @@ void setup()
     //Example of Peer Definition
     //SetAsPeerNode(0xAB02, 1);
 
+    Set_Pressure(PRESSURE0);
+    Set_Temperature(BMP180TEMP);
+
     if (pressure.begin())
        Debug.println("BMP180 init success");
     else
      {
               // Oops, something went wrong, this is usually a connection problem,
               // see the comments at the top of this sketch for the proper connections.
-        
               Debug.println("BMP180 init fail\n\n");
-              
       }
-    
-    
 }
 
 
 void loop()
 { 
-    
     EXECUTEFAST() {                     
         UPDATEFAST();   
-        
         // Here we handle here the communication with Android
         FAST_GatewayComms();                                        
     }
-    EXECUTESLOW() {
- UPDATESLOW();
-
-
-            SLOW_10s() {  // Read temperature and humidity from DHT every 110 seconds  
-
-
-              Souliss_GetPressure_BMP180(PRESSURE0,BMP180TEMP); 
-              
-            } 
-      }
+	EXECUTESLOW() {
+		UPDATESLOW();
+		SLOW_10s() {  // Read temperature and humidity from DHT every 110 seconds  
+			Logic_Pressure(PRESSURE0);
+			Logic_Temperature(BMP180TEMP);
+		} 
+		SLOW_50s() {
+			Souliss_GetPressure_BMP180(PRESSURE0,BMP180TEMP); 
+		}
+	}
 }    
     
-   
-
-
 /***************************************************************************/
 /*                         BMP180 I2C READING FUNCTION                     */
 /***************************************************************************/
