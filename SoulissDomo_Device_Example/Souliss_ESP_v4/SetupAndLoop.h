@@ -9,7 +9,7 @@ void setupGeneral(){
     EEPROM_CONFIG();
     SLOT_CONFIG();
     PINS_CONFIG();
-    analogWriteFreq(500);
+    analogWriteFreq(250);
     analogWriteRange(255);
 //**************************** SENSORS INITIALIZE *****************************
     if(DHT_SENSOR){
@@ -139,7 +139,8 @@ void setupGeneral(){
 }
 
 void fastGeneral(){
-  
+      yield();
+      
       FAST_50ms() {   // We process the logic and relevant input and output every 50 milliseconds
             if(RELAY){
                 Logic_SimpleLight(RELAY0);
@@ -259,7 +260,7 @@ void fastGeneral(){
            }
         }
 
-        FAST_910ms()    {
+        FAST_9110ms()    {
             if(DALLAS){ 
                   // Acquire temperature from the microcontroller ADC
                   sensors.requestTemperatures(); //Prepara el sensor para la lectura
@@ -268,7 +269,7 @@ void fastGeneral(){
                     LOG.print("Dallas: ");
                     LOG.println(dallas);
                   }
-                  String dallasstring = "dallas";
+                  
                   SendEmoncms("Dallas_Sensor", DALLAS);
                   Souliss_ImportAnalog(memory_map, DALLAS, &dallas);
                   if(THERMOSTAT_MODE){

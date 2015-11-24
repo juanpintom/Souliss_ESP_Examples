@@ -5,8 +5,8 @@ int valorPWM;
 
 #define LOG Serial
 
-//#define PCB
-#define STRIPBOARD
+#define PCB
+//#define STRIPBOARD
 
 //Autocalibrate Capacitive Sensors ON
 #define AUTOCALIBRATE         1
@@ -15,7 +15,7 @@ boolean DEBUG_CAPSENSE = 0;
 boolean DEBUG_CAPSENSE_ALL = 0;
 boolean DEBUG_PRESSURE = 0;
 boolean DEBUG_GETLUX   = 0;
-boolean DEBUG_DALLAS   = 1;
+boolean DEBUG_DALLAS   = 0;
 
 //COPIED TO Souliss webconfig.h
 byte byte0;
@@ -141,18 +141,18 @@ SFE_BMP180 pressure;
 char serveremon[] = "emoncms.org";
 char path[] = "/input/post.json?json=";
 char input[] = "testesp";
-char apikey[] = "YOUR API HERE";
+char apikey[] = "6f55af35796382182ab15464c32bf2d8";
 int port = 80; // port 80 is the default for HTTP
 WiFiClient client;
 
 void SendEmoncms(String inputstring, byte SLOT){
   
   float value = mOutputAsFloat(SLOT);
-  LOG.println(value);
+  //LOG.println(value);
   
   if (client.connect(serveremon, port))
   {
-    Serial.println("connected");
+    //Serial.println("connected");
     // Make a HTTP request:
     client.print("POST ");
     client.print(path);
@@ -170,7 +170,7 @@ void SendEmoncms(String inputstring, byte SLOT){
   else
   {
     // if you didn't get a connection to the server:
-    Serial.println("connection failed");
+    //Serial.println("connection failed");
   }
 }
 
