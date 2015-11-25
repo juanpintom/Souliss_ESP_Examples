@@ -97,7 +97,7 @@ byte THERM_FAN3P;
 
 // Include and Configure DHT11 SENSOR
 #ifdef PCB    //PCB NUEVA
-  #define DHTPIN      16     // what pin we're connected to
+  #define DHTPIN      15     // what pin we're connected to
 #endif
 
 #ifdef STRIPBOARD //STRIPBOARD DE PRUEBAS
@@ -185,15 +185,15 @@ void PINS_CONFIG(){
         //DHTPIN = 16;     // what pin we're connected to
     }
     if(PWM_MODE){
-        LEDPWMP0 = 12;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 13;      //LED STRIP ON PIN 13
-        LEDPWMP2 = 15;      //LED STRIP ON PIN 15
+        LEDPWMP0 = 13;      //LED STRIP ON PIN 12
+        LEDPWMP1 = 12;      //LED STRIP ON PIN 13
+        LEDPWMP2 = 16;      //LED STRIP ON PIN 15
     }
     
     if(PIR_MODE){
-        LEDPWMP0 = 12;//5;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 13;//16;      //LED STRIP ON PIN 13
-        LEDP = 15;      //LED STRIP ON PIN 15
+        LEDPWMP0 = 13;//5;      //LED STRIP ON PIN 12
+        LEDPWMP1 = 12;//16;      //LED STRIP ON PIN 13
+        LEDP = 16;      //LED STRIP ON PIN 15
         PIRP = 2;       //LED STRIP ON PIN 2
     }
     if(ALARM_MODE){
@@ -201,9 +201,9 @@ void PINS_CONFIG(){
     }
     
     if(RGB_MODE){
-        LEDRP = 12;//5;      //LED STRIP ON PIN 12
-        LEDGP = 13;//16;      //LED STRIP ON PIN 13
-        LEDBP = 15;      //LED STRIP ON PIN 15
+        LEDRP = 13;//5;      //LED STRIP ON PIN 12
+        LEDGP = 12;//16;      //LED STRIP ON PIN 13
+        LEDBP = 16;      //LED STRIP ON PIN 15
     }
     
     //PIN OPTIONS FOR CAPACITIVE - RELAY OR BMP180
