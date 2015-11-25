@@ -21,6 +21,9 @@
 
 void setup()
 {   
+	analogWriteFreq(500); 
+    analogWriteRange(255); 
+
     Initialize();
     // Connect to the WiFi network and get an address from DHCP
     GetIPAddress();      
@@ -47,7 +50,7 @@ void loop()
         
         FAST_50ms() {   // We process the logic and relevant input and output every 50 milliseconds
             Logic_DimmableLight(LEDPWM);                        
-            analogWrite(LEDPWMP, mOutput(LEDPWM+1)*4);
+            analogWrite(LEDPWMP, mOutput(LEDPWM+1));
         }
         // Here we handle here the communication with Android
         FAST_GatewayComms();                                        
