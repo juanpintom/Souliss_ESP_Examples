@@ -1,3 +1,13 @@
+/*NOTES: IMPORTANT! Take care if you have a wire library on your Arduino IDE because it will be used 
+instead of the library stored on the core of ESP. 
+Just make a backup of Wire folder on ArduinoIDE/libraries folder and delete the folder.
+
+WIRE PIN CONFIGURATION:
+On the ESP library you need to call to Wire.begin() with PIN as parameters 
+so to configure the SFE_BMP180 library you need to modify this line with Wire.begin(4.5);
+*/
+
+
 // Configure the framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
 #include "conf/Gateway.h"                   // The main node is the Gateway, we have just one node
