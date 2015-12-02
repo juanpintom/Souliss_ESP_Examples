@@ -37,11 +37,12 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 	<tr><td>Lights Output Mode:</td><td>
 	<select  id="byte1" name="byte1">
 		<option value="0">None</option>
-		<option value="1">PWM MODE</option>
-		<option value="2">PIR_MODE</option>
-		<option value="3">RGB_MODE</option>
-                <option value="4">PIR_ALARM_MODE</option>
-                <option value="5">THERMOSTAT_MODE</option>
+		<option value="1">ON-OFF MODE</option>
+		<option value="2">PWM MODE</option>
+		<option value="3">PIR_MODE</option>
+		<option value="4">RGB_MODE</option>
+        <option value="5">PIR_ALARM_MODE</option>
+        <option value="6">THERMOSTAT_MODE</option>
 	</select>
 	</td></tr>
 	

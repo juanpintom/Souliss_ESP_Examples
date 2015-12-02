@@ -34,7 +34,8 @@ boolean LDR_SENSOR;
 //DALLAS Sensor on PIN 14
 boolean DALLAS_SENSOR;   
 
-//PWM PIN 15 or PIR (PIR Sensor on PIN 2) 
+//LIGHT MODES
+boolean ONOFF_MODE;
 boolean PWM_MODE;           
 boolean PIR_MODE;
 boolean RGB_MODE;
@@ -187,6 +188,11 @@ void PINS_CONFIG(){
     if(DHT_SENSOR){
         //DHTPIN = 16;     // what pin we're connected to
     }
+	if(ONOFF_MODE){
+    	LEDPWMP0 = 13;      //LED STRIP ON PIN 12
+        LEDPWMP1 = 12;      //LED STRIP ON PIN 13
+        LEDPWMP2 = 16;      //LED STRIP ON PIN 15
+    }
     if(PWM_MODE){
         LEDPWMP0 = 13;      //LED STRIP ON PIN 12
         LEDPWMP1 = 12;      //LED STRIP ON PIN 13
@@ -307,7 +313,15 @@ void SLOT_CONFIG(){
       LOG.print("HUMI: ");
       LOG.println(HUMIDITY);      
   }
-  
+  if(ONOFF_MODE){
+      LEDPWM0 = NEXTSLOT;
+      LEDPWM1 = NEXTSLOT + 1;
+      NEXTSLOT = LEDPWM1 + 1;
+      LOG.print("LEDONOFF0: ");
+      LOG.println(LEDPWM0);  
+      LOG.print("LEDONOFF1: ");
+      LOG.println(LEDPWM1);  	
+  }
   if(PWM_MODE || PIR_MODE){
       LEDPWM0 = NEXTSLOT;
       LEDPWM1 = NEXTSLOT + 2;
@@ -445,6 +459,7 @@ bool EEPROM_CONFIG(){
     
     // PWM PIR RGB OPTIONS:
     //switch (configuration[EEPROM_START+1]) {
+	ONOFF_MODE = false;
     PWM_MODE = false;
     PIR_MODE = false;
     RGB_MODE = false;
@@ -454,29 +469,33 @@ bool EEPROM_CONFIG(){
         case 0:
             //NONE
             break;
-        case 1:
+		case 1:
+            ONOFF_MODE = true;
+            break;	
+        case 2:
             PWM_MODE = true;
             break;
-        case 2:
+        case 3:
             PIR_MODE = true;
             break;
-        case 3:
+        case 4:
             RGB_MODE = true;
             break;
-        case 4:
+        case 5:
             PIR_MODE = true;
             ALARM_MODE = true;
             break;
-        case 5:
+        case 6:
             THERMOSTAT_MODE = true;
             break;    
     }
+	LOG.print(ONOFF_MODE);
     LOG.print(PWM_MODE);
     LOG.print(PIR_MODE);
     LOG.print(RGB_MODE);
     LOG.print(ALARM_MODE);
     LOG.print(THERMOSTAT_MODE);
-    LOG.print(" PPRAT (PWM-PIR-RGB-ALARM-THERMOSTAT)");
+    LOG.print(" OPPRAT (ONOFF-PWM-PIR-RGB-ALARM-THERMOSTAT)");
     LOG.print("\r\n");
     
     // CAPACITIVE RELAY BMP180 OPTIONS

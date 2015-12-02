@@ -26,7 +26,11 @@ void setupGeneral(){
         Set_Temperature(TEMPERATURE);
         Set_Humidity(HUMIDITY);
     }
-    
+    if(ONOFF_MODE){
+        Set_SimpleLight(LEDPWM0);
+        Set_SimpleLight(LEDPWM1);
+        Set_SimpleLight(LEDPWM2);
+    }
     if(PWM_MODE || PIR_MODE){
         Set_DimmableLight(LEDPWM0);
         Set_DimmableLight(LEDPWM1);  
@@ -82,7 +86,11 @@ void setupGeneral(){
         pinMode(RELAY0P, OUTPUT);                 
         pinMode(RELAY1P, OUTPUT);
     }
-    
+     if(ONOFF_MODE){
+        pinMode(LEDPWMP0, OUTPUT);
+        pinMode(LEDPWMP1, OUTPUT);        
+        pinMode(LEDPWMP2, OUTPUT);        
+    }
     if(PWM_MODE || PIR_MODE){
         pinMode(LEDPWMP0, OUTPUT);
         pinMode(LEDPWMP1, OUTPUT);        
@@ -152,7 +160,15 @@ void fastGeneral(){
                 DigOut(RELAY1P, Souliss_T1n_Coil,RELAY1);
                 
             }
-
+			if(ONOFF_MODE){
+                Logic_SimpleLight(LEDPWM0);
+                Logic_SimpleLight(LEDPWM1);
+                Logic_SimpleLight(LEDPWM2);
+                
+                DigOut(LEDPWM0P, Souliss_T1n_Coil,LEDPWM0);
+                DigOut(LEDPWM1P, Souliss_T1n_Coil,LEDPWM1);
+                DigOut(LEDPWM2P, Souliss_T1n_Coil,LEDPWM2);
+            }
             if(PWM_MODE || PIR_MODE){
                 if(CAPACITIVE){
                     Souliss_CapSense(LEDPWM0,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, CAP0P, cap_thresold, 1500);
@@ -359,7 +375,11 @@ void slowGeneral(){
             Timer_SimpleLight(RELAY0);
             Timer_SimpleLight(RELAY1);
         }
-        
+        if(ONOFF_MODE){
+            Timer_SimpleLight(LEDPWM0);
+            Timer_SimpleLight(LEDPWM1);
+            Timer_SimpleLight(LEDPWM2);
+        }
         if(PIR_MODE || PWM_MODE){
             Timer_DimmableLight(LEDPWM0);              
             Timer_DimmableLight(LEDPWM1);              
