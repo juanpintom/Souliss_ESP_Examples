@@ -140,7 +140,7 @@ SFE_BMP180 pressure;
 // ******************************************************************************************************************
 char serveremon[] = "emoncms.org";
 char path[] = "/input/post.json?json=";
-char apikey[] = "6f55af35796382182ab15464c32bf2d8";
+//char apikey[] = "6f55af35796382182ab15464c32bf2d8";
 int port = 80; // port 80 is the default for HTTP
 WiFiClient client;
 
@@ -162,7 +162,7 @@ void SendEmoncms(String inputstring, byte SLOT){
     client.print(":");
     client.print(value);
     client.print("&apikey=");
-    client.print(apikey);
+    client.print(API);
     client.println(" HTTP/1.1");
     client.print("Host: ");
     client.println(serveremon);
