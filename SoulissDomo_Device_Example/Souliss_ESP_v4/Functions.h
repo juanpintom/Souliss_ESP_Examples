@@ -140,10 +140,12 @@ SFE_BMP180 pressure;
 // ******************************************************************************************************************
 char serveremon[] = "emoncms.org";
 char path[] = "/input/post.json?json=";
-char input[] = "testesp";
 char apikey[] = "6f55af35796382182ab15464c32bf2d8";
 int port = 80; // port 80 is the default for HTTP
 WiFiClient client;
+
+String API;
+String DeviceName;
 
 void SendEmoncms(String inputstring, byte SLOT){
   
@@ -534,6 +536,8 @@ void WriteConfig_Slots()
 	EEPROM.write(502,byte1);
 	EEPROM.write(503,byte2);
         EEPROM.write(504, ALTITUDE/20);
+        StoreString(505,DeviceName);   	//MAX 10 
+ 	StoreString(515,API);		//MAX 16 
         EEPROM.commit();
 	
 }
@@ -546,7 +550,8 @@ void ReadConfig_Slots()
 	byte1 = EEPROM.read(502);
 	byte2 = EEPROM.read(503);
         ALTITUDE = EEPROM.read(504)*20;
-		
+        DeviceName = Return_String(505,10)
+	API = Return_String(515,32);
 }
 
 // ******************************************************************************************************************
