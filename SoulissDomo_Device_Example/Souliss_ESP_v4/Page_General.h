@@ -9,7 +9,15 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 <hr>
 <form action="" method="post">
 <table border="0"  cellspacing="0" cellpadding="3" >
-	
+	<tr>
+		<td align="left">Node Name</td>
+		<td><input type="text" id="devicename" name="devicename" value="" maxlength="10"></td>
+	</tr>
+	<tr>
+		<td align="left">Emoncms API</td>
+		<td><input type="text" id="API" name="API" value="" maxlength="32"></td>
+	</tr>
+
 	<tr><td>Sensors Configuration:</td><td>
 	<select  id="byte0" name="byte0">
 		<option value="0">None</option>
@@ -101,11 +109,14 @@ void send_general_html()
 		byte2 = 0;
 		String temp = "";
 		for ( uint8_t i = 0; i < server.args(); i++ ) {
+            if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
+			if (server.argName(i) == "API") API = urldecode(server.arg(i));
 		    if (server.argName(i) == "byte0") byte0 = server.arg(i).toInt(); 
-		    if (server.argName(i) == "byte1") byte1 = server.arg(i).toInt(); 
+		    if (server.argName(i) == "byte1") byte1 = server.arg(i).toInt();
 		    if (server.argName(i) == "byte2") byte2 = server.arg(i).toInt(); 
-       		    if (server.argName(i) == "cap_thresold") cap_thresold = server.arg(i).toInt();
-                    if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
+       		if (server.argName(i) == "cap_thresold") cap_thresold = server.arg(i).toInt();
+            if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
+
 		}
 		WriteConfig_Slots();
 		//firstStart = true;
@@ -120,6 +131,8 @@ void send_general_html()
 void send_general_configuration_values_html()
 {
 	String values ="";
+	values += "devicename|" +  (String)  DeviceName +  "|input\n";
+	values += "API|" +  (String)  API +  "|input\n";
 	values += "byte0|" +  (String) byte0 + "|input\n";
 	values += "byte1|" +  (String) byte1 + "|input\n";
 	values += "byte2|" +  (String) byte2 + "|input\n";
