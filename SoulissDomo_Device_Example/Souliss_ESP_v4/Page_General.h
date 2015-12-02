@@ -17,6 +17,10 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 		<td align="left">Emoncms API</td>
 		<td><input type="text" id="API" name="API" value="" maxlength="32"></td>
 	</tr>
+	<tr>
+		<td align="left"> Enable this Node as USART Bridge?:</td>
+		<td><input type="checkbox" id="usartbridge" name="usartbridge"></td>
+    </tr>
 
 	<tr><td>Sensors Configuration:</td><td>
 	<select  id="byte0" name="byte0">
@@ -108,6 +112,7 @@ void send_general_html()
 		byte1 = 0;
 		byte2 = 0;
 		String temp = "";
+		usartbridge = false;
 		for ( uint8_t i = 0; i < server.args(); i++ ) {
             if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
 			if (server.argName(i) == "API") API = urldecode(server.arg(i));
@@ -116,6 +121,7 @@ void send_general_html()
 		    if (server.argName(i) == "byte2") byte2 = server.arg(i).toInt(); 
        		if (server.argName(i) == "cap_thresold") cap_thresold = server.arg(i).toInt();
             if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
+			if (server.argName(i) == "usartbridge") usartbridge = true;
 
 		}
 		WriteConfig_Slots();
@@ -137,7 +143,8 @@ void send_general_configuration_values_html()
 	values += "byte1|" +  (String) byte1 + "|input\n";
 	values += "byte2|" +  (String) byte2 + "|input\n";
 	values += "cap_thresold|" +  (String) cap_thresold + "|input\n";
-        values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
-        server.send ( 200, "text/plain", values);
+    values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
+	values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
+    server.send ( 200, "text/plain", values);
 	LOG.println(__FUNCTION__); 
 }

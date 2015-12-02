@@ -11,6 +11,7 @@ void setupGeneral(){
     PINS_CONFIG();
     analogWriteFreq(250);
     analogWriteRange(255);
+	if(usartbridge) SetAddress(0xD001, 0xFF00, 0x0000);
 //**************************** SENSORS INITIALIZE *****************************
     if(DHT_SENSOR){
         dht.begin();

@@ -23,6 +23,7 @@ byte byte1;
 byte byte2;
 byte cap_thresold;
 int ALTITUDE = 20;
+boolean usartbridge = false;
 
 //DHT Sensor on PIN 16
 boolean DHT_SENSOR;
@@ -531,14 +532,15 @@ void WriteConfig_Slots()
 {
 
 	LOG.println("Writing Config");
-        EEPROM.write(500,cap_thresold);
+    EEPROM.write(500,cap_thresold);
 	EEPROM.write(501,byte0);
 	EEPROM.write(502,byte1);
 	EEPROM.write(503,byte2);
-        EEPROM.write(504, ALTITUDE/20);
-        StoreString(505,DeviceName);   	//MAX 10 
- 	StoreString(515,API);		//MAX 16 
-        EEPROM.commit();
+    EEPROM.write(504, ALTITUDE/20);
+    EEPROM.write(505, usartbridge);
+	StoreString(506,DeviceName);   	//MAX 10 
+ 	StoreString(516,API);			//MAX 32 
+    EEPROM.commit();
 	
 }
 void ReadConfig_Slots()
@@ -549,9 +551,10 @@ void ReadConfig_Slots()
 	byte0 = EEPROM.read(501);
 	byte1 = EEPROM.read(502);
 	byte2 = EEPROM.read(503);
-        ALTITUDE = EEPROM.read(504)*20;
-        DeviceName = Return_String(505,10)
-	API = Return_String(515,32);
+    ALTITUDE = EEPROM.read(504)*20;
+    usartbridge = EEPROM.read(505);
+    DeviceName = Return_String(506,10)
+	API = Return_String(516,32);
 }
 
 // ******************************************************************************************************************
