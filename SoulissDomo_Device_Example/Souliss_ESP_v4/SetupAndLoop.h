@@ -32,6 +32,7 @@ void setupGeneral(){
     }
     
     if(PWM_MODE){
+        pinMode(0, INPUT);
         Set_DimmableLight(LEDPWM2);
     }
     
@@ -197,8 +198,8 @@ void fastGeneral(){
             }
             
             if(PWM_MODE){
+                DigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
                 Logic_DimmableLight(LEDPWM2);                        
-                //analogWrite(LEDPWMP2, mOutput(LEDPWM2+1)*4);
                 analogWrite(LEDPWMP2, mOutput(LEDPWM2+1));
             }
             
