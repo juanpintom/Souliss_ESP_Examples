@@ -26,6 +26,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include <ESP8266HTTPUpdateServer.h>
 #include <EEPROM.h>
 #include <WiFiUdp.h>
 
@@ -42,6 +43,7 @@
 #include "Page_General.h"
 
 OTA_Setup();  
+ESP8266HTTPUpdateServer httpUpdater;
 
 void setup()
 {
@@ -115,6 +117,9 @@ void setup()
     LOG.println (vNet_GetAddress(5),HEX);
 
     OTA_Init(); 
+    
+    httpUpdater.setup(&server);
+    MDNS.addService("http", "tcp", 80);
 }
 
 void loop()
