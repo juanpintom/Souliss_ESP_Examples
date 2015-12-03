@@ -12,6 +12,37 @@ void setupGeneral(){
     analogWriteFreq(250);
     analogWriteRange(255);
 	//if(usartbridge) SetAddress(0xD001, 0xFF00, 0x0000);
+	
+// **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
+    long previous = millis();
+    if(!DigitalRead(0)) LOG.println("GPIO0 PRESSED!");
+    while(!DigitalRead(0)){
+    	if(millis() < previous + 5000){
+    		LOG.print("Deleting Addresses in: ");
+    		LOG.print(millis() - previous);
+    		delay(500);
+    	}else{
+    		for(int i = STORE__ADDR_s; i <= STORE__PADDR_f; i++){
+    			EEPROM.write(i,0);
+    		}
+    		EEPROM.commit();
+    		LOG.println("Address Deleted");
+    		// DELETE EEPROM IF GPIO STILL PRESSED
+    		if(millis() < previous + 10000){
+    			LOG.print("Deleting EEPROM in: ");
+    			LOG.print(millis() - previous);
+    			delay(500);
+    		}else{
+    			for(int i = 0; i <= 768; i++){
+	    			EEPROM.write(i,0);
+    		}
+    		EEPROM.commit();
+    		LOG.println("EEPROM Deleted");
+    		}
+    	}
+    }
+    
+    
 //**************************** SENSORS INITIALIZE *****************************
     if(DHT_SENSOR){
         dht.begin();
