@@ -32,7 +32,7 @@
 
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
-#include "conf/usart.h"                     // USART 
+//#include "conf/usart.h"                     // USART 
 #include "conf/RuntimeGateway.h"            // This node is a Peer and can became a Gateway at runtime
 #include "conf/DynamicAddressing.h"         // Use dynamically assigned addresses
 #include "conf/WEBCONFinterface.h"          // Enable the WebConfig interface
@@ -50,8 +50,15 @@ void setup()
 {
     Serial.begin(115200);
     Initialize();
-    EEPROM.begin(512);
+    EEPROM.begin(768);
     
+    /*for(int i = 0; i<769;i++){
+        EEPROM.write(i,255);
+      }
+      EEPROM.commit();
+      LOG.println("EEPROM DELETED");
+    delay(4000);
+    */
     server.on ( "/", send_general_html  );
     server.on ( "/general.html", send_general_html  );
     server.on ( "/admin/generalvalues", send_general_configuration_values_html);

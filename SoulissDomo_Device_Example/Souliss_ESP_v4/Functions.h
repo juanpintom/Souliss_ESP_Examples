@@ -146,8 +146,8 @@ char path[] = "/input/post.json?json=";
 int port = 80; // port 80 is the default for HTTP
 WiFiClient client;
 
-String API;
-String DeviceName;
+String API = "";
+String DeviceName = "Souliss";
 
 void SendEmoncms(String inputstring, byte SLOT){
   
@@ -557,8 +557,8 @@ void WriteConfig_Slots()
 	EEPROM.write(503,byte2);
     EEPROM.write(504, ALTITUDE/20);
     EEPROM.write(505, usartbridge);
-	StoreString(506,DeviceName);   	//MAX 10 
- 	StoreString(516,API);			//MAX 32 
+	Store_String(506,DeviceName);   	//MAX 10 
+ 	Store_String(516,API);			//MAX 32 
     EEPROM.commit();
 	
 }
@@ -570,10 +570,14 @@ void ReadConfig_Slots()
 	byte0 = EEPROM.read(501);
 	byte1 = EEPROM.read(502);
 	byte2 = EEPROM.read(503);
-    ALTITUDE = EEPROM.read(504)*20;
-    usartbridge = EEPROM.read(505);
-    DeviceName = Return_String(506,10)
+  ALTITUDE = EEPROM.read(504)*20;
+  usartbridge = EEPROM.read(505);
+  DeviceName = Return_String(506,10);
 	API = Return_String(516,32);
+  LOG.print(F("DeviceName: "));
+  LOG.println(DeviceName);
+  LOG.print(F("API: "));
+  LOG.println(API);
 }
 
 // ******************************************************************************************************************

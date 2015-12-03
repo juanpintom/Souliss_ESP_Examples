@@ -11,7 +11,7 @@ void setupGeneral(){
     PINS_CONFIG();
     analogWriteFreq(250);
     analogWriteRange(255);
-	if(usartbridge) SetAddress(0xD001, 0xFF00, 0x0000);
+	//if(usartbridge) SetAddress(0xD001, 0xFF00, 0x0000);
 //**************************** SENSORS INITIALIZE *****************************
     if(DHT_SENSOR){
         dht.begin();
@@ -165,9 +165,9 @@ void fastGeneral(){
                 Logic_SimpleLight(LEDPWM1);
                 Logic_SimpleLight(LEDPWM2);
                 
-                DigOut(LEDPWM0P, Souliss_T1n_Coil,LEDPWM0);
-                DigOut(LEDPWM1P, Souliss_T1n_Coil,LEDPWM1);
-                DigOut(LEDPWM2P, Souliss_T1n_Coil,LEDPWM2);
+                DigOut(LEDPWMP0, Souliss_T1n_Coil,LEDPWM0);
+                DigOut(LEDPWMP1, Souliss_T1n_Coil,LEDPWM1);
+                DigOut(LEDPWMP2, Souliss_T1n_Coil,LEDPWM2);
             }
             if(PWM_MODE || PIR_MODE){
                 if(CAPACITIVE){
