@@ -46,19 +46,46 @@
 OTA_Setup();  
 ESP8266HTTPUpdateServer httpUpdater;
 
+
+
 void setup()
 {
     Serial.begin(115200);
     Initialize();
-    EEPROM.begin(768);
-    
-    /*for(int i = 0; i<769;i++){
-        EEPROM.write(i,255);
+// **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
+    EEPROM.begin(512);
+    LOG.println("");
+    LOG.println("Time to Reset");
+    delay(1000);
+    long previous = millis();
+    if(!digitalRead(0)) LOG.println("GPIO0 PRESSED!");
+    while(!digitalRead(0)){
+      if(millis() < previous + 5000){
+        LOG.print("Deleting Addresses in: ");
+        LOG.println(5000 - (millis() - previous));
+        delay(500);
+      }else{
+        for(int i = STORE__ADDR_s; i <= STORE__PADDR_f; i++){
+          EEPROM.write(i,0);
+        }
+        EEPROM.commit();
+        LOG.println("Address Deleted");
+        // DELETE EEPROM IF GPIO STILL PRESSED
+        if(millis() < previous + 10000){
+          LOG.print("Deleting EEPROM in: ");
+          LOG.println(10000 - (millis() - previous));
+          delay(500);
+        }else{
+          for(int i = 0; i <= 512; i++){
+            EEPROM.write(i,255);
+        }
+        EEPROM.commit();
+        LOG.println("EEPROM Deleted");
+        }
       }
-      EEPROM.commit();
-      LOG.println("EEPROM DELETED");
-    delay(4000);
-    */
+    }
+    
+    //SetAddress(0xAB04,0x00FF,0xAB01);
     server.on ( "/", send_general_html  );
     server.on ( "/general.html", send_general_html  );
     server.on ( "/admin/generalvalues", send_general_configuration_values_html);
@@ -124,6 +151,8 @@ void setup()
     LOG.print("vNet 5 : ");
     LOG.println (vNet_GetAddress(5),HEX);
 
+    LOG.print("STORE__SIZE: ");
+    LOG.println(STORE__SIZE);
     OTA_Init(); 
     
     httpUpdater.setup(&server);

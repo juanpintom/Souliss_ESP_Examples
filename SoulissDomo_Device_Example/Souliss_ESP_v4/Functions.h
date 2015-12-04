@@ -3,6 +3,8 @@
 
 int valorPWM;
 
+#define STORE_CUSTOM 450
+
 #define LOG Serial
 
 #define PCB
@@ -99,7 +101,7 @@ byte THERM_FAN3P;
 
 // Include and Configure DHT11 SENSOR
 #ifdef PCB    //PCB NUEVA
-  #define DHTPIN      15     // what pin we're connected to
+  #define DHTPIN      2//15     // what pin we're connected to
 #endif
 
 #ifdef STRIPBOARD //STRIPBOARD DE PRUEBAS
@@ -107,7 +109,7 @@ byte THERM_FAN3P;
 #endif
 
 //#include "DHT.h"
-#define DHTTYPE DHT11   // DHT 11 
+#define DHTTYPE DHT22   // DHT 11 
 DHT dht(DHTPIN, DHTTYPE, 15);
 
 // Light calibration data
@@ -160,6 +162,8 @@ void SendEmoncms(String inputstring, byte SLOT){
     // Make a HTTP request:
     client.print("POST ");
     client.print(path);
+    client.print(DeviceName);
+    client.print("_");
     client.print(inputstring);
     client.print(":");
     client.print(value);
@@ -459,7 +463,7 @@ bool EEPROM_CONFIG(){
     
     // PWM PIR RGB OPTIONS:
     //switch (configuration[EEPROM_START+1]) {
-	ONOFF_MODE = false;
+	  ONOFF_MODE = false;
     PWM_MODE = false;
     PIR_MODE = false;
     RGB_MODE = false;
@@ -469,7 +473,7 @@ bool EEPROM_CONFIG(){
         case 0:
             //NONE
             break;
-		case 1:
+		    case 1:
             ONOFF_MODE = true;
             break;	
         case 2:
@@ -489,7 +493,7 @@ bool EEPROM_CONFIG(){
             THERMOSTAT_MODE = true;
             break;    
     }
-	LOG.print(ONOFF_MODE);
+	  LOG.print(ONOFF_MODE);
     LOG.print(PWM_MODE);
     LOG.print(PIR_MODE);
     LOG.print(RGB_MODE);
@@ -551,33 +555,36 @@ void WriteConfig_Slots()
 {
 
 	LOG.println("Writing Config");
-    EEPROM.write(500,cap_thresold);
-	EEPROM.write(501,byte0);
-	EEPROM.write(502,byte1);
-	EEPROM.write(503,byte2);
-    EEPROM.write(504, ALTITUDE/20);
-    EEPROM.write(505, usartbridge);
-	Store_String(506,DeviceName);   	//MAX 10 
- 	Store_String(516,API);			//MAX 32 
-    EEPROM.commit();
+  EEPROM.write(STORE_CUSTOM,cap_thresold);
+  EEPROM.write(STORE_CUSTOM+1,byte0);
+  EEPROM.write(STORE_CUSTOM+2,byte1);
+  EEPROM.write(STORE_CUSTOM+3,byte2);
+  EEPROM.write(STORE_CUSTOM+4, ALTITUDE/20);
+  EEPROM.write(STORE_CUSTOM+5, usartbridge);
+  Store_String(STORE_CUSTOM+6,DeviceName);     //MAX 10 
+  Store_String(STORE_CUSTOM+16,API);      //MAX 32    480
+  EEPROM.commit();
 	
 }
 void ReadConfig_Slots()
 {
 
 	LOG.println(F("Reading Configuration"));
-	cap_thresold = EEPROM.read(500);
-	byte0 = EEPROM.read(501);
-	byte1 = EEPROM.read(502);
-	byte2 = EEPROM.read(503);
-  ALTITUDE = EEPROM.read(504)*20;
-  usartbridge = EEPROM.read(505);
-  DeviceName = Return_String(506,10);
-	API = Return_String(516,32);
+	cap_thresold = EEPROM.read(STORE_CUSTOM);
+	byte0 = EEPROM.read(STORE_CUSTOM+1);
+	byte1 = EEPROM.read(STORE_CUSTOM+2);
+	byte2 = EEPROM.read(STORE_CUSTOM+3);
+  ALTITUDE = EEPROM.read(STORE_CUSTOM+4)*20;
+  usartbridge = EEPROM.read(STORE_CUSTOM+5);
+  DeviceName = Return_String(STORE_CUSTOM+6,10);
+	API = Return_String(STORE_CUSTOM+16,32);
   LOG.print(F("DeviceName: "));
   LOG.println(DeviceName);
   LOG.print(F("API: "));
   LOG.println(API);
+  LOG.print(F("byte1: "));
+  LOG.println(byte1);
+  
 }
 
 // ******************************************************************************************************************

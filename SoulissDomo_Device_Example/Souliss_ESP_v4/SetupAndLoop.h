@@ -12,6 +12,7 @@ void setupGeneral(){
     analogWriteFreq(250);
     analogWriteRange(255);
 	//if(usartbridge) SetAddress(0xD001, 0xFF00, 0x0000);
+ 
 //**************************** SENSORS INITIALIZE *****************************
     if(DHT_SENSOR){
         dht.begin();
@@ -405,6 +406,8 @@ void slowGeneral(){
 
         if(DHT_SENSOR){
             Souliss_GetDHT(TEMPERATURE, HUMIDITY, true);  
+            SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
+            SendEmoncms("DHT_Humi_Sensor", HUMIDITY);
         }
         
         if(BMP180){
