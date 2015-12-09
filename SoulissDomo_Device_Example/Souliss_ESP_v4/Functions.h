@@ -7,7 +7,8 @@ int valorPWM;
 
 #define LOG Serial
 
-#define PCB
+//#define PCB
+#define PCBrev2
 //#define STRIPBOARD
 
 //Autocalibrate Capacitive Sensors ON
@@ -100,6 +101,10 @@ byte THERM_FAN3P;
 // **************************************************************************
 
 // Include and Configure DHT11 SENSOR
+#ifdef PCBrev2    //PCB NUEVA
+  #define DHTPIN      16//15     // what pin we're connected to
+#endif
+
 #ifdef PCB    //PCB NUEVA
   #define DHTPIN      2//15     // what pin we're connected to
 #endif
@@ -109,7 +114,7 @@ byte THERM_FAN3P;
 #endif
 
 //#include "DHT.h"
-#define DHTTYPE DHT22   // DHT 11 
+#define DHTTYPE DHT11   // DHT 11 
 DHT dht(DHTPIN, DHTTYPE, 15);
 
 // Light calibration data
@@ -117,6 +122,10 @@ DHT dht(DHTPIN, DHTTYPE, 15);
 #define SIZEOF 10
 static const unsigned int out[] = { 1, 7, 30, 45, 65, 150, 300, 450, 2100, 13000};  // x10  //ULTIMO VALOR REFERENCIA
 static const unsigned int in[]  = { 1, 100, 350, 430, 500, 680, 780, 950, 1005, 1024 };  // 0 - 1024
+
+#ifdef PCBrev2    //PCB NUEVA
+  #define DALLASPIN   14     //Se declara el pin donde se conectarÃ¡ la DATA
+#endif
 
 #ifdef PCB    //PCB NUEVA
   #define DALLASPIN   14     //Se declara el pin donde se conectarÃ¡ la DATA
@@ -144,7 +153,6 @@ SFE_BMP180 pressure;
 // ******************************************************************************************************************
 char serveremon[] = "emoncms.org";
 char path[] = "/input/post.json?json=";
-//char apikey[] = "6f55af35796382182ab15464c32bf2d8";
 int port = 80; // port 80 is the default for HTTP
 WiFiClient client;
 
@@ -188,6 +196,58 @@ void SendEmoncms(String inputstring, byte SLOT){
 // *************************************************  PINS CONFIG ***************************************************
 // ******************************************************************************************************************
 void PINS_CONFIG(){
+
+// *************************************************  PINS PCBrev2 ***************************************************
+  #ifdef PCBrev2    //PCB NUEVA
+
+    if(ONOFF_MODE){
+        LEDPWMP0 = 13;      //LED STRIP ON PIN 
+        LEDPWMP1 = 15;      //LED STRIP ON PIN 
+        LEDPWMP2 = 12;      //LED STRIP ON PIN 
+    }
+    if(PWM_MODE){
+        LEDPWMP0 = 13;      //LED STRIP ON PIN 
+        LEDPWMP1 = 15;      //LED STRIP ON PIN 
+        LEDPWMP2 = 12;      //LED STRIP ON PIN 
+    }
+    
+    if(PIR_MODE){
+        LEDPWMP0 = 13;//5;      //LED STRIP ON PIN 12
+        LEDPWMP1 = 15;//16;      //LED STRIP ON PIN 13
+        LEDP = 12;      //LED STRIP ON PIN 15
+        PIRP = 2;       //LED STRIP ON PIN 2
+    }
+    if(ALARM_MODE){
+        ALARMP = 2;
+    }
+    
+    if(RGB_MODE){
+        LEDRP = 13;//5;      //LED STRIP ON PIN 12
+        LEDGP = 15;//16;      //LED STRIP ON PIN 13
+        LEDBP = 12;      //LED STRIP ON PIN 15
+    }
+    
+    //PIN OPTIONS FOR CAPACITIVE - RELAY OR BMP180
+    if(CAPACITIVE){
+        //SDA 5  SCL 4  PINS MUST CHANGE ON WIRE.H
+        CAP0P = 4;//12;
+        CAP1P = 5;//14;
+    }
+    
+    if(RELAY){
+        RELAY0P = 4;//12;
+        RELAY1P = 5;//14;
+    }
+    if(BMP180){
+        SCLP = 4;//12;
+        SDAP = 5;//14;
+    }
+    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP){
+      BUT0P = 4;
+      BUT1P = 5;
+    }
+  #endif
+// *************************************************  PINS PCB ***************************************************  
   #ifdef PCB    //PCB NUEVA
     if(DHT_SENSOR){
         //DHTPIN = 16;     // what pin we're connected to
@@ -239,8 +299,8 @@ void PINS_CONFIG(){
     	BUT1P = 5;
     }
   #endif
-
-  #ifdef STRIPBOARD    //PCB NUEVA
+// *************************************************  PINS STRIPBOARD ***************************************************
+  #ifdef STRIPBOARD    
     if(DHT_SENSOR){
         //DHTPIN = 16;     // what pin we're connected to
     }

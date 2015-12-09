@@ -409,11 +409,14 @@ void slowGeneral(){
             SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
             SendEmoncms("DHT_Humi_Sensor", HUMIDITY);
         }
-        
+    }
+    SLOW_x10s(3) {
         if(BMP180){
-            Souliss_GetPressure_BMP180(PRESSURE0,BMP180TEMP);	
-        }    
-        
+            Souliss_GetPressure_BMP180(PRESSURE0,BMP180TEMP);  
+            SendEmoncms("BMP180_Pressure", PRESSURE0);
+            SendEmoncms("BMP180_Temp", BMP180TEMP);
+            
+        }   
     }
 
 }

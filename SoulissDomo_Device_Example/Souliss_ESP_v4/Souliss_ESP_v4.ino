@@ -53,6 +53,7 @@ void setup()
     Serial.begin(115200);
     Initialize();
 // **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
+//  STILL DISABLED, TESTING
     EEPROM.begin(512);
     LOG.println("");
     LOG.println("Time to Reset");
@@ -66,7 +67,7 @@ void setup()
         delay(500);
       }else{
         for(int i = STORE__ADDR_s; i <= STORE__PADDR_f; i++){
-          EEPROM.write(i,0);
+          //EEPROM.write(i,0);
         }
         EEPROM.commit();
         LOG.println("Address Deleted");
@@ -77,7 +78,7 @@ void setup()
           delay(500);
         }else{
           for(int i = 0; i <= 512; i++){
-            EEPROM.write(i,255);
+            //EEPROM.write(i,255);
         }
         EEPROM.commit();
         LOG.println("EEPROM Deleted");
