@@ -59,6 +59,7 @@ void setup()
     LOG.println("Time to Reset");
     delay(1000);
     long previous = millis();
+    pinMode(0, INPUT);
     if(!digitalRead(0)) LOG.println("GPIO0 PRESSED!");
     while(!digitalRead(0)){
       if(millis() < previous + 5000){
