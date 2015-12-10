@@ -214,7 +214,7 @@ void fastGeneral(){
             }
             
             if(PWM_MODE){
-                //DigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
+                DigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
                 Logic_DimmableLight(LEDPWM2);                        
                 analogWrite(LEDPWMP2, mOutput(LEDPWM2+1));
             }
