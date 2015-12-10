@@ -385,7 +385,9 @@ void SLOT_CONFIG(){
       LOG.print("LEDONOFF0: ");
       LOG.println(LEDPWM0);  
       LOG.print("LEDONOFF1: ");
-      LOG.println(LEDPWM1);  	
+      LOG.println(LEDPWM1);  
+      LOG.print("LEDPWM2: ");
+      LOG.println(LEDPWM2);       
   }
   if(PWM_MODE || PIR_MODE){
       LEDPWM0 = NEXTSLOT;
@@ -395,8 +397,6 @@ void SLOT_CONFIG(){
       LOG.println(LEDPWM0);  
       LOG.print("LEDPWM1: ");
       LOG.println(LEDPWM1);  
-      LOG.print("LEDPWM2: ");
-      LOG.println(LEDPWM2);   
   }
   if(PWM_MODE){
       LEDPWM2 = NEXTSLOT;
@@ -585,7 +585,7 @@ bool EEPROM_CONFIG(){
             RELAY = true;
             break;
         case 3:
-	    BMP180 = true;
+	    	BMP180 = true;
             break;
         case 4:
             CAPACITIVE = true;
