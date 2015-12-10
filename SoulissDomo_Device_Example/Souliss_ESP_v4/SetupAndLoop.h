@@ -38,7 +38,7 @@ void setupGeneral(){
     }
     
     if(PWM_MODE){
-        pinMode(0, INPUT);
+        //pinMode(0, INPUT);
         Set_DimmableLight(LEDPWM2);
     }
     
@@ -113,28 +113,28 @@ void setupGeneral(){
     }
     
     if(RGB_MODE){
-            pinMode(LEDRP, OUTPUT);
-            pinMode(LEDGP, OUTPUT);
-            pinMode(LEDBP, OUTPUT);
+        pinMode(LEDRP, OUTPUT);
+        pinMode(LEDGP, OUTPUT);
+        pinMode(LEDBP, OUTPUT);
     }
     if(THERMOSTAT_MODE){
-            pinMode(THERM_HEATERP, OUTPUT);
-            pinMode(THERM_FAN1P, OUTPUT);
-            pinMode(THERM_FAN1P, OUTPUT);  
-            pinMode(THERM_FAN2P, OUTPUT);          
+        pinMode(THERM_HEATERP, OUTPUT);
+        pinMode(THERM_FAN1P, OUTPUT);
+        pinMode(THERM_FAN1P, OUTPUT);  
+        pinMode(THERM_FAN2P, OUTPUT);          
     }
     if(BUTTONS){
-            pinMode(BUT0P, INPUT);
-            pinMode(BUT1P, INPUT);
+        pinMode(BUT0P, INPUT);
+        pinMode(BUT1P, INPUT);
     }
     if(BUTTONS_PULLUP || ALARM_ENDSTOP){
-            pinMode(BUT0P, INPUT_PULLUP);
-            pinMode(BUT1P, INPUT_PULLUP);
+        pinMode(BUT0P, INPUT_PULLUP);
+        pinMode(BUT1P, INPUT_PULLUP);
     }
     
     if(BMP180){
-      //Wire.begin(SDAP,SCLP);
-      delay(200);
+        //Wire.begin(SDAP,SCLP);
+        delay(200);
         if (pressure.begin())
             LOG.print(F("BMP180 init success\r\n"));
         else
@@ -185,12 +185,10 @@ void fastGeneral(){
                     LowDigIn(BUT1P, Souliss_T1n_ToggleCmd, LEDPWM1);
                 }
                 
-                Logic_DimmableLight(LEDPWM0);                        
-                //analogWrite(LEDPWMP0, mOutput(LEDPWM0+1)*4);
+                Logic_DimmableLight(LEDPWM0);
                 analogWrite(LEDPWMP0, mOutput(LEDPWM0+1));                
                 
-                Logic_DimmableLight(LEDPWM1);                        
-                //analogWrite(LEDPWMP1, mOutput(LEDPWM1+1)*4);
+                Logic_DimmableLight(LEDPWM1); 
                 analogWrite(LEDPWMP1, mOutput(LEDPWM1+1));
             }
             
@@ -216,7 +214,7 @@ void fastGeneral(){
             }
             
             if(PWM_MODE){
-                DigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
+                //DigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
                 Logic_DimmableLight(LEDPWM2);                        
                 analogWrite(LEDPWMP2, mOutput(LEDPWM2+1));
             }
