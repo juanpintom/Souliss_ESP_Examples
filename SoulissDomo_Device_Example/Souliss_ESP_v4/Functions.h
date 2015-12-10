@@ -386,7 +386,7 @@ void SLOT_CONFIG(){
       LOG.println(LEDPWM0);  
       LOG.print("LEDONOFF1: ");
       LOG.println(LEDPWM1);  
-      LOG.print("LEDPWM2: ");
+      LOG.print("LEDONOFF2: ");
       LOG.println(LEDPWM2);       
   }
   if(PWM_MODE || PIR_MODE){
