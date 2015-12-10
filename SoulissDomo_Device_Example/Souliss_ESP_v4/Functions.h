@@ -380,7 +380,8 @@ void SLOT_CONFIG(){
   if(ONOFF_MODE){
       LEDPWM0 = NEXTSLOT;
       LEDPWM1 = NEXTSLOT + 1;
-      NEXTSLOT = LEDPWM1 + 1;
+      LEDPWM2 = NEXTSLOT + 2;
+      NEXTSLOT = LEDPWM2 + 1;
       LOG.print("LEDONOFF0: ");
       LOG.println(LEDPWM0);  
       LOG.print("LEDONOFF1: ");
@@ -393,7 +394,9 @@ void SLOT_CONFIG(){
       LOG.print("LEDPWM0: ");
       LOG.println(LEDPWM0);  
       LOG.print("LEDPWM1: ");
-      LOG.println(LEDPWM1);      
+      LOG.println(LEDPWM1);  
+      LOG.print("LEDPWM2: ");
+      LOG.println(LEDPWM2);   
   }
   if(PWM_MODE){
       LEDPWM2 = NEXTSLOT;
@@ -523,7 +526,7 @@ bool EEPROM_CONFIG(){
     
     // PWM PIR RGB OPTIONS:
     //switch (configuration[EEPROM_START+1]) {
-	  ONOFF_MODE = false;
+	ONOFF_MODE = false;
     PWM_MODE = false;
     PIR_MODE = false;
     RGB_MODE = false;
@@ -533,7 +536,7 @@ bool EEPROM_CONFIG(){
         case 0:
             //NONE
             break;
-		    case 1:
+		case 1:
             ONOFF_MODE = true;
             break;	
         case 2:
@@ -553,7 +556,7 @@ bool EEPROM_CONFIG(){
             THERMOSTAT_MODE = true;
             break;    
     }
-	  LOG.print(ONOFF_MODE);
+	LOG.print(ONOFF_MODE);
     LOG.print(PWM_MODE);
     LOG.print(PIR_MODE);
     LOG.print(RGB_MODE);
@@ -614,7 +617,7 @@ bool EEPROM_CONFIG(){
 void WriteConfig_Slots()
 {
 
-	LOG.println("Writing Config");
+  LOG.println("Writing Config");
   EEPROM.write(STORE_CUSTOM,cap_thresold);
   EEPROM.write(STORE_CUSTOM+1,byte0);
   EEPROM.write(STORE_CUSTOM+2,byte1);
@@ -637,7 +640,7 @@ void ReadConfig_Slots()
   ALTITUDE = EEPROM.read(STORE_CUSTOM+4)*20;
   usartbridge = EEPROM.read(STORE_CUSTOM+5);
   DeviceName = Return_String(STORE_CUSTOM+6,10);
-	API = Return_String(STORE_CUSTOM+16,32);
+  API = Return_String(STORE_CUSTOM+16,32);
   LOG.print(F("DeviceName: "));
   LOG.println(DeviceName);
   LOG.print(F("API: "));
