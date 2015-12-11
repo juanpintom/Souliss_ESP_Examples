@@ -21,7 +21,7 @@ boolean DEBUG_GETLUX   = 0;
 boolean DEBUG_DALLAS   = 0;
 
 //INSIDE BUTTON ON GPIO0 VARIABLE:
-byte button0 = 0;
+boolean button0 = false;
 
 //VALUES FOR CONFIGURATION STORED ON THE EEPROM.
 byte byte0;
