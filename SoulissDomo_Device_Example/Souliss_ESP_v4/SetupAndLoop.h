@@ -150,7 +150,13 @@ void setupGeneral(){
 }
 
 void fastGeneral(){
-      yield();
+    yield();
+      
+    if (!button0) {
+      	if(millis()>10000) {
+      		button0 = true;
+    	}
+	}
       
       FAST_50ms() {   // We process the logic and relevant input and output every 50 milliseconds
             if(RELAY){
@@ -162,6 +168,7 @@ void fastGeneral(){
                 
             }
 			if(ONOFF_MODE){
+				if(button0) DigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
                 Logic_SimpleLight(LEDPWM0);
                 Logic_SimpleLight(LEDPWM1);
                 Logic_SimpleLight(LEDPWM2);
@@ -214,12 +221,13 @@ void fastGeneral(){
             }
             
             if(PWM_MODE){
-                DigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
+                if(button0) DigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
                 Logic_DimmableLight(LEDPWM2);                        
                 analogWrite(LEDPWMP2, mOutput(LEDPWM2+1));
             }
             
             if(RGB_MODE){
+                if(button0) DigIn(0, Souliss_T1n_ToggleCmd, LEDRGB);
                 if(CAPACITIVE){
                     Souliss_CapSense(LEDRGB,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch,CAP0P, cap_thresold, 1500);
                     Souliss_CapSense(LEDRGB,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch,CAP1P, cap_thresold, 1500);

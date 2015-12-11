@@ -20,7 +20,10 @@ boolean DEBUG_PRESSURE = 0;
 boolean DEBUG_GETLUX   = 0;
 boolean DEBUG_DALLAS   = 0;
 
-//COPIED TO Souliss webconfig.h
+//INSIDE BUTTON ON GPIO0 VARIABLE:
+boolean button0 = false;
+
+//VALUES FOR CONFIGURATION STORED ON THE EEPROM.
 byte byte0;
 byte byte1;
 byte byte2;
