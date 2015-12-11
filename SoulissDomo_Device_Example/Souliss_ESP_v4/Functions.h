@@ -114,7 +114,7 @@ byte THERM_FAN3P;
 #endif
 
 //#include "DHT.h"
-#define DHTTYPE DHT11   // DHT 11 
+#define DHTTYPE DHT22   // DHT 11 
 DHT dht(DHTPIN, DHTTYPE, 15);
 
 // Light calibration data
@@ -202,19 +202,19 @@ void PINS_CONFIG(){
 
     if(ONOFF_MODE){
         LEDPWMP0 = 13;      //LED STRIP ON PIN 
-        LEDPWMP1 = 15;      //LED STRIP ON PIN 
-        LEDPWMP2 = 12;      //LED STRIP ON PIN 
+        LEDPWMP1 = 12;      //LED STRIP ON PIN 
+        LEDPWMP2 = 15;      //LED STRIP ON PIN 
     }
     if(PWM_MODE){
         LEDPWMP0 = 13;      //LED STRIP ON PIN 
-        LEDPWMP1 = 15;      //LED STRIP ON PIN 
-        LEDPWMP2 = 12;      //LED STRIP ON PIN 
+        LEDPWMP1 = 12;      //LED STRIP ON PIN 
+        LEDPWMP2 = 15;      //LED STRIP ON PIN 
     }
     
     if(PIR_MODE){
         LEDPWMP0 = 13;//5;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 15;//16;      //LED STRIP ON PIN 13
-        LEDP = 12;      //LED STRIP ON PIN 15
+        LEDPWMP1 = 12;//16;      //LED STRIP ON PIN 13
+        LEDP = 15;      //LED STRIP ON PIN 15
         PIRP = 2;       //LED STRIP ON PIN 2
     }
     if(ALARM_MODE){
@@ -223,8 +223,8 @@ void PINS_CONFIG(){
     
     if(RGB_MODE){
         LEDRP = 13;//5;      //LED STRIP ON PIN 12
-        LEDGP = 15;//16;      //LED STRIP ON PIN 13
-        LEDBP = 12;      //LED STRIP ON PIN 15
+        LEDGP = 12;//16;      //LED STRIP ON PIN 13
+        LEDBP = 15;      //LED STRIP ON PIN 15
     }
     
     //PIN OPTIONS FOR CAPACITIVE - RELAY OR BMP180
