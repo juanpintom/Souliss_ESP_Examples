@@ -12,7 +12,7 @@ void setupGeneral(){
     analogWriteFreq(250);
     analogWriteRange(255);
 	  //if(usartbridge) 
-	  SetAddress(0xCE01, 0xFF00, 0x0000);
+	  //SetAddress(0xCE01, 0xFF00, 0x0000);
  
 //**************************** SENSORS INITIALIZE *****************************
     if(DHT_SENSOR){
@@ -148,7 +148,7 @@ void setupGeneral(){
     
     button0 = true;
     pinMode(0, INPUT);
-    RoutingTable(0xAB04, 0xCE00, 0);
+    //RoutingTable(0xAB04, 0xCE00, 0);
 
 }
 

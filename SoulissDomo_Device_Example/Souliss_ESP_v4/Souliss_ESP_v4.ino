@@ -19,9 +19,9 @@
   #define SOULISS_DEBUG   1
 
 //#define myUSARTDRIVER LOG
-#define USART_LOG LOG.print
-#define USART_DEBUG_INSKETCH
-  #define USART_DEBUG     1
+//#define USART_LOG LOG.print
+//#define USART_DEBUG_INSKETCH
+//  #define USART_DEBUG     1
 
 #include "DHT.h"
 #include <OneWire.h>
@@ -38,8 +38,8 @@
 
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
-#include "conf/SuperNode.h"
-#include "conf/usart.h"                     // USART 
+//#include "conf/SuperNode.h"
+//#include "conf/usart.h"                     // USART 
 #include "conf/RuntimeGateway.h"            // This node is a Peer and can became a Gateway at runtime
 #include "conf/DynamicAddressing.h"         // Use dynamically assigned addresses
 #include "conf/WEBCONFinterface.h"          // Enable the WebConfig interface
