@@ -18,7 +18,6 @@
 #define SOULISS_DEBUG_INSKETCH
   #define SOULISS_DEBUG   1
 
-//#define myUSARTDRIVER LOG
 //#define USART_LOG LOG.print
 //#define USART_DEBUG_INSKETCH
 //  #define USART_DEBUG     1
@@ -50,7 +49,7 @@
 
 #include "Page_General.h"
 
-OTA_Setup();  
+//OTA_Setup();  
 ESP8266HTTPUpdateServer httpUpdater;
 
 
@@ -162,7 +161,7 @@ void setup()
 
     LOG.print("STORE__SIZE: ");
     LOG.println(STORE__SIZE);
-    OTA_Init(); 
+    //OTA_Init(); 
     
     httpUpdater.setup(&server);
     MDNS.addService("http", "tcp", 80);
@@ -193,7 +192,7 @@ void loop()
         if (!IsRuntimeGateway())
             SLOW_PeerJoin();
     } 
-    OTA_Process();
+    //OTA_Process();
 }    
 
 
