@@ -8,6 +8,7 @@
 	This example is only supported on ESP8266.
  
 ***************************************************************************/
+
 #define MaCaco_DEBUG_INSKETCH
   #define MaCaco_DEBUG   1
 
@@ -16,6 +17,11 @@
 
 #define SOULISS_DEBUG_INSKETCH
   #define SOULISS_DEBUG   1
+
+//#define myUSARTDRIVER LOG
+#define USART_LOG LOG.print
+#define USART_DEBUG_INSKETCH
+  #define USART_DEBUG     1
 
 #include "DHT.h"
 #include <OneWire.h>
@@ -32,7 +38,8 @@
 
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
-//#include "conf/usart.h"                     // USART 
+#include "conf/SuperNode.h"
+#include "conf/usart.h"                     // USART 
 #include "conf/RuntimeGateway.h"            // This node is a Peer and can became a Gateway at runtime
 #include "conf/DynamicAddressing.h"         // Use dynamically assigned addresses
 #include "conf/WEBCONFinterface.h"          // Enable the WebConfig interface
@@ -50,7 +57,7 @@ ESP8266HTTPUpdateServer httpUpdater;
 
 void setup()
 {
-    Serial.begin(115200);
+    LOG.begin(115200);
     Initialize();
 // **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
 //  STILL DISABLED, TESTING
@@ -116,13 +123,13 @@ void setup()
     }
     
     
-    Serial.print("EEPROM GW: ");
-    Serial.println(EEPROM.read(STORE__GATEWAY_s));
+    LOG.print("EEPROM GW: ");
+    LOG.println(EEPROM.read(STORE__GATEWAY_s));
     
     if (IsRuntimeGateway())
     {
         // Connect to the WiFi network and get an address from DHCP     
-        Serial.println("Gateway Mode");        
+        LOG.println("Gateway Mode");        
         SetAsGateway(myvNet_dhcp);       // Set this node as gateway for SoulissApp  
         SetAddressingServer();
         
@@ -131,7 +138,7 @@ void setup()
     {
         // This board request an address to the gateway at runtime, no need
         // to configure any parameter here.
-        Serial.println("Peer Mode");
+        LOG.println("Peer Mode");
         SetDynamicAddressing();  
         GetAddress();
         

@@ -5,17 +5,14 @@ int valorPWM;
 
 #define STORE_CUSTOM 450
 
-#define LOG Serial
-
-//#define PCB
-#define PCBrev2
-//#define STRIPBOARD
+//#define LOG Serial1
 
 //Autocalibrate Capacitive Sensors ON
 #define AUTOCALIBRATE         1
 
 boolean DEBUG_CAPSENSE = 0;
 boolean DEBUG_CAPSENSE_ALL = 0;
+boolean DEBUG_DHT = 1;
 boolean DEBUG_PRESSURE = 0;
 boolean DEBUG_GETLUX   = 0;
 boolean DEBUG_DALLAS   = 0;
@@ -58,6 +55,8 @@ boolean BUTTONS;
 boolean BUTTONS_PULLUP;
 boolean ALARM_ENDSTOP;
 
+#include "PinsConfig.h"
+
 //**********************  SLOTS VARIABLES  ***********************
 byte ALARM;
 byte TEMPERATURE;
@@ -77,45 +76,6 @@ byte PRESSURE0;
 byte BMP180TEMP;
 byte THERMOSTAT;
 
-//**********************  PIN VARIABLES  *************************
-byte ALARMP;
-byte LEDPWMP0;
-byte LEDPWMP1;
-byte LEDPWMP2;
-byte LEDP;
-byte PIRP;
-byte LEDRP;
-byte LEDGP;
-byte LEDBP;
-byte CAP0P;
-byte CAP1P;
-byte THRE;
-byte RELAY0P;
-byte RELAY1P;
-byte SDAP;
-byte SCLP;
-byte BUT0P;
-byte BUT1P;
-byte THERM_HEATERP;
-byte THERM_FAN1P;
-byte THERM_FAN2P;
-byte THERM_FAN3P;
-
-// **************************************************************************
-
-// Include and Configure DHT11 SENSOR
-#ifdef PCBrev2    //PCB NUEVA
-  #define DHTPIN      16//15     // what pin we're connected to
-#endif
-
-#ifdef PCB    //PCB NUEVA
-  #define DHTPIN      2//15     // what pin we're connected to
-#endif
-
-#ifdef STRIPBOARD //STRIPBOARD DE PRUEBAS
-  #define DHTPIN      13         // what pin we're connected to
-#endif
-
 //#include "DHT.h"
 #define DHTTYPE DHT22   // DHT 11 
 DHT dht(DHTPIN, DHTTYPE, 15);
@@ -125,19 +85,6 @@ DHT dht(DHTPIN, DHTTYPE, 15);
 #define SIZEOF 10
 static const unsigned int out[] = { 1, 7, 30, 45, 65, 150, 300, 450, 2100, 13000};  // x10  //ULTIMO VALOR REFERENCIA
 static const unsigned int in[]  = { 1, 100, 350, 430, 500, 680, 780, 950, 1005, 1024 };  // 0 - 1024
-
-#ifdef PCBrev2    //PCB NUEVA
-  #define DALLASPIN   14     //Se declara el pin donde se conectarÃ¡ la DATA
-#endif
-
-#ifdef PCB    //PCB NUEVA
-  #define DALLASPIN   14     //Se declara el pin donde se conectarÃ¡ la DATA
-#endif
-
-#ifdef STRIPBOARD //STRIPBOARD DE PRUEBAS
-  #define DALLASPIN   4     //Se declara el pin donde se conectarÃ¡ la DATA
-#endif
-
 
 //#include <OneWire.h>
 //#include <DallasTemperature.h>
@@ -169,7 +116,7 @@ void SendEmoncms(String inputstring, byte SLOT){
   
   if (client.connect(serveremon, port))
   {
-    //Serial.println("connected");
+    //LOG.println("connected");
     // Make a HTTP request:
     client.print("POST ");
     client.print(path);
@@ -189,174 +136,11 @@ void SendEmoncms(String inputstring, byte SLOT){
   else
   {
     // if you didn't get a connection to the server:
-    //Serial.println("connection failed");
+    //LOG.println("connection failed");
   }
 }
 
 
-
-// ******************************************************************************************************************
-// *************************************************  PINS CONFIG ***************************************************
-// ******************************************************************************************************************
-void PINS_CONFIG(){
-
-// *************************************************  PINS PCBrev2 ***************************************************
-  #ifdef PCBrev2    //PCB NUEVA
-
-    if(ONOFF_MODE){
-        LEDPWMP0 = 13;      //LED STRIP ON PIN 
-        LEDPWMP1 = 12;      //LED STRIP ON PIN 
-        LEDPWMP2 = 15;      //LED STRIP ON PIN 
-    }
-    if(PWM_MODE){
-        LEDPWMP0 = 13;      //LED STRIP ON PIN 
-        LEDPWMP1 = 12;      //LED STRIP ON PIN 
-        LEDPWMP2 = 15;      //LED STRIP ON PIN 
-    }
-    
-    if(PIR_MODE){
-        LEDPWMP0 = 13;//5;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 12;//16;      //LED STRIP ON PIN 13
-        LEDP = 15;      //LED STRIP ON PIN 15
-        PIRP = 2;       //LED STRIP ON PIN 2
-    }
-    if(ALARM_MODE){
-        ALARMP = 2;
-    }
-    
-    if(RGB_MODE){
-        LEDRP = 13;//5;      //LED STRIP ON PIN 12
-        LEDGP = 12;//16;      //LED STRIP ON PIN 13
-        LEDBP = 15;      //LED STRIP ON PIN 15
-    }
-    
-    //PIN OPTIONS FOR CAPACITIVE - RELAY OR BMP180
-    if(CAPACITIVE){
-        //SDA 5  SCL 4  PINS MUST CHANGE ON WIRE.H
-        CAP0P = 4;//12;
-        CAP1P = 5;//14;
-    }
-    
-    if(RELAY){
-        RELAY0P = 4;//12;
-        RELAY1P = 5;//14;
-    }
-    if(BMP180){
-        SCLP = 4;//12;
-        SDAP = 5;//14;
-    }
-    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP){
-      BUT0P = 4;
-      BUT1P = 5;
-    }
-  #endif
-// *************************************************  PINS PCB ***************************************************  
-  #ifdef PCB    //PCB NUEVA
-    if(DHT_SENSOR){
-        //DHTPIN = 16;     // what pin we're connected to
-    }
-	if(ONOFF_MODE){
-    	LEDPWMP0 = 13;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 12;      //LED STRIP ON PIN 13
-        LEDPWMP2 = 16;      //LED STRIP ON PIN 15
-    }
-    if(PWM_MODE){
-        LEDPWMP0 = 13;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 12;      //LED STRIP ON PIN 13
-        LEDPWMP2 = 16;      //LED STRIP ON PIN 15
-    }
-    
-    if(PIR_MODE){
-        LEDPWMP0 = 13;//5;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 12;//16;      //LED STRIP ON PIN 13
-        LEDP = 16;      //LED STRIP ON PIN 15
-        PIRP = 2;       //LED STRIP ON PIN 2
-    }
-    if(ALARM_MODE){
-        ALARMP = 2;
-    }
-    
-    if(RGB_MODE){
-        LEDRP = 13;//5;      //LED STRIP ON PIN 12
-        LEDGP = 12;//16;      //LED STRIP ON PIN 13
-        LEDBP = 16;      //LED STRIP ON PIN 15
-    }
-    
-    //PIN OPTIONS FOR CAPACITIVE - RELAY OR BMP180
-    if(CAPACITIVE){
-        //SDA 5  SCL 4  PINS MUST CHANGE ON WIRE.H
-        CAP0P = 4;//12;
-        CAP1P = 5;//14;
-    }
-    
-    if(RELAY){
-        RELAY0P = 4;//12;
-        RELAY1P = 5;//14;
-    }
-    if(BMP180){
-        SCLP = 4;//12;
-        SDAP = 5;//14;
-    }
-    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP){
-    	BUT0P = 4;
-    	BUT1P = 5;
-    }
-  #endif
-// *************************************************  PINS STRIPBOARD ***************************************************
-  #ifdef STRIPBOARD    
-    if(DHT_SENSOR){
-        //DHTPIN = 16;     // what pin we're connected to
-    }
-    if(PWM_MODE){
-        LEDPWMP0 = 5;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 2;//16;      //LED STRIP ON PIN 13
-        LEDPWMP2 = 15;      //LED STRIP ON PIN 15
-    }
-    
-    if(PIR_MODE){
-        LEDPWMP0 = 5;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 2;//16;      //LED STRIP ON PIN 13
-        LEDP = 15;      //LED STRIP ON PIN 15
-        PIRP = 16;//2;       //LED STRIP ON PIN 2
-    }
-    if(ALARM_MODE){
-        ALARMP = 16;//2;
-    }    
-    
-    if(RGB_MODE){
-        LEDRP = 5;      //LED STRIP ON PIN 12
-        LEDGP = 2;//16;      //LED STRIP ON PIN 13
-        LEDBP = 15;      //LED STRIP ON PIN 15
-    }
-    if(THERMOSTAT_MODE){
-        THERM_HEATERP = 5;
-        THERM_FAN1P = 2;
-        THERM_FAN2P = 15;
-        THERM_FAN3P = 13;  //USING DHT PIN FOR TESTING PURPOSES 
-    }
-    
-    //PIN OPTIONS FOR CAPACITIVE - RELAY OR BMP180
-    if(CAPACITIVE){
-        //SDA 5  SCL 4  PINS MUST CHANGE ON WIRE.H
-        CAP0P = 12;
-        CAP1P = 14;
-    }
-    
-    if(RELAY){
-        RELAY0P = 12;
-        RELAY1P = 14;
-    }
-    if(BMP180){
-        SCLP = 12;
-        SDAP = 14;
-    }
-    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP){
-    	BUT0P = 12;
-    	BUT1P = 14;
-    }
-  #endif
-
-}
 // ******************************************************************************************************************
 // ***********************************************  SLOTS CONFIG ****************************************************
 // ******************************************************************************************************************
@@ -848,14 +632,19 @@ void Souliss_GetDHT(uint8_t SLOT_TEMPERATURE, uint8_t SLOT_HUMIDITY, boolean Cel
               
         // Check if any reads failed and exit early (to try again).
         if (isnan(h) || isnan(t) || isnan(f)) {
-            LOG.print("Failed to read from DHT sensor!\r\n");
+            if(DEBUG_DHT) LOG.print("Failed to read from DHT sensor!\r\n");
         }
         // Compute heat index
         // Must send in temp in Fahrenheit!
         //float hi = dht.computeHeatIndex(f, h);
         //float hic = (f - 32) / 1.8;
         //Souliss_ImportAnalog(memory_map, HEAT, &hic);
-  	    
+  	    if(DEBUG_DHT) {
+  	      LOG.print("DHT Temp: ");
+  	      LOG.print(t);
+          LOG.print(" DHT Hum: ");
+          LOG.println(h);
+  	    }
         if(Celsius) Souliss_ImportAnalog(memory_map, SLOT_TEMPERATURE, &t);
         else        Souliss_ImportAnalog(memory_map, SLOT_TEMPERATURE, &f);
         
