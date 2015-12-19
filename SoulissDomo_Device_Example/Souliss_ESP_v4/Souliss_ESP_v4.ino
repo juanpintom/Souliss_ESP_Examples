@@ -8,6 +8,7 @@
 	This example is only supported on ESP8266.
  
 ***************************************************************************/
+//#define LOG Serial
 
 #include <IRremoteESP8266.h>
 

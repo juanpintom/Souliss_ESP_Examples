@@ -14,7 +14,8 @@ boolean DEBUG_DHT           = 0;
 boolean DEBUG_PRESSURE      = 0;
 boolean DEBUG_GETLUX        = 0;
 boolean DEBUG_DALLAS        = 0;
-boolean DEBUG_IR            = 0;
+boolean DEBUG_IR            = 1;
+boolean DEBUG_IR_FULL       = 0;
 
 //INSIDE BUTTON ON GPIO0 VARIABLE:
 boolean button0 = false;

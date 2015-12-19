@@ -51,14 +51,18 @@ void ircode (decode_results *results)
 {
   // Panasonic has an Address
   if (results->decode_type == PANASONIC) {
-    Serial.print(results->panasonicAddress, HEX);
-    Serial.print(":");
+    LOG.print(results->panasonicAddress, HEX);
+    LOG.print(":");
   }
 
   // Print Code
-  Serial.print(results->value, HEX);
-  Serial.print(" ");
-  Serial.print(results->value, DEC);
+  LOG.print(results->value, HEX);
+}
+
+void ircodeDEC (decode_results *results)
+{
+
+  LOG.print(results->value, DEC);
 
 }
 
@@ -69,21 +73,21 @@ void  encoding (decode_results *results)
 {
   switch (results->decode_type) {
     default:
-    case UNKNOWN:      Serial.print("UNKNOWN");       break ;
-    case NEC:          Serial.print("NEC");           break ;
-    case SONY:         Serial.print("SONY");          break ;
-    case RC5:          Serial.print("RC5");           break ;
-    case RC6:          Serial.print("RC6");           break ;
-    case DISH:         Serial.print("DISH");          break ;
-    case SHARP:        Serial.print("SHARP");         break ;
-    case JVC:          Serial.print("JVC");           break ;
-    case SANYO:        Serial.print("SANYO");         break ;
-    case MITSUBISHI:   Serial.print("MITSUBISHI");    break ;
-    case SAMSUNG:      Serial.print("SAMSUNG");       break ;
-    case LG:           Serial.print("LG");            break ;
-    case WHYNTER:      Serial.print("WHYNTER");       break ;
-    case AIWA_RC_T501: Serial.print("AIWA_RC_T501");  break ;
-    case PANASONIC:    Serial.print("PANASONIC");     break ;
+    case UNKNOWN:      LOG.print("UNKNOWN");       break ;
+    case NEC:          LOG.print("NEC");           break ;
+    case SONY:         LOG.print("SONY");          break ;
+    case RC5:          LOG.print("RC5");           break ;
+    case RC6:          LOG.print("RC6");           break ;
+    case DISH:         LOG.print("DISH");          break ;
+    case SHARP:        LOG.print("SHARP");         break ;
+    case JVC:          LOG.print("JVC");           break ;
+    case SANYO:        LOG.print("SANYO");         break ;
+    case MITSUBISHI:   LOG.print("MITSUBISHI");    break ;
+    case SAMSUNG:      LOG.print("SAMSUNG");       break ;
+    case LG:           LOG.print("LG");            break ;
+    case WHYNTER:      LOG.print("WHYNTER");       break ;
+    case AIWA_RC_T501: LOG.print("AIWA_RC_T501");  break ;
+    case PANASONIC:    LOG.print("PANASONIC");     break ;
   }
 }
 
@@ -93,16 +97,16 @@ void  encoding (decode_results *results)
 void  dumpInfo (decode_results *results)
 {
   // Show Encoding standard
-  Serial.print("Encoding  : ");
+  LOG.print("Encoding  : ");
   encoding(results);
-  Serial.println("");
+  LOG.println("");
 
   // Show Code & length
-  Serial.print("Code      : ");
+  LOG.print("Code      : ");
   ircode(results);
-  Serial.print(" (");
-  Serial.print(results->bits, DEC);
-  Serial.println(" bits)");
+  LOG.print(" (");
+  LOG.print(results->bits, DEC);
+  LOG.println(" bits)");
 }
 
 //+=============================================================================
@@ -111,28 +115,28 @@ void  dumpInfo (decode_results *results)
 void  dumpRaw (decode_results *results)
 {
   // Print Raw data
-  Serial.print("Timing[");
-  Serial.print(results->rawlen-1, DEC);
-  Serial.println("]: ");
+  LOG.print("Timing[");
+  LOG.print(results->rawlen-1, DEC);
+  LOG.println("]: ");
 
   for (int i = 1;  i < results->rawlen;  i++) {
     unsigned long  x = results->rawbuf[i] * USECPERTICK;
     if (!(i & 1)) {  // even
-      Serial.print("-");
-      if (x < 1000)  Serial.print(" ") ;
-      if (x < 100)   Serial.print(" ") ;
-      Serial.print(x, DEC);
+      LOG.print("-");
+      if (x < 1000)  LOG.print(" ") ;
+      if (x < 100)   LOG.print(" ") ;
+      LOG.print(x, DEC);
     } else {  // odd
-      Serial.print("     ");
-      Serial.print("+");
-      if (x < 1000)  Serial.print(" ") ;
-      if (x < 100)   Serial.print(" ") ;
-      Serial.print(x, DEC);
-      if (i < results->rawlen-1) Serial.print(", "); //',' not needed for last one
+      LOG.print("     ");
+      LOG.print("+");
+      if (x < 1000)  LOG.print(" ") ;
+      if (x < 100)   LOG.print(" ") ;
+      LOG.print(x, DEC);
+      if (i < results->rawlen-1) LOG.print(", "); //',' not needed for last one
     }
-    if (!(i % 8))  Serial.println("");
+    if (!(i % 8))  LOG.println("");
   }
-  Serial.println("");                    // Newline
+  LOG.println("");                    // Newline
 }
 
 //+=============================================================================
@@ -141,54 +145,60 @@ void  dumpRaw (decode_results *results)
 void  dumpCode (decode_results *results)
 {
   // Start declaration
-  Serial.print("unsigned int  ");          // variable type
-  Serial.print("rawData[");                // array name
-  Serial.print(results->rawlen - 1, DEC);  // array size
-  Serial.print("] = {");                   // Start declaration
+  LOG.print("unsigned int  ");          // variable type
+  LOG.print("rawData[");                // array name
+  LOG.print(results->rawlen - 1, DEC);  // array size
+  LOG.print("] = {");                   // Start declaration
 
   // Dump data
   for (int i = 1;  i < results->rawlen;  i++) {
-    Serial.print(results->rawbuf[i] * USECPERTICK, DEC);
-    if ( i < results->rawlen-1 ) Serial.print(","); // ',' not needed on last one
-    if (!(i & 1))  Serial.print(" ");
+    LOG.print(results->rawbuf[i] * USECPERTICK, DEC);
+    if ( i < results->rawlen-1 ) LOG.print(","); // ',' not needed on last one
+    if (!(i & 1))  LOG.print(" ");
   }
 
   // End declaration
-  Serial.print("};");  // 
+  LOG.print("};");  // 
 
   // Comment
-  Serial.print("  // ");
+  LOG.print("  // ");
   encoding(results);
-  Serial.print(" ");
+  LOG.print(" ");
   ircode(results);
 
   // Newline
-  Serial.println("");
+  LOG.println("");
 
   // Now dump "known" codes
   if (results->decode_type != UNKNOWN) {
 
     // Some protocols have an address
     if (results->decode_type == PANASONIC) {
-      Serial.print("unsigned int  addr = 0x");
-      Serial.print(results->panasonicAddress, HEX);
-      Serial.println(";");
+      LOG.print("unsigned int  addr = 0x");
+      LOG.print(results->panasonicAddress, HEX);
+      LOG.println(";");
     }
 
     // All protocols have data
-    Serial.print("unsigned int  data = 0x");
-    Serial.print(results->value, HEX);
-    Serial.println(";");
+    LOG.print("unsigned int  data = 0x");
+    LOG.print(results->value, HEX);
+    LOG.println(";");
   }
 }
 
 void readIR(){
     if (irrecv.decode(&results)) {  // Grab an IR code
       if(DEBUG_IR){
-        dumpInfo(&results);           // Output the results
-        //dumpRaw(&results);            // Output the results in RAW format
-        //dumpCode(&results);           // Output the results as source code
-        Serial.println("");           // Blank line between entries
+        LOG.print(F("Code: "));
+        ircodeDEC(&results);
+        LOG.println("");
+        if(DEBUG_IR_FULL){
+          dumpInfo(&results);           // Output the results
+          dumpRaw(&results);            // Output the results in RAW format
+          dumpCode(&results);           // Output the results as source code
+          LOG.println("");
+        }  
+                   // Blank line between entries
       }
       irrecv.resume();              // Prepare for the next value
     }
