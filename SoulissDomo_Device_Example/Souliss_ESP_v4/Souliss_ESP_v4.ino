@@ -9,6 +9,8 @@
  
 ***************************************************************************/
 
+#include <IRremoteESP8266.h>
+
 #define MaCaco_DEBUG_INSKETCH
   #define MaCaco_DEBUG   1
 
@@ -18,9 +20,18 @@
 #define SOULISS_DEBUG_INSKETCH
   #define SOULISS_DEBUG   1
 
-//#define USART_LOG LOG.print
-//#define USART_DEBUG_INSKETCH
-//  #define USART_DEBUG     1
+/*#define USART_LOG LOG.print
+#define USART_DEBUG_INSKETCH
+  #define USART_DEBUG     1
+
+#define USARTBAUDRATE_INSKETCH
+# define USART_BAUD9k6        1
+# define USART_BAUD19k2       0
+# define USART_BAUD57k6       0
+# define USART_BAUD115k2      0
+# define USART_BAUD256k       0  */
+/*************/
+
 
 #include "DHT.h"
 #include <OneWire.h>
@@ -45,7 +56,9 @@
 
 #include "Souliss.h"
 #include "Functions.h"
+#include "irReceiver.h"
 #include "SetupAndLoop.h"
+
 
 #include "Page_General.h"
 
@@ -57,6 +70,8 @@ ESP8266HTTPUpdateServer httpUpdater;
 void setup()
 {
     LOG.begin(115200);
+    irrecv.enableIRIn();  // Start the receiver
+    
     Initialize();
 // **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
 //  STILL DISABLED, TESTING
@@ -85,7 +100,7 @@ void setup()
           delay(500);
         }else{
           for(int i = 0; i <= 512; i++){
-            //EEPROM.write(i,255);
+            EEPROM.write(i,255);
         }
         EEPROM.commit();
         LOG.println("EEPROM Deleted");
@@ -167,8 +182,12 @@ void setup()
     MDNS.addService("http", "tcp", 80);
 }
 
+
+
 void loop()
 {  
+    readIR();
+    
     runWebServer();
     
     EXECUTEFAST() {                     

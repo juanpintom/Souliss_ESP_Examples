@@ -147,7 +147,7 @@ void setupGeneral(){
     }
     
     button0 = true;
-    pinMode(0, INPUT);
+    //pinMode(0, INPUT);
     //RoutingTable(0xAB04, 0xCE00, 0);
 
 }
@@ -164,6 +164,7 @@ void fastGeneral(){
 	  //}
       
       FAST_50ms() {   // We process the logic and relevant input and output every 50 milliseconds
+
             if(RELAY){
                 Logic_SimpleLight(RELAY0);
                 DigOut(RELAY0P, Souliss_T1n_Coil,RELAY0);
@@ -174,6 +175,13 @@ void fastGeneral(){
             }
 			      if(ONOFF_MODE){
 				        if(button0) LowDigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
+
+                if(IR_ENABLE){
+                  Souliss_IrIn(b4, Souliss_T1n_ToggleCmd, LEDPWM0, &results);
+                  Souliss_IrIn(b5, Souliss_T1n_ToggleCmd, LEDPWM1, &results);
+                  Souliss_IrIn(b6, Souliss_T1n_ToggleCmd, LEDPWM2, &results);
+                }
+                
                 Logic_SimpleLight(LEDPWM0);
                 Logic_SimpleLight(LEDPWM1);
                 Logic_SimpleLight(LEDPWM2);
@@ -195,6 +203,10 @@ void fastGeneral(){
                 if(BUTTONS_PULLUP){
                     LowDigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDPWM0);
                     LowDigIn(BUT1P, Souliss_T1n_ToggleCmd, LEDPWM1);
+                }
+                if(IR_ENABLE){
+                  Souliss_IrIn(b4, Souliss_T1n_ToggleCmd, LEDPWM0, &results);
+                  Souliss_IrIn(b5, Souliss_T1n_ToggleCmd, LEDPWM1, &results);
                 }
                 
                 Logic_DimmableLight(LEDPWM0);
@@ -227,8 +239,14 @@ void fastGeneral(){
             
             if(PWM_MODE){
                 if(button0) {
+                  //if (Souliss_RemoteLowDigIn(0, Souliss_T1n_ToggleCmd, 0xCE02, 0) == Souliss_T1n_ToggleCmd){
+                  //  mInput(LEDPWM2) = Souliss_T1n_ToggleCmd;  
+                  //}
                   LowDigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
-                  Souliss_RemoteLowDigIn(0, Souliss_T1n_ToggleCmd, 0xCE02, 0);
+                  //Souliss_RemoteLowDigIn(0, Souliss_T1n_ToggleCmd, 0xCE02, 0);
+                }
+                if(IR_ENABLE){
+                  Souliss_IrIn(b6, Souliss_T1n_ToggleCmd, LEDPWM2, &results);
                 }
                 Logic_DimmableLight(LEDPWM2);                        
                 analogWrite(LEDPWMP2, mOutput(LEDPWM2+1));
@@ -274,6 +292,8 @@ void fastGeneral(){
         }
         
         FAST_110ms(){
+          //Souliss_RemoteLowDigIn(0, Souliss_T1n_ToggleCmd, 0xCE02, 0);
+                    
           if(CAPACITIVE && DEBUG_CAPSENSE){
             float temp;
             temp = readCapacitivePin(CAP0P);

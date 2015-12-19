@@ -5,17 +5,16 @@ int valorPWM;
 
 #define STORE_CUSTOM 450
 
-//#define LOG Serial1
-
 //Autocalibrate Capacitive Sensors ON
 #define AUTOCALIBRATE         1
 
-boolean DEBUG_CAPSENSE = 0;
-boolean DEBUG_CAPSENSE_ALL = 0;
-boolean DEBUG_DHT = 1;
-boolean DEBUG_PRESSURE = 0;
-boolean DEBUG_GETLUX   = 0;
-boolean DEBUG_DALLAS   = 0;
+boolean DEBUG_CAPSENSE      = 0;
+boolean DEBUG_CAPSENSE_ALL  = 0;
+boolean DEBUG_DHT           = 0;
+boolean DEBUG_PRESSURE      = 0;
+boolean DEBUG_GETLUX        = 0;
+boolean DEBUG_DALLAS        = 0;
+boolean DEBUG_IR            = 0;
 
 //INSIDE BUTTON ON GPIO0 VARIABLE:
 boolean button0 = false;
@@ -27,6 +26,7 @@ byte byte2;
 byte cap_thresold;
 int ALTITUDE = 20;
 boolean usartbridge = false;
+boolean IR_ENABLE = true;
 
 //DHT Sensor on PIN 16
 boolean DHT_SENSOR;
