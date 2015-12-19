@@ -121,8 +121,8 @@ void setupGeneral(){
     if(THERMOSTAT_MODE){
         pinMode(THERM_HEATERP, OUTPUT);
         pinMode(THERM_FAN1P, OUTPUT);
-        pinMode(THERM_FAN1P, OUTPUT);  
-        pinMode(THERM_FAN2P, OUTPUT);          
+        pinMode(THERM_FAN2P, OUTPUT);  
+        pinMode(THERM_FAN3P, OUTPUT);          
     }
     if(BUTTONS){
         pinMode(BUT0P, INPUT);
