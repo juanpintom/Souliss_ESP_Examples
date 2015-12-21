@@ -10,8 +10,14 @@
 ***************************************************************************/
 //#define LOG Serial
 
+// ************************* IR LIBRARY ***********************************
+// To use the IR Functions you need to add this library to your Arduino libraries:
+// https://github.com/markszabo/IRremoteESP8266/
+
 #include <IRremoteESP8266.h>
 
+// ************************* SOULISS DEBUG LINES  ***********************************
+// Enable or disable Souliss debug
 #define MaCaco_DEBUG_INSKETCH
   #define MaCaco_DEBUG   1
 
@@ -31,14 +37,17 @@
 # define USART_BAUD57k6       0
 # define USART_BAUD115k2      0
 # define USART_BAUD256k       0  */
-/*************/
+// *************
 
+// *************************** SENSORS LIBRARIES *************************
 
 #include "DHT.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <SFE_BMP180.h>
 #include <Wire.h>
+
+// ***************************  ESP  LIBRARIES ***************************
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
@@ -47,6 +56,7 @@
 #include <EEPROM.h>
 #include <WiFiUdp.h>
 
+// ***************************  SOULISS  LIBRARIES ***************************
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
 //#include "conf/SuperNode.h"
@@ -60,12 +70,10 @@
 #include "irReceiver.h"
 #include "SetupAndLoop.h"
 
-
 #include "Page_General.h"
 
 //OTA_Setup();  
 ESP8266HTTPUpdateServer httpUpdater;
-
 
 
 void setup()
