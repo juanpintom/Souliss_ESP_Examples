@@ -79,7 +79,9 @@ ESP8266HTTPUpdateServer httpUpdater;
 void setup()
 {
     LOG.begin(115200);
-    irrecv.enableIRIn();  // Start the receiver
+    if(IR_ENABLE){
+    	irrecv.enableIRIn();  // Start the receiver
+    }
     
     Initialize();
 // **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
@@ -195,7 +197,9 @@ void setup()
 
 void loop()
 {  
-    readIR();
+    if(IR_ENABLE){
+    	readIR();
+    }
     
     runWebServer();
     
