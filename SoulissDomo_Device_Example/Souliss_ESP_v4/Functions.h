@@ -27,6 +27,9 @@ byte byte2;
 byte cap_thresold;
 int ALTITUDE = 20;
 boolean usartbridge = false;
+boolean Send_Emon = false;
+byte dht_type;
+byte dallas_qty = 1;
 boolean IR_ENABLE = true;
 
 //DHT Sensor on PIN 16
@@ -402,21 +405,20 @@ bool EEPROM_CONFIG(){
 
 }
 
-void WriteConfig_Slots()
-{
-
+void WriteConfig_Slots() {
   LOG.println("Writing Config");
-  EEPROM.write(STORE_CUSTOM,cap_thresold);
-  EEPROM.write(STORE_CUSTOM+1,byte0);
-  EEPROM.write(STORE_CUSTOM+2,byte1);
-  EEPROM.write(STORE_CUSTOM+3,byte2);
-  EEPROM.write(STORE_CUSTOM+4, ALTITUDE/20);
-  EEPROM.write(STORE_CUSTOM+5, usartbridge);
-  Store_String(STORE_CUSTOM+6,DeviceName);     //MAX 10 
-  Store_String(STORE_CUSTOM+16,API);      //MAX 32    480
+  EEPROM.write(STORE_CUSTOM,	cap_thresold);
+  EEPROM.write(STORE_CUSTOM+1, 	byte0);
+  EEPROM.write(STORE_CUSTOM+2, 	byte1);
+  EEPROM.write(STORE_CUSTOM+3, 	byte2);
+  EEPROM.write(STORE_CUSTOM+4, 	ALTITUDE/20);
+  EEPROM.write(STORE_CUSTOM+5, 	usartbridge);
+  Store_String(STORE_CUSTOM+6, 	DeviceName);     //MAX 10 
+  Store_String(STORE_CUSTOM+16,	API);      //MAX 32    480
+  EEPROM.write(STORE_CUSTOM+48, dallas_qty);
   EEPROM.commit();
-	
 }
+
 void ReadConfig_Slots()
 {
 
@@ -425,17 +427,17 @@ void ReadConfig_Slots()
 	byte0 = EEPROM.read(STORE_CUSTOM+1);
 	byte1 = EEPROM.read(STORE_CUSTOM+2);
 	byte2 = EEPROM.read(STORE_CUSTOM+3);
-  ALTITUDE = EEPROM.read(STORE_CUSTOM+4)*20;
-  usartbridge = EEPROM.read(STORE_CUSTOM+5);
-  DeviceName = Return_String(STORE_CUSTOM+6,10);
-  API = Return_String(STORE_CUSTOM+16,32);
-  LOG.print(F("DeviceName: "));
-  LOG.println(DeviceName);
-  LOG.print(F("API: "));
-  LOG.println(API);
-  LOG.print(F("byte1: "));
-  LOG.println(byte1);
-  
+  	ALTITUDE = EEPROM.read(STORE_CUSTOM+4)*20;
+  	usartbridge = EEPROM.read(STORE_CUSTOM+5);
+  	DeviceName = Return_String(STORE_CUSTOM+6,10);
+  	API = Return_String(STORE_CUSTOM+16,32);
+  	dallas_qty = EEPROM.read(STORE_CUSTOM+48);
+  	LOG.print(F("DeviceName: "));
+  	LOG.println(DeviceName);
+  	LOG.print(F("API: "));
+  	LOG.println(API);
+  	LOG.print(F("byte1: "));
+  	LOG.println(byte1);
 }
 
 // ******************************************************************************************************************
