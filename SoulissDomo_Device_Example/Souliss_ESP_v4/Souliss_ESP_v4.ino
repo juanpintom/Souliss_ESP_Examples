@@ -9,16 +9,13 @@
  
 ***************************************************************************/
 
-<<<<<<< HEAD
 #define SERIALPORT_INSKETCH
   #define LOG Serial
  
-=======
 // ************************* IR LIBRARY ***********************************
 // To use the IR Functions you need to add this library to your Arduino libraries:
 // https://github.com/markszabo/IRremoteESP8266/
 
->>>>>>> origin/master
 #include <IRremoteESP8266.h>
 
 // ************************* SOULISS DEBUG LINES  ***********************************
@@ -61,12 +58,7 @@
 #include <EEPROM.h>
 #include <WiFiUdp.h>
 
-<<<<<<< HEAD
-
-
-=======
 // ***************************  SOULISS  LIBRARIES ***************************
->>>>>>> origin/master
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
 //#include "conf/SuperNode.h"
@@ -86,15 +78,12 @@
 //OTA_Setup();  
 ESP8266HTTPUpdateServer httpUpdater;
 
-<<<<<<< HEAD
 #include "Adafruit_IO_Client.h"
 //#define AIO_KEY    "...your Adafruit IO key value ..."
 #define AIO_KEY    "65b1e1717e6d08e3f58768c1de502d5363d6a64e"
 Adafruit_IO_Client aio = Adafruit_IO_Client(client, AIO_KEY);
 Adafruit_IO_Feed testFeed = aio.getFeed("esptestfeed");
 unsigned int count = 0;
-=======
->>>>>>> origin/master
 
 void setup()
 {
@@ -219,18 +208,11 @@ void setup()
 
 void loop()
 {  
-<<<<<<< HEAD
-
-=======
     if(IR_ENABLE){
     	readIR();
     }
-    
->>>>>>> origin/master
     runWebServer();
-
-    readIR();
-    
+        
     EXECUTEFAST() {                     
         UPDATEFAST();   
         

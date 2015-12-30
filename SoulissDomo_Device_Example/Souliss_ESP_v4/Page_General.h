@@ -173,7 +173,7 @@ void send_general_html()
         	if (server.argName(i) == "Send_Emon") Send_Emon = true; 
         	if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
         	if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
-        	if (server.argName(i) == "IR_ENABLE") IR_REMOTE = true; 
+        	if (server.argName(i) == "IR_ENABLE") IR_ENABLE = true; 
 		}
 		WriteConfig_Slots();
 		//firstStart = true;
