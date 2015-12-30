@@ -13,7 +13,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
     <td align="left">Node Name</td>
     <td><input type="text" id="devicename" name="devicename" value="" maxlength="10"></td>
   </tr>
-  <tr>
+  <tr id="Emoncms">
     <td align="left">Emoncms API</td>
     <td><input type="text" id="API" name="API" value="" maxlength="32"></td>
   </tr>
@@ -22,7 +22,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
     <td><input type="checkbox" id="usartbridge" name="usartbridge"></td>
   </tr>
 	<tr><td>Sensors Configuration:</td><td>
-	<select  id="byte0" name="byte0">
+	<select  id="byte0" name="byte0" onchange="getComboA(this)">
 		<option value="0">None</option>
 		<option value="1">DHT |........|.......</option>
 		<option value="2">.......| LDR |.......</option>
@@ -33,8 +33,9 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 		<option value="7">DHT | LDR | DALLAS</option>
 	</select>
 	</td></tr>
+
 	<tr><td>Lights Output Mode:</td><td>
-	<select  id="byte1" name="byte1">
+	<select  id="byte1" name="byte1" onchange="getComboB(this)">
 		<option value="0">None</option>
 		<option value="1">ON-OFF MODE</option>
 		<option value="2">PWM MODE</option>
@@ -46,7 +47,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 	</td></tr>
 	
 	<tr><td>Others: </td><td>
-	<select  id="byte2" name="byte2">
+	<select  id="byte2" name="byte2" onchange="getComboC(this)">
 		<option value="0">None</option>
 		<option value="1">CAPACITIVE</option>
 		<option value="2">RELAY</option>
@@ -57,11 +58,11 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 		<option value="7">ALARM_ENDSTOP</option>
 	</select>
 	</td></tr>
-        <tr>
+    <tr id="Thresold">
         <td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
         <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td>
 	</tr>
-        <tr>
+    <tr id="Altitude">
         <td align="left" id="Altitude_line"> Altitude:</td>
         <td><input type="text" id="Altitude_id" name="Altitude_id" size="2" value="20"></td>
 	</tr>
@@ -91,15 +92,33 @@ function load(e,t,n){
     var a=document.createElement("link");
     a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)}
   }
-  if(byte == 3) {
-      document.getElementById("Altitude_line").style.display = "none";  //none;  
-      document.getElementById("Altitude_id").style.display = "none";  //none;
-  }
-  else {
-      document.getElementById("Altitude_line").style.display = "block"; 
-      document.getElementById("Altitude_id").style.display = "block";    
-  }
-  
+
+
+function getComboA(sel) {
+    var value = sel.value;
+    
+}
+
+function getComboB(sel) {
+    var value = sel.value;
+    
+}
+
+function getComboC(sel) {
+    var value = sel.value;
+    if(value == 1 || value == 4) {
+    	document.getElementById("Thresold").style.display = "block";  //none;  
+    } else { 
+    	document.getElementById("Thresold").style.display = "none";	
+    }
+   
+    if(value == 3) {
+     	document.getElementById("Altitude").style.display = "block";  //none;  
+  	} else {
+  		document.getElementById("Altitude").style.display = "none"; 	
+  	}
+}
+ 
 </script>
 )=====";
 
