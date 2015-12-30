@@ -83,7 +83,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 	</tr>
 	<tr>
 		<td align="left"> Enable IR Receive on this Node?:</td>
-		<td><input type="checkbox" id="IR_REMOTE" name="IR_REMOTE"></td>
+		<td><input type="checkbox" id="IR_ENABLE" name="IR_ENABLE"></td>
 	</tr>
 	
 <tr><td colspan="2" align="center"><input type="submit" style="width:150px" class="btn btn--m btn--blue" value="Save"></td></tr>
@@ -173,7 +173,7 @@ void send_general_html()
         	if (server.argName(i) == "Send_Emon") Send_Emon = true; 
         	if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
         	if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
-        	if (server.argName(i) == "IR_REMOTE") IR_REMOTE = true; 
+        	if (server.argName(i) == "IR_ENABLE") IR_REMOTE = true; 
 		}
 		WriteConfig_Slots();
 		//firstStart = true;
@@ -199,7 +199,7 @@ void send_general_configuration_values_html()
   	values += "Send_Emon|" +  (String) (Send_Emon ? "checked" : "") + "|chk\n";
   	values += "dht_type|" +  (String)  dht_type +  "|input\n";
   	values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
-  	values += "IR_REMOTE|" +  (String) (IR_REMOTE ? "checked" : "") + "|chk\n";
+  	values += "IR_ENABLE|" +  (String) (IR_ENABLE ? "checked" : "") + "|chk\n";
   	server.send ( 200, "text/plain", values);
 	LOG.println(__FUNCTION__); 
 }
