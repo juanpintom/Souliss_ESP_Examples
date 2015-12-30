@@ -437,6 +437,37 @@ void ReadConfig_Slots()
   LOG.println(byte1);
   
 }
+// ******************************************************************************************************************
+// *******************************************       setColor FUNCTION          *************************************
+// ******************************************************************************************************************
+void setColor(uint8_t slot, uint8_t R, uint8_t G, uint8_t B)
+{
+  mInput(slot+1)=R;
+  mInput(slot+2)=G;
+  mInput(slot+3)=B;
+  mInput(slot)=Souliss_T1n_Set;
+}
+
+// ******************************************************************************************************************
+// *************************************       setBrightColor FUNCTION          *************************************
+// ******************************************************************************************************************
+void setBrightColor(uint8_t slot, uint8_t color, uint8_t value_state)  //color:  Red=1 Green=2 Blue=3
+{
+  for (int i = 1; i<=3; i++)
+  {
+    if ( i == color ) 
+    { 
+      if (value_state == Souliss_T1n_BrightUp && mOutput(slot+color) +10 <= 254) { mInput(slot+color) = mOutput(slot+color) +10; }
+      if (value_state == Souliss_T1n_BrightDown && mOutput(slot+color) -10 >= 0) { mInput(slot+color) = mOutput(slot+color) -10; }
+    }
+    else 
+    {
+      mInput(slot+i)=mOutput(slot+i);      
+    }
+  }
+  mInput(slot)=Souliss_T1n_Set;
+  
+}
 
 // ******************************************************************************************************************
 // *******************************************       CAPACITIVO 1 PIN          **************************************

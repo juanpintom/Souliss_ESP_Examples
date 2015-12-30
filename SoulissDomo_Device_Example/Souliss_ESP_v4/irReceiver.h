@@ -5,43 +5,16 @@ int RECV_PIN = 2; //an IR detector/demodulatord is connected to GPIO pin 2
 IRrecv irrecv(RECV_PIN);
 decode_results results;
 
-/******************************** BUTTONS DEFINITIONS *************************/
-//This values are long values returned by IRremote library, to get your values enable DEBUG and see results on Serial Port
-#define b0  16748655
-#define b1  16758855
-#define b2  16775175
-#define b3  16756815
-#define b4  16750695
-#define b5  16767015
-#define b6  16746615
-#define b7  16754775
-#define b8  16771095
-#define b9  16730295
-#define b10 16738455
-#define b11 16757325
-#define b12 16712445
-#define b13 16724685
-#define b14 16720095
-#define b15 16711935
-#define b16 16732335
-#define b17 16742535
-#define b18 16740495
-#define b19 16734375
-#define b20 16726215
-#define b21 16722135
-#define b22 16773135
-#define b23 16724175
-#define b_Repeat  4294967295
-
-uint8_t Souliss_IrIn(long remote_button, uint8_t value_state1, uint8_t slot, decode_results *results) {
+bool Souliss_IrIn(long remote_button, uint8_t value_state1, uint8_t slot, decode_results *results) {
 
     if (results->value == remote_button)  
      {
-        mInput(slot) = value_state1;
+        if(DEBUG_IR) { LOG.print("Souliss_IrIN| Code: "); LOG.print(remote_button); LOG.print(" Cmd: "); LOG.print(value_state1); LOG.print(" Slot: "); LOG.println(slot); }
+        if(slot != 254) mInput(slot) = value_state1;
         results->value = 0;
-        return value_state1;
+        return true;
      }
-     else return 0;
+     else return false;
 }
 
 //+=============================================================================

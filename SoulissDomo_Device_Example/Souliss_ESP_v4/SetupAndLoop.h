@@ -177,9 +177,7 @@ void fastGeneral(){
 				        if(button0) LowDigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
 
                 if(IR_ENABLE){
-                  Souliss_IrIn(b4, Souliss_T1n_ToggleCmd, LEDPWM0, &results);
-                  Souliss_IrIn(b5, Souliss_T1n_ToggleCmd, LEDPWM1, &results);
-                  Souliss_IrIn(b6, Souliss_T1n_ToggleCmd, LEDPWM2, &results);
+                   irButtons(ir_ONOFF);
                 }
                 
                 Logic_SimpleLight(LEDPWM0);
@@ -203,10 +201,6 @@ void fastGeneral(){
                 if(BUTTONS_PULLUP){
                     LowDigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDPWM0);
                     LowDigIn(BUT1P, Souliss_T1n_ToggleCmd, LEDPWM1);
-                }
-                if(IR_ENABLE){
-                  Souliss_IrIn(b4, Souliss_T1n_ToggleCmd, LEDPWM0, &results);
-                  Souliss_IrIn(b5, Souliss_T1n_ToggleCmd, LEDPWM1, &results);
                 }
                 
                 Logic_DimmableLight(LEDPWM0);
@@ -246,7 +240,7 @@ void fastGeneral(){
                   //Souliss_RemoteLowDigIn(0, Souliss_T1n_ToggleCmd, 0xCE02, 0);
                 }
                 if(IR_ENABLE){
-                  Souliss_IrIn(b6, Souliss_T1n_ToggleCmd, LEDPWM2, &results);
+                  irButtons(ir_PWM);
                 }
                 Logic_DimmableLight(LEDPWM2);                        
                 analogWrite(LEDPWMP2, mOutput(LEDPWM2+1));
@@ -266,10 +260,11 @@ void fastGeneral(){
                     LowDigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDRGB);
                     LowDigIn(BUT1P, Souliss_T1n_BrightSwitch, LEDRGB);
                 }
+                if(IR_ENABLE){
+                    irButtons(ir_RGB);
+                }
                 Logic_LED_Strip(LEDRGB);
-                //analogWrite(LEDRP, mOutput(LEDRGB+1)*4);
-                //analogWrite(LEDGP, mOutput(LEDRGB+2)*4);
-                //analogWrite(LEDBP, mOutput(LEDRGB+3)*4);
+
                 analogWrite(LEDRP, mOutput(LEDRGB+1));
                 analogWrite(LEDGP, mOutput(LEDRGB+2));
                 analogWrite(LEDBP, mOutput(LEDRGB+3));

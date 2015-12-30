@@ -8,8 +8,10 @@
 	This example is only supported on ESP8266.
  
 ***************************************************************************/
-//#define LOG Serial
 
+#define SERIALPORT_INSKETCH
+  #define LOG Serial
+ 
 #include <IRremoteESP8266.h>
 
 #define MaCaco_DEBUG_INSKETCH
@@ -47,6 +49,8 @@
 #include <EEPROM.h>
 #include <WiFiUdp.h>
 
+
+
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
 //#include "conf/SuperNode.h"
@@ -58,6 +62,7 @@
 #include "Souliss.h"
 #include "Functions.h"
 #include "irReceiver.h"
+#include "irButtons.h"
 #include "SetupAndLoop.h"
 
 
@@ -66,7 +71,12 @@
 //OTA_Setup();  
 ESP8266HTTPUpdateServer httpUpdater;
 
-
+#include "Adafruit_IO_Client.h"
+//#define AIO_KEY    "...your Adafruit IO key value ..."
+#define AIO_KEY    "65b1e1717e6d08e3f58768c1de502d5363d6a64e"
+Adafruit_IO_Client aio = Adafruit_IO_Client(client, AIO_KEY);
+Adafruit_IO_Feed testFeed = aio.getFeed("esptestfeed");
+unsigned int count = 0;
 
 void setup()
 {
@@ -181,15 +191,18 @@ void setup()
     
     httpUpdater.setup(&server);
     MDNS.addService("http", "tcp", 80);
+
+    aio.begin();
 }
 
 
 
 void loop()
 {  
-    readIR();
-    
+
     runWebServer();
+
+    readIR();
     
     EXECUTEFAST() {                     
         UPDATEFAST();   
@@ -205,7 +218,39 @@ void loop()
 
     EXECUTESLOW() {
         UPDATESLOW();
-
+        SLOW_x10s(1) { 
+            count += 1;
+            if (testFeed.send(count)) {
+              LOG.print(F("Wrote value to feed: ")); LOG.println(count, DEC);
+            }
+            else {
+              LOG.println(F("Error writing value to feed!"));
+            }
+        }   
+        SLOW_x10s(3){
+            FeedData latest = testFeed.receive();
+            if (latest.isValid()) {
+              Serial.print(F("Received value from feed: ")); Serial.println(latest);
+              // By default the received feed data item has a string value, however you
+              // can use the following functions to attempt to convert it to a numeric
+              // value like an int or float.  Each function returns a boolean that indicates
+              // if the conversion succeeded, and takes as a parameter by reference the
+              // output value.
+              int i;
+              if (latest.intValue(&i)) {
+                Serial.print(F("Value as an int: ")); Serial.println(i, DEC);
+              }
+              // Other functions that you can use include:
+              //  latest.uintValue() (unsigned int)
+              //  latest.longValue() (long)
+              //  latest.ulongValue() (unsigned long)
+              //  latest.floatValue() (float)
+              //  latest.doubleValue() (double)
+            }
+            else {
+              Serial.print(F("Failed to receive the latest feed value!"));
+            }
+        } 
         slowGeneral();
         
         // If running as Peer
