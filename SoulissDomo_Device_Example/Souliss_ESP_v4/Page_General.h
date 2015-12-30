@@ -166,6 +166,7 @@ void send_general_html()
         	if (server.argName(i) == "usartbridge") usartbridge = true;
         	if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
         	if (server.argName(i) == "API") API = urldecode(server.arg(i));
+        	if (server.argName(i) == "Send_Emon") Send_Emon = true; 
         	if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
         	if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
 		}
@@ -190,6 +191,7 @@ void send_general_configuration_values_html()
   	values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
   	values += "devicename|" +  (String)  DeviceName +  "|input\n";
   	values += "API|" +  (String)  API +  "|input\n";
+  	values += "Send_Emon|" +  (String) (Send_Emon ? "checked" : "") + "|chk\n";
   	values += "dht_type|" +  (String)  dht_type +  "|input\n";
   	values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
   	server.send ( 200, "text/plain", values);
