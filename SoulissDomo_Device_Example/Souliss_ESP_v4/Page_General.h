@@ -16,6 +16,8 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
   <tr id="Emoncms">
     <td align="left">Emoncms API</td>
     <td><input type="text" id="API" name="API" value="" maxlength="32"></td>
+    <td align="left">Send Sensors?: </td>
+    <td><input type="checkbox" id="Send_Emon" name="Send_Emon"></td>
   </tr>
   <tr>
     <td align="left"> Enable this Node as USART Bridge?:</td>
@@ -33,6 +35,19 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 		<option value="7">DHT | LDR | DALLAS</option>
 	</select>
 	</td></tr>
+	
+	<tr id="DHT">
+        	<td align="left"> DHT Type:</td><td>
+		<select  id="dht_type" name="dht_type">
+			<option value="0">DHT11</option>
+			<option value="1">DHT22</option>
+		</select>
+	</td></tr>
+	
+	<tr id="Dallas">
+        <td align="left"> Dallas Qty:</td>
+        <td><input type="text" id="dallas_qty" name="Dallas_Qty" size="2" value="1"></td>
+	</tr>
 
 	<tr><td>Lights Output Mode:</td><td>
 	<select  id="byte1" name="byte1" onchange="getComboB(this)">
@@ -58,15 +73,19 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 		<option value="7">ALARM_ENDSTOP</option>
 	</select>
 	</td></tr>
-    <tr id="Thresold">
-        <td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
-        <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td>
+	<tr id="Thresold">
+		<td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
+		<td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td>
 	</tr>
-    <tr id="Altitude">
-        <td align="left" id="Altitude_line"> Altitude:</td>
-        <td><input type="text" id="Altitude_id" name="Altitude_id" size="2" value="20"></td>
+	<tr id="Altitude">
+		<td align="left" id="Altitude_line"> Altitude:</td>
+		<td><input type="text" id="Altitude_id" name="Altitude_id" size="2" value="20"></td>
 	</tr>
-
+	<tr>
+		<td align="left"> Enable IR Receive on this Node?:</td>
+		<td><input type="checkbox" id="IR_ENABLE" name="IR_ENABLE"></td>
+	</tr>
+	
 <tr><td colspan="2" align="center"><input type="submit" style="width:150px" class="btn btn--m btn--blue" value="Save"></td></tr>
 </table>
 <strong>Remember Get Souliss Nodes again from the app after Save Settings</strong>
@@ -96,7 +115,17 @@ function load(e,t,n){
 
 function getComboA(sel) {
     var value = sel.value;
-    
+    if(value == 1 || value == 4 || value == 5 || value == 7) {
+    	document.getElementById("DHT").style.display = "block";  //none;  
+    } else { 
+    	document.getElementById("DHT").style.display = "none";	
+    }
+   
+    if(value == 3 || value == 5 || value == 6 || value == 7) {
+     	document.getElementById("Dallas").style.display = "block";  //none;  
+  	} else {
+  		document.getElementById("Dallas").style.display = "none"; 	
+  	}
 }
 
 function getComboB(sel) {
@@ -137,10 +166,14 @@ void send_general_html()
 		    if (server.argName(i) == "byte1") byte1 = server.arg(i).toInt();
 		    if (server.argName(i) == "byte2") byte2 = server.arg(i).toInt(); 
      		if (server.argName(i) == "cap_thresold") cap_thresold = server.arg(i).toInt();
-        if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
-        if (server.argName(i) == "usartbridge") usartbridge = true;
-        if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
-        if (server.argName(i) == "API") API = urldecode(server.arg(i));
+        	if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
+        	if (server.argName(i) == "usartbridge") usartbridge = true;
+        	if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
+        	if (server.argName(i) == "API") API = urldecode(server.arg(i));
+        	if (server.argName(i) == "Send_Emon") Send_Emon = true; 
+        	if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
+        	if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
+        	if (server.argName(i) == "IR_ENABLE") IR_REMOTE = true; 
 		}
 		WriteConfig_Slots();
 		//firstStart = true;
@@ -159,10 +192,14 @@ void send_general_configuration_values_html()
 	values += "byte1|" +  (String) byte1 + "|input\n";
 	values += "byte2|" +  (String) byte2 + "|input\n";
 	values += "cap_thresold|" +  (String) cap_thresold + "|input\n";
-  values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
-  values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
-  values += "devicename|" +  (String)  DeviceName +  "|input\n";
-  values += "API|" +  (String)  API +  "|input\n";
-  server.send ( 200, "text/plain", values);
+  	values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
+  	values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
+  	values += "devicename|" +  (String)  DeviceName +  "|input\n";
+  	values += "API|" +  (String)  API +  "|input\n";
+  	values += "Send_Emon|" +  (String) (Send_Emon ? "checked" : "") + "|chk\n";
+  	values += "dht_type|" +  (String)  dht_type +  "|input\n";
+  	values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
+  	values += "IR_ENABLE|" +  (String) (IR_ENABLE ? "checked" : "") + "|chk\n";
+  	server.send ( 200, "text/plain", values);
 	LOG.println(__FUNCTION__); 
 }
