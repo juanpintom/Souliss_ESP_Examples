@@ -73,15 +73,19 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 		<option value="7">ALARM_ENDSTOP</option>
 	</select>
 	</td></tr>
-    <tr id="Thresold">
-        <td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
-        <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td>
+	<tr id="Thresold">
+		<td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
+		<td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td>
 	</tr>
-    <tr id="Altitude">
-        <td align="left" id="Altitude_line"> Altitude:</td>
-        <td><input type="text" id="Altitude_id" name="Altitude_id" size="2" value="20"></td>
+	<tr id="Altitude">
+		<td align="left" id="Altitude_line"> Altitude:</td>
+		<td><input type="text" id="Altitude_id" name="Altitude_id" size="2" value="20"></td>
 	</tr>
-
+	<tr>
+		<td align="left"> Enable IR Receive on this Node?:</td>
+		<td><input type="checkbox" id="IR_REMOTE" name="IR_REMOTE"></td>
+	</tr>
+	
 <tr><td colspan="2" align="center"><input type="submit" style="width:150px" class="btn btn--m btn--blue" value="Save"></td></tr>
 </table>
 <strong>Remember Get Souliss Nodes again from the app after Save Settings</strong>
@@ -169,6 +173,7 @@ void send_general_html()
         	if (server.argName(i) == "Send_Emon") Send_Emon = true; 
         	if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
         	if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
+        	if (server.argName(i) == "IR_REMOTE") IR_REMOTE = true; 
 		}
 		WriteConfig_Slots();
 		//firstStart = true;
@@ -194,6 +199,7 @@ void send_general_configuration_values_html()
   	values += "Send_Emon|" +  (String) (Send_Emon ? "checked" : "") + "|chk\n";
   	values += "dht_type|" +  (String)  dht_type +  "|input\n";
   	values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
+  	values += "IR_REMOTE|" +  (String) (IR_REMOTE ? "checked" : "") + "|chk\n";
   	server.send ( 200, "text/plain", values);
 	LOG.println(__FUNCTION__); 
 }
