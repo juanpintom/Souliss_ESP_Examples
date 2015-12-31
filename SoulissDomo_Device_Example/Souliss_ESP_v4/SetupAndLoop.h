@@ -16,7 +16,10 @@ void setupGeneral(){
  
 //**************************** SENSORS INITIALIZE *****************************
     if(DHT_SENSOR){
-        dht.begin();
+        if(!dht_type)
+          dht11.begin();
+        else
+          dht22.begin();
     }
     
     if(DALLAS_SENSOR){
@@ -318,7 +321,7 @@ void fastGeneral(){
                     LOG.println(dallas);
                   }
                   
-                  SendEmoncms("Dallas_Sensor", DALLAS);
+                  if(Send_Emon) SendEmoncms("Dallas_Sensor", DALLAS);
                   Souliss_ImportAnalog(memory_map, DALLAS, &dallas);
                   if(THERMOSTAT_MODE){
                      Souliss_ImportAnalog(memory_map, THERMOSTAT+1, &dallas);  //IMPORTED FROM DALLAS SENSOR FOR NOW     
@@ -358,6 +361,7 @@ void fastGeneral(){
                 }
                 if (ldr_read == 0) ldr_read = 0.01;
                 Souliss_ImportAnalog(memory_map, LDR, &ldr_read);
+                if(Send_Emon) SendEmoncms("Lux_Sensor", LDR);
             }
         }
         
@@ -435,16 +439,19 @@ void slowGeneral(){
 
         if(DHT_SENSOR){
             Souliss_GetDHT(TEMPERATURE, HUMIDITY, true);  
-            SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
-            SendEmoncms("DHT_Humi_Sensor", HUMIDITY);
+            if(Send_Emon) {
+              SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
+              SendEmoncms("DHT_Humi_Sensor", HUMIDITY);
+            }
         }
     }
     SLOW_x10s(3) {
         if(BMP180){
             Souliss_GetPressure_BMP180(PRESSURE0,BMP180TEMP);  
-            SendEmoncms("BMP180_Pressure", PRESSURE0);
-            SendEmoncms("BMP180_Temp", BMP180TEMP);
-            
+            if(Send_Emon) {
+              SendEmoncms("BMP180_Pressure", PRESSURE0);
+              SendEmoncms("BMP180_Temp", BMP180TEMP);
+            }  
         }   
     }
 

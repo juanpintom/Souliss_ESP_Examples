@@ -19,10 +19,6 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
     <td align="left">Send Sensors?: </td>
     <td><input type="checkbox" id="Send_Emon" name="Send_Emon"></td>
   </tr>
-  <tr>
-    <td align="left"> Enable this Node as USART Bridge?:</td>
-    <td><input type="checkbox" id="usartbridge" name="usartbridge"></td>
-  </tr>
 	<tr><td>Sensors Configuration:</td><td>
 	<select  id="byte0" name="byte0" onchange="getComboA(this)">
 		<option value="0">None</option>
@@ -46,7 +42,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 	
 	<tr id="Dallas">
         <td align="left"> Dallas Qty:</td>
-        <td><input type="text" id="dallas_qty" name="Dallas_Qty" size="2" value="1"></td>
+        <td><input type="text" id="dallas_qty" name="dallas_qty" size="2" value="1"></td>
 	</tr>
 
 	<tr><td>Lights Output Mode:</td><td>
@@ -85,6 +81,10 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 		<td align="left"> Enable IR Receive on this Node?:</td>
 		<td><input type="checkbox" id="IR_ENABLE" name="IR_ENABLE"></td>
 	</tr>
+  <tr>
+    <td align="left"> Enable this Node as USART Bridge?:</td>
+    <td><input type="checkbox" id="usartbridge" name="usartbridge"></td>
+  </tr>
 	
 <tr><td colspan="2" align="center"><input type="submit" style="width:150px" class="btn btn--m btn--blue" value="Save"></td></tr>
 </table>
@@ -98,8 +98,8 @@ window.onload = function ()
 	load("style.css","css", function() 
 	{
 		load("microajax.js","js", function() 
-		{
-				setValues("/admin/generalvalues");
+		{       
+        setValues("/admin/generalvalues");				
 		});
 	});
 }
@@ -109,8 +109,9 @@ function load(e,t,n){
     a.src=e,a.type="text/javascript",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
   }else if("css"==t){
     var a=document.createElement("link");
-    a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)}
+    a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
   }
+}
 
 
 function getComboA(sel) {
@@ -166,14 +167,14 @@ void send_general_html()
 		    if (server.argName(i) == "byte1") byte1 = server.arg(i).toInt();
 		    if (server.argName(i) == "byte2") byte2 = server.arg(i).toInt(); 
      		if (server.argName(i) == "cap_thresold") cap_thresold = server.arg(i).toInt();
-        	if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
-        	if (server.argName(i) == "usartbridge") usartbridge = true;
-        	if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
-        	if (server.argName(i) == "API") API = urldecode(server.arg(i));
-        	if (server.argName(i) == "Send_Emon") Send_Emon = true; 
-        	if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
-        	if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
-        	if (server.argName(i) == "IR_ENABLE") IR_ENABLE = true; 
+      	if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
+      	if (server.argName(i) == "usartbridge") usartbridge = true;
+      	if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
+      	if (server.argName(i) == "API") API = urldecode(server.arg(i));
+      	if (server.argName(i) == "Send_Emon") Send_Emon = true; 
+      	if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
+      	if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
+      	if (server.argName(i) == "IR_ENABLE") IR_ENABLE = true; 
 		}
 		WriteConfig_Slots();
 		//firstStart = true;
@@ -192,14 +193,14 @@ void send_general_configuration_values_html()
 	values += "byte1|" +  (String) byte1 + "|input\n";
 	values += "byte2|" +  (String) byte2 + "|input\n";
 	values += "cap_thresold|" +  (String) cap_thresold + "|input\n";
-  	values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
-  	values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
-  	values += "devicename|" +  (String)  DeviceName +  "|input\n";
-  	values += "API|" +  (String)  API +  "|input\n";
-  	values += "Send_Emon|" +  (String) (Send_Emon ? "checked" : "") + "|chk\n";
-  	values += "dht_type|" +  (String)  dht_type +  "|input\n";
-  	values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
-  	values += "IR_ENABLE|" +  (String) (IR_ENABLE ? "checked" : "") + "|chk\n";
-  	server.send ( 200, "text/plain", values);
+	values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
+	values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
+	values += "devicename|" +  (String)  DeviceName +  "|input\n";
+	values += "API|" +  (String)  API +  "|input\n";
+	values += "Send_Emon|" +  (String) (Send_Emon ? "checked" : "") + "|chk\n";
+	values += "dht_type|" +  (String)  dht_type +  "|input\n";
+	values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
+	values += "IR_ENABLE|" +  (String) (IR_ENABLE ? "checked" : "") + "|chk\n";
+	server.send ( 200, "text/plain", values);
 	LOG.println(__FUNCTION__); 
 }

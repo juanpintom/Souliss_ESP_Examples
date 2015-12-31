@@ -78,13 +78,13 @@
 //OTA_Setup();  
 ESP8266HTTPUpdateServer httpUpdater;
 
-#include "Adafruit_IO_Client.h"
+/*#include "Adafruit_IO_Client.h"
 //#define AIO_KEY    "...your Adafruit IO key value ..."
 #define AIO_KEY    "65b1e1717e6d08e3f58768c1de502d5363d6a64e"
 Adafruit_IO_Client aio = Adafruit_IO_Client(client, AIO_KEY);
 Adafruit_IO_Feed testFeed = aio.getFeed("esptestfeed");
 unsigned int count = 0;
-
+*/
 void setup()
 {
     LOG.begin(115200);
@@ -201,7 +201,7 @@ void setup()
     httpUpdater.setup(&server);
     MDNS.addService("http", "tcp", 80);
 
-    aio.begin();
+    //aio.begin();
 }
 
 
@@ -227,7 +227,7 @@ void loop()
 
     EXECUTESLOW() {
         UPDATESLOW();
-        SLOW_x10s(1) { 
+        /*SLOW_x10s(1) { 
             count += 1;
             if (testFeed.send(count)) {
               LOG.print(F("Wrote value to feed: ")); LOG.println(count, DEC);
@@ -259,7 +259,7 @@ void loop()
             else {
               Serial.print(F("Failed to receive the latest feed value!"));
             }
-        } 
+        } */
         slowGeneral();
         
         // If running as Peer

@@ -21,16 +21,20 @@ boolean DEBUG_IR_FULL       = 0;
 boolean button0 = false;
 
 //VALUES FOR CONFIGURATION STORED ON THE EEPROM.
-byte byte0;
-byte byte1;
-byte byte2;
+byte byte0;   //STORE SENSOR CONFIGURATION
+byte byte1;   //STORE LIGHTS CONFIGURATION
+byte byte2;   //STORE OTHERS CONFIGURATION
+byte byte3;   //STORE BOOLEAN OPTIONS
+// BOOLEAN OPTIONS
+boolean usartbridge = false;
+boolean Send_Emon = true;
+boolean IR_ENABLE = true;
+boolean dht_type = true;  //FALSE = DHT11 , TRUE = DHT22
+// ******************
 byte cap_thresold;
 int ALTITUDE = 20;
-boolean usartbridge = false;
-boolean Send_Emon = false;
-byte dht_type;
 byte dallas_qty = 1;
-boolean IR_ENABLE = true;
+
 
 //DHT Sensor on PIN 16
 boolean DHT_SENSOR;
@@ -80,9 +84,8 @@ byte PRESSURE0;
 byte BMP180TEMP;
 byte THERMOSTAT;
 
-//#include "DHT.h"
-#define DHTTYPE DHT22   // DHT 11 
-DHT dht(DHTPIN, DHTTYPE, 15);
+DHT dht11(DHTPIN, DHT11, 15);
+DHT dht22(DHTPIN, DHT22, 15);
 
 // Light calibration data
 // out[] holds the values wanted in lux/10
@@ -317,7 +320,7 @@ bool EEPROM_CONFIG(){
     
     // PWM PIR RGB OPTIONS:
     //switch (configuration[EEPROM_START+1]) {
-	ONOFF_MODE = false;
+    ONOFF_MODE = false;
     PWM_MODE = false;
     PIR_MODE = false;
     RGB_MODE = false;
@@ -407,15 +410,23 @@ bool EEPROM_CONFIG(){
 
 void WriteConfig_Slots() {
   LOG.println("Writing Config");
+  bitWrite(byte3, 0, usartbridge);
+  bitWrite(byte3, 1, IR_ENABLE);
+  bitWrite(byte3, 2, dht_type);
+  bitWrite(byte3, 3, Send_Emon);
+  
   EEPROM.write(STORE_CUSTOM,	cap_thresold);
   EEPROM.write(STORE_CUSTOM+1, 	byte0);
   EEPROM.write(STORE_CUSTOM+2, 	byte1);
   EEPROM.write(STORE_CUSTOM+3, 	byte2);
-  EEPROM.write(STORE_CUSTOM+4, 	ALTITUDE/20);
-  EEPROM.write(STORE_CUSTOM+5, 	usartbridge);
+  EEPROM.write(STORE_CUSTOM+4,  byte3);
+  EEPROM.write(STORE_CUSTOM+5, 	ALTITUDE/20);
+  //EEPROM.write(STORE_CUSTOM+5, 	usartbridge);
   Store_String(STORE_CUSTOM+6, 	DeviceName);     //MAX 10 
   Store_String(STORE_CUSTOM+16,	API);      //MAX 32    480
-  EEPROM.write(STORE_CUSTOM+48, dallas_qty);
+  EEPROM.write(STORE_CUSTOM+49, dallas_qty);
+
+  
   EEPROM.commit();
 }
 
@@ -427,17 +438,39 @@ void ReadConfig_Slots()
 	byte0 = EEPROM.read(STORE_CUSTOM+1);
 	byte1 = EEPROM.read(STORE_CUSTOM+2);
 	byte2 = EEPROM.read(STORE_CUSTOM+3);
-  	ALTITUDE = EEPROM.read(STORE_CUSTOM+4)*20;
-  	usartbridge = EEPROM.read(STORE_CUSTOM+5);
-  	DeviceName = Return_String(STORE_CUSTOM+6,10);
-  	API = Return_String(STORE_CUSTOM+16,32);
-  	dallas_qty = EEPROM.read(STORE_CUSTOM+48);
-  	LOG.print(F("DeviceName: "));
-  	LOG.println(DeviceName);
-  	LOG.print(F("API: "));
-  	LOG.println(API);
-  	LOG.print(F("byte1: "));
-  	LOG.println(byte1);
+  byte3 = EEPROM.read(STORE_CUSTOM+4);
+  usartbridge = bitRead(byte3, 0);
+  IR_ENABLE =   bitRead(byte3, 1);
+  dht_type =    bitRead(byte3, 2);
+  Send_Emon =   bitRead(byte3, 3);
+ 
+ 	ALTITUDE = EEPROM.read(STORE_CUSTOM+5)*20;
+  //usartbridge = EEPROM.read(STORE_CUSTOM+5);
+	DeviceName = Return_String(STORE_CUSTOM+6,10);
+	API = Return_String(STORE_CUSTOM+16,32);
+	dallas_qty = EEPROM.read(STORE_CUSTOM+49);
+	LOG.print(F("DeviceName: "));
+	LOG.println(DeviceName);
+	LOG.print(F("API: "));
+	LOG.println(API);
+	LOG.print(F("byte0: "));
+	LOG.println(byte0);
+  LOG.print(F("byte1: "));
+  LOG.println(byte1);
+  LOG.print(F("byte2: "));
+  LOG.println(byte2);
+  LOG.print(F("byte3: "));
+  LOG.println(byte3);
+  LOG.print(F("usartbridge: "));
+  LOG.println(usartbridge);
+  LOG.print(F("IR_ENABLE: "));
+  LOG.println(IR_ENABLE);
+  LOG.print(F("dht_type: "));
+  LOG.println(dht_type);
+  LOG.print(F("Send Emon: "));
+  LOG.println(Send_Emon);
+  LOG.print(F("Dallas_qty: "));
+  LOG.println(dallas_qty);
 }
 // ******************************************************************************************************************
 // *******************************************       setColor FUNCTION          *************************************
@@ -658,12 +691,23 @@ int Souliss_GetLux(const unsigned int* _in, const unsigned int* _out, byte size)
 //*                            DHT READING FUNCTION                         *
 //***************************************************************************
 void Souliss_GetDHT(uint8_t SLOT_TEMPERATURE, uint8_t SLOT_HUMIDITY, boolean Celsius){
-        float h = dht.readHumidity();
+    float h;
+    float t;
+    float f;
+    if(!dht_type){
+        h = dht11.readHumidity();
         // Read temperature as Celsius
-        float t = dht.readTemperature();
+        t = dht11.readTemperature();
         // Read temperature as Fahrenheit
-        float f = dht.readTemperature(true);
-              
+        f = dht11.readTemperature(true);
+    }
+    else {
+        h = dht22.readHumidity();
+        // Read temperature as Celsius
+        t = dht22.readTemperature();
+        // Read temperature as Fahrenheit
+        f = dht22.readTemperature(true);      
+    }          
         // Check if any reads failed and exit early (to try again).
         if (isnan(h) || isnan(t) || isnan(f)) {
             if(DEBUG_DHT) LOG.print("Failed to read from DHT sensor!\r\n");
