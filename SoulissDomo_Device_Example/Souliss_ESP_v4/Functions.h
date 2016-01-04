@@ -158,79 +158,65 @@ void SLOT_CONFIG(){
   if(ALARM_MODE || ALARM_ENDSTOP){
       ALARM = NEXTSLOT;
       NEXTSLOT = ALARM + 1;
-      LOG.print("ALARM: ");
-      LOG.println(ALARM);
+      LOG.print("ALARM: "); LOG.println(ALARM);
   }
   
   if(DHT_SENSOR){
       TEMPERATURE = NEXTSLOT;
       HUMIDITY = NEXTSLOT + 2;
       NEXTSLOT = HUMIDITY + 2;
-      LOG.print("TEMP: ");
-      LOG.println(TEMPERATURE);  
-      LOG.print("HUMI: ");
-      LOG.println(HUMIDITY);      
+      LOG.print("TEMP: "); LOG.println(TEMPERATURE);  
+      LOG.print("HUMI: "); LOG.println(HUMIDITY);      
   }
   if(ONOFF_MODE){
       LEDPWM0 = NEXTSLOT;
       LEDPWM1 = NEXTSLOT + 1;
       LEDPWM2 = NEXTSLOT + 2;
       NEXTSLOT = LEDPWM2 + 1;
-      LOG.print("LEDONOFF0: ");
-      LOG.println(LEDPWM0);  
-      LOG.print("LEDONOFF1: ");
-      LOG.println(LEDPWM1);  
-      LOG.print("LEDONOFF2: ");
-      LOG.println(LEDPWM2);       
+      LOG.print("LEDONOFF0: "); LOG.println(LEDPWM0);  
+      LOG.print("LEDONOFF1: "); LOG.println(LEDPWM1);  
+      LOG.print("LEDONOFF2: "); LOG.println(LEDPWM2);       
   }
   if(PWM_MODE || PIR_MODE){
       LEDPWM0 = NEXTSLOT;
       LEDPWM1 = NEXTSLOT + 2;
       NEXTSLOT = LEDPWM1 + 2;
-      LOG.print("LEDPWM0: ");
-      LOG.println(LEDPWM0);  
-      LOG.print("LEDPWM1: ");
-      LOG.println(LEDPWM1);  
+      LOG.print("LEDPWM0: "); LOG.println(LEDPWM0);  
+      LOG.print("LEDPWM1: "); LOG.println(LEDPWM1);  
   }
   if(PWM_MODE){
       LEDPWM2 = NEXTSLOT;
       NEXTSLOT = LEDPWM2 + 2;
-      LOG.print("LEDPWM2: ");
-      LOG.println(LEDPWM2);     
+      LOG.print("LEDPWM2: "); LOG.println(LEDPWM2);     
   }
   
   if(PIR_MODE){
       LED = NEXTSLOT;
       NEXTSLOT = LED + 1;
-      LOG.print("LED: ");
-      LOG.println(LED);       
+      LOG.print("LED: "); LOG.println(LED);       
   }
   
   if(RGB_MODE){
       LEDRGB = NEXTSLOT;
       NEXTSLOT = LEDRGB + 4;
-      LOG.print("LEDRGB: ");
-      LOG.println(LEDRGB);        
+      LOG.print("LEDRGB: "); LOG.println(LEDRGB);        
   }
   if(THERMOSTAT_MODE){
       THERMOSTAT = NEXTSLOT;
       NEXTSLOT = THERMOSTAT + 5;
-      LOG.print("THERMOSTAT: ");
-      LOG.println(THERMOSTAT);     
+      LOG.print("THERMOSTAT: "); LOG.println(THERMOSTAT);     
   }
   
   if(LDR_SENSOR){
       LDR = NEXTSLOT;
       NEXTSLOT = LDR + 2;
-      LOG.print("LDR: ");
-      LOG.println(LDR);        
+      LOG.print("LDR: "); LOG.println(LDR);        
   }
   
   if(DALLAS_SENSOR){
       DALLAS = NEXTSLOT;
       NEXTSLOT = DALLAS + 2;
-      LOG.print("DALLAS: ");
-      LOG.println(DALLAS);        
+      LOG.print("DALLAS: "); LOG.println(DALLAS);        
   }
   
   //GPIO 4-5 SLOT DEFINITIONS
@@ -240,32 +226,25 @@ void SLOT_CONFIG(){
       CAP1 = NEXTSLOT + 2;
       THRE = NEXTSLOT + 4;
       NEXTSLOT = THRE + 2;
-      LOG.print("CAP0: ");
-      LOG.println(CAP0);   
-      LOG.print("CAP1: ");
-      LOG.println(CAP1);             
-      LOG.print("THRE: ");
-      LOG.println(THRE);                   
+      LOG.print("CAP0: "); LOG.println(CAP0);   
+      LOG.print("CAP1: "); LOG.println(CAP1);             
+      LOG.print("THRE: "); LOG.println(THRE);                   
   }
   
   if(RELAY){
       RELAY0 = NEXTSLOT;
       RELAY1 = NEXTSLOT + 1;
       NEXTSLOT = RELAY1 + 1;
-      LOG.print("RELAY0: ");
-      LOG.println(RELAY0);   
-      LOG.print("RELAY1: ");
-      LOG.println(RELAY1);         
+      LOG.print("RELAY0: "); LOG.println(RELAY0);   
+      LOG.print("RELAY1: "); LOG.println(RELAY1);         
   }
   
   if(BMP180){
       PRESSURE0 = NEXTSLOT;  
       BMP180TEMP = NEXTSLOT + 2;
       NEXTSLOT = BMP180TEMP + 2;
-      LOG.print("PRESSURE0: ");
-      LOG.println(PRESSURE0);   
-      LOG.print("BMP180TEMP: ");
-      LOG.println(BMP180TEMP);       
+      LOG.print("PRESSURE0: ");  LOG.println(PRESSURE0);   
+      LOG.print("BMP180TEMP: "); LOG.println(BMP180TEMP);       
   }  
 }
 
@@ -421,7 +400,6 @@ void WriteConfig_Slots() {
   EEPROM.write(STORE_CUSTOM+3, 	byte2);
   EEPROM.write(STORE_CUSTOM+4,  byte3);
   EEPROM.write(STORE_CUSTOM+5, 	ALTITUDE/20);
-  //EEPROM.write(STORE_CUSTOM+5, 	usartbridge);
   Store_String(STORE_CUSTOM+6, 	DeviceName);     //MAX 10 
   Store_String(STORE_CUSTOM+16,	API);      //MAX 32    480
   EEPROM.write(STORE_CUSTOM+49, dallas_qty);
@@ -445,10 +423,11 @@ void ReadConfig_Slots()
   Send_Emon =   bitRead(byte3, 3);
  
  	ALTITUDE = EEPROM.read(STORE_CUSTOM+5)*20;
-  //usartbridge = EEPROM.read(STORE_CUSTOM+5);
-	DeviceName = Return_String(STORE_CUSTOM+6,10);
+  DeviceName = Return_String(STORE_CUSTOM+6,10);
 	API = Return_String(STORE_CUSTOM+16,32);
 	dallas_qty = EEPROM.read(STORE_CUSTOM+49);
+	
+	//*** DEBUG TO SERIAL ***
 	LOG.print(F("DeviceName: "));
 	LOG.println(DeviceName);
 	LOG.print(F("API: "));
@@ -573,6 +552,7 @@ uint8_t readCapacitivePin(int pinToMeasure) {
   return cycles;
 }
 
+unsigned long timer;
 
 uint8_t Souliss_CapSense(uint8_t slot, uint8_t value, uint8_t value_hold, uint8_t pin, uint8_t thresold_value, int holdtime) {
 
@@ -593,7 +573,7 @@ uint8_t Souliss_CapSense(uint8_t slot, uint8_t value, uint8_t value_hold, uint8_
           LOG.print("\t");
           LOG.print(thresold_value); 
           LOG.print("\t");          
-          LOG.print(abs(millis()-time)); 
+          LOG.print(abs(millis()-timer)); 
           LOG.print("\t");          
 
     }
@@ -604,14 +584,14 @@ uint8_t Souliss_CapSense(uint8_t slot, uint8_t value, uint8_t value_hold, uint8_
         
     if(cycles > thresold_value && (InPin[pin]==PINRESET))
 	{
-		time = millis();								// Record time
+		timer = millis();								// Record time
 		InPin[pin] = PINSET;
 		
 		return InPin[pin];
 	}
-	else if(cycles > thresold_value && (abs(millis()-time) > holdtime) && (InPin[pin]==PINSET || InPin[pin]==PINACTIVE))
+	else if(cycles > thresold_value && (abs(millis()-timer) > holdtime) && (InPin[pin]==PINSET || InPin[pin]==PINACTIVE))
 	{
-	    if(AUTOCALIBRATE && (abs(millis()-time) > 15000)){
+	    if(AUTOCALIBRATE && (abs(millis()-timer) > 15000)){
                 //config.cap_thresold = cycles + 4;
                 //EEPROM.write(4, cycles + 4);
                 //EEPROM.commit();
@@ -668,12 +648,12 @@ int Souliss_GetLux(const unsigned int* _in, const unsigned int* _out, byte size)
 	int val = analogRead(A0);
 	delay(10);  //TODO: TEST WITH LOWER VALUES
 
-        if(DEBUG_GETLUX){
-          LOG.print(" AnalogRead: ");
-          LOG.print(val);
-          LOG.print("\r\n");
-        }
-        if (val <= _in[0]) return _out[0];
+  if(DEBUG_GETLUX){
+    LOG.print(" AnalogRead: ");
+    LOG.print(val);
+    LOG.print("\r\n");
+  }
+  if (val <= _in[0]) return _out[0];
 	if (val >= _in[size-1]) return _out[size-1];
 
 	// search right interval
@@ -691,10 +671,8 @@ int Souliss_GetLux(const unsigned int* _in, const unsigned int* _out, byte size)
 //*                            DHT READING FUNCTION                         *
 //***************************************************************************
 void Souliss_GetDHT(uint8_t SLOT_TEMPERATURE, uint8_t SLOT_HUMIDITY, boolean Celsius){
-    float h;
-    float t;
-    float f;
-    if(!dht_type){
+    float h, t, f;  //Variables
+    if(!dht_type){  
         h = dht11.readHumidity();
         // Read temperature as Celsius
         t = dht11.readTemperature();
@@ -708,25 +686,25 @@ void Souliss_GetDHT(uint8_t SLOT_TEMPERATURE, uint8_t SLOT_HUMIDITY, boolean Cel
         // Read temperature as Fahrenheit
         f = dht22.readTemperature(true);      
     }          
-        // Check if any reads failed and exit early (to try again).
-        if (isnan(h) || isnan(t) || isnan(f)) {
-            if(DEBUG_DHT) LOG.print("Failed to read from DHT sensor!\r\n");
-        }
-        // Compute heat index
-        // Must send in temp in Fahrenheit!
-        //float hi = dht.computeHeatIndex(f, h);
-        //float hic = (f - 32) / 1.8;
-        //Souliss_ImportAnalog(memory_map, HEAT, &hic);
-  	    if(DEBUG_DHT) {
-  	      LOG.print("DHT Temp: ");
-  	      LOG.print(t);
-          LOG.print(" DHT Hum: ");
-          LOG.println(h);
-  	    }
-        if(Celsius) Souliss_ImportAnalog(memory_map, SLOT_TEMPERATURE, &t);
-        else        Souliss_ImportAnalog(memory_map, SLOT_TEMPERATURE, &f);
-        
-  	    Souliss_ImportAnalog(memory_map, SLOT_HUMIDITY, &h);	
+    // Check if any reads failed and exit early (to try again).
+    if (isnan(h) || isnan(t) || isnan(f)) {
+        if(DEBUG_DHT) LOG.print("Failed to read from DHT sensor!\r\n");
+    }
+    // Compute heat index
+    // Must send in temp in Fahrenheit!
+    //float hi = dht.computeHeatIndex(f, h);
+    //float hic = (f - 32) / 1.8;
+    //Souliss_ImportAnalog(memory_map, HEAT, &hic);
+    if(DEBUG_DHT) {
+      LOG.print("DHT Temp: ");
+      LOG.print(t);
+      LOG.print(" DHT Hum: ");
+      LOG.println(h);
+    }
+    if(Celsius) Souliss_ImportAnalog(memory_map, SLOT_TEMPERATURE, &t);
+    else        Souliss_ImportAnalog(memory_map, SLOT_TEMPERATURE, &f);
+    
+    Souliss_ImportAnalog(memory_map, SLOT_HUMIDITY, &h);	
           
 }
 
