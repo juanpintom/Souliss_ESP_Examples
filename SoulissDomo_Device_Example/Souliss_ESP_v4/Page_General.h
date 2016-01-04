@@ -67,6 +67,11 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 		<option value="5">BUTTONS</option>
 		<option value="6">BUTTONS_PULLUP</option>
 		<option value="7">ALARM_ENDSTOP</option>
+		<option value="8">BUTTONS_2_STATE</option>
+		<option value="9">PULSE_OUTPUT</option>
+		<option value="10">GARAGE_DOOR</option>
+		<option value="11">WINDOW_CURTAIN</option>
+		<option value="12">220V_OPTO_AND_RELAY</option>
 	</select>
 	</td></tr>
 	<tr id="Thresold">
