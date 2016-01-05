@@ -75,7 +75,9 @@ void setupGeneral(){
     }
     
     if(DALLAS_SENSOR){
-        Set_Temperature(DALLAS);
+    	for(int i=0; i < dallas_qty; i++){
+        	Set_Temperature(DALLAS + (i*2));
+    	}	
     }        
 
     if(BMP180){
@@ -370,16 +372,17 @@ void fastGeneral(){
             if(DALLAS){ 
                   // Acquire temperature from the microcontroller ADC
                   sensors.requestTemperatures(); //Prepara el sensor para la lectura
-                  //for(int i=0; i < dallas_qty; i++){
-                      float dallas = sensors.getTempCByIndex(0);
+                  for(int i=0; i < dallas_qty; i++){
+                      float dallas = sensors.getTempCByIndex(i);
                       if(DEBUG_DALLAS){
-                        LOG.print("Dallas: ");
+                        LOG.print("Dallas "); LOG.print(i); LOG.print(": ");
                         LOG.println(dallas);
                       }
-                      
-                      if(Send_Emon) SendEmoncms("Dallas_Sensor", DALLAS);
-                      Souliss_ImportAnalog(memory_map, DALLAS, &dallas);
-                  //}
+                      Souliss_ImportAnalog(memory_map, DALLAS + (i*2), &dallas);
+                      String stringDallas = "Dallas_sensor: ";
+                      stringDallas += i;
+                      if(Send_Emon) SendEmoncms(stringDallas, DALLAS + (i*2));
+                  }
                   if(THERMOSTAT_MODE){
                      Souliss_ImportAnalog(memory_map, THERMOSTAT+1, &dallas);  //IMPORTED FROM DALLAS SENSOR FOR NOW     
                   }
@@ -398,7 +401,9 @@ void fastGeneral(){
             }
             
             if(DALLAS_SENSOR){
-                  Logic_Temperature(DALLAS);
+            	for(int i=0; i < dallas_qty; i++){
+                  Logic_Temperature(DALLAS + (i*2));
+            	}
             }                  
             
             if(BMP180){
