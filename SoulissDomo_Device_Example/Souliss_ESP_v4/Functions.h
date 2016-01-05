@@ -8,6 +8,9 @@ int valorPWM;
 //Autocalibrate Capacitive Sensors ON
 #define AUTOCALIBRATE         1
 
+
+
+boolean DEBUG_LOG           = 1;
 boolean DEBUG_CAPSENSE      = 0;
 boolean DEBUG_CAPSENSE_ALL  = 0;
 boolean DEBUG_DHT           = 0;
@@ -16,6 +19,9 @@ boolean DEBUG_GETLUX        = 0;
 boolean DEBUG_DALLAS        = 0;
 boolean DEBUG_IR            = 1;
 boolean DEBUG_IR_FULL       = 0;
+boolean DEBUG_PLC           = 1;
+
+#define DEBUG if(DEBUG_LOG)LOG
 
 //INSIDE BUTTON ON GPIO0 VARIABLE:
 boolean button0 = false;
@@ -47,6 +53,7 @@ boolean DALLAS_SENSOR;
 
 //LIGHT MODES
 boolean ONOFF_MODE;
+boolean PULSE_MODE;
 boolean PWM_MODE;           
 boolean PIR_MODE;
 boolean RGB_MODE;
@@ -62,6 +69,18 @@ boolean BMP180;
 boolean BUTTONS;
 boolean BUTTONS_PULLUP;
 boolean ALARM_ENDSTOP;
+boolean BUTTONS_2_STATE;
+boolean PULSE_OUTPUT;
+boolean GARAGE_DOOR;
+boolean WINDOW_CURTAIN;
+boolean OPTO_AND_RELAY;
+
+  
+// Define the hold time of the outputs, by default the timer hold the relays for 16 times, so:
+// 221x10x16ms that is about 35 seconds. Change the parameter inside FAST_x10ms() to change this time.
+int WINDOW_TIMER = 211;  // MOVE THIS TO WEBCONFIG
+
+int PULSE_TIMER = 1500;  // MOVE THIS TO WEBCONFIG
 
 #include "PinsConfig.h"
 
@@ -83,6 +102,11 @@ byte RELAY1;
 byte PRESSURE0;
 byte BMP180TEMP;
 byte THERMOSTAT;
+byte PULSE0;
+byte PULSE1;
+byte T2X;         //To use with Garage and Curtain Mode
+byte OPTO;        //To use with Opto + Relay Mode
+
 
 DHT dht11(DHTPIN, DHT11, 15);
 DHT dht22(DHTPIN, DHT22, 15);
@@ -177,6 +201,15 @@ void SLOT_CONFIG(){
       LOG.print("LEDONOFF1: "); LOG.println(LEDPWM1);  
       LOG.print("LEDONOFF2: "); LOG.println(LEDPWM2);       
   }
+  if(PULSE_MODE){
+      LEDPWM0 = NEXTSLOT;
+      LEDPWM1 = NEXTSLOT + 1;
+      LEDPWM2 = NEXTSLOT + 2;
+      NEXTSLOT = LEDPWM2 + 1;
+      LOG.print("LEDPULSE0: "); LOG.println(LEDPWM0);  
+      LOG.print("LEDPULSE1: "); LOG.println(LEDPWM1);  
+      LOG.print("LEDPULSE2: "); LOG.println(LEDPWM2);       
+  }
   if(PWM_MODE || PIR_MODE){
       LEDPWM0 = NEXTSLOT;
       LEDPWM1 = NEXTSLOT + 2;
@@ -215,8 +248,9 @@ void SLOT_CONFIG(){
   
   if(DALLAS_SENSOR){
       DALLAS = NEXTSLOT;
-      NEXTSLOT = DALLAS + 2;
-      LOG.print("DALLAS: "); LOG.println(DALLAS);        
+      NEXTSLOT = DALLAS + (2 * dallas_qty);
+      LOG.print("DALLAS: "); LOG.println(DALLAS);
+            
   }
   
   //GPIO 4-5 SLOT DEFINITIONS
@@ -245,7 +279,26 @@ void SLOT_CONFIG(){
       NEXTSLOT = BMP180TEMP + 2;
       LOG.print("PRESSURE0: ");  LOG.println(PRESSURE0);   
       LOG.print("BMP180TEMP: "); LOG.println(BMP180TEMP);       
-  }  
+  } 
+  if(PULSE_OUTPUT){
+      PULSE0 = NEXTSLOT;
+      PULSE1 = PULSE0 + 1;
+      NEXTSLOT = PULSE1 + 1;
+      LOG.print("PULSE0: ");  LOG.println(PULSE0); 
+      LOG.print("PULSE1: ");  LOG.println(PULSE1); 
+  }
+  if(GARAGE_DOOR || WINDOW_CURTAIN){
+      T2X = NEXTSLOT;
+      NEXTSLOT = T2X + 1;
+      LOG.print("T2X: ");  LOG.println(T2X); 
+  }
+  if(OPTO_AND_RELAY){
+      OPTO = NEXTSLOT;
+      NEXTSLOT = OPTO + 1;
+      LOG.print("OPTO: ");  LOG.println(OPTO); 
+  }
+  
+// ************************************** END OF SLOT_CONFIG() **************************
 }
 
 // ******************************************************************************************************************
@@ -300,6 +353,7 @@ bool EEPROM_CONFIG(){
     // PWM PIR RGB OPTIONS:
     //switch (configuration[EEPROM_START+1]) {
     ONOFF_MODE = false;
+    PULSE_MODE = false;
     PWM_MODE = false;
     PIR_MODE = false;
     RGB_MODE = false;
@@ -309,23 +363,26 @@ bool EEPROM_CONFIG(){
         case 0:
             //NONE
             break;
-		case 1:
+		    case 1:
             ONOFF_MODE = true;
-            break;	
+            break;
         case 2:
+            PULSE_MODE = true;
+            break;	
+        case 3:
             PWM_MODE = true;
             break;
-        case 3:
+        case 4:
             PIR_MODE = true;
             break;
-        case 4:
+        case 5:
             RGB_MODE = true;
             break;
-        case 5:
+        case 6:
             PIR_MODE = true;
             ALARM_MODE = true;
             break;
-        case 6:
+        case 7:
             THERMOSTAT_MODE = true;
             break;    
     }
@@ -346,43 +403,68 @@ bool EEPROM_CONFIG(){
     DEBUG_CAPSENSE = false;
     BUTTONS = false;
     BUTTONS_PULLUP = false;
-    
+    ALARM_ENDSTOP = false;
+    BUTTONS_2_STATE = false;
+    PULSE_OUTPUT = false;
+    GARAGE_DOOR = false;
+    WINDOW_CURTAIN = false;
+    OPTO_AND_RELAY = false;
+    LOG.println("BYTE2: ");   
     switch (byte2) { 
         case 0:
             //NONE
             break;
         case 1:
             CAPACITIVE = true;
+            DEBUG.print("CAPACITIVE");
             break;
         case 2:
             RELAY = true;
+            DEBUG.print("RELAY");
             break;
         case 3:
-	    	BMP180 = true;
+	    	    BMP180 = true;
+            DEBUG.print("BMP180");
             break;
         case 4:
             CAPACITIVE = true;
             DEBUG_CAPSENSE = true;
+            DEBUG.print("CAPACITIVE /W DEBUG");
             break;    
         case 5:
             BUTTONS = true;
+            DEBUG.print("BUTTONS");
             break; 
         case 6:
             BUTTONS_PULLUP = true;
+            DEBUG.print("BUTTONS_PULLUP");
             break; 
         case 7:
             ALARM_ENDSTOP = true;
-            break;     
+            DEBUG.print("ALARM_ENDSTOP");
+            break; 
+        case 8:
+            BUTTONS_2_STATE = true;
+            DEBUG.print("BUTTONS_2_STATE");
+            break;
+        case 9:
+            PULSE_OUTPUT = true;
+            DEBUG.print("PULSE_OUTPUT");
+            break;
+        case 10:            
+            GARAGE_DOOR = true;
+            DEBUG.print("GARAGE_DOOR");
+            break;
+        case 11:            
+            WINDOW_CURTAIN = true;
+            DEBUG.print("WINDOW_CURTAIN");
+            break;
+        case 12:            
+            OPTO_AND_RELAY = true;
+            DEBUG.print("220V_OPTO_AND_RELAY");    
+            break;   
     }
-    LOG.print(CAPACITIVE);
-    LOG.print(RELAY);
-    LOG.print(BMP180);
-    LOG.print(DEBUG_CAPSENSE);
-    LOG.print(BUTTONS);
-    LOG.print(ALARM_ENDSTOP);
-    LOG.print(" CRBDB (CAP-RELAY-BMP180-DEBUG-BUTTONS-ALARM_ENDSTOP)");
-    LOG.print("\r\n");
-    
+    LOG.println("");
     return 1;
 
 }
@@ -829,6 +911,51 @@ float Souliss_GetPressure_BMP180(uint8_t SLOT_PRESSURE, uint8_t SLOT_TEMPERATURE
   }
   else if(DEBUG_PRESSURE) LOG.print(F("error starting temperature measurement\n"));
  
+}
+
+uint8_t SoulissPLC_Read(uint8_t slot, uint8_t button_pin, uint8_t plc_pin, uint8_t relay_pin){
+                           
+            if(mInput(slot) == Souliss_T1n_OnCmd || mInput(slot) == Souliss_T1n_OffCmd){
+                 if(DEBUG_PLC) LOG.println(mInput(slot));  
+                 digitalWrite(relay_pin, !digitalRead(relay_pin)); 
+                 memory_map[MaCaco_IN_s + slot] = Souliss_T1n_RstCmd;
+                 return 99;  //Return 99 when cmd received from Souliss App Just for test.
+            }
+  
+            if(!digitalRead(button_pin) && InPin[button_pin] == PINRESET) { 
+                 InPin[button_pin] = PINSET;
+                 if(DEBUG_PLC) LOG.println(InPin[button_pin]);                 
+                 return InPin[button_pin];
+            }
+            if(!digitalRead(button_pin) && InPin[button_pin] == PINSET) { 
+                 InPin[button_pin] = PINACTIVE;
+                 if(DEBUG_PLC) LOG.println(InPin[button_pin]);                 
+                 return InPin[button_pin];
+            }
+            if(digitalRead(button_pin) && InPin[button_pin] == PINACTIVE) { 
+                 InPin[button_pin] = PINRELEASED;
+                 if(DEBUG_PLC) LOG.println(InPin[button_pin]);                 
+                 return InPin[button_pin];
+            }
+            if(digitalRead(button_pin) && InPin[button_pin] == PINRELEASED) { 
+                 digitalWrite(relay_pin, !digitalRead(relay_pin));
+                 InPin[button_pin] = PINRESET;
+                 if(DEBUG_PLC) LOG.println(InPin[button_pin]);                 
+                 return InPin[button_pin];
+            }
+            
+            
+            if(!digitalRead(plc_pin)) {    
+                memory_map[MaCaco_OUT_s + slot] = Souliss_T1n_OnCoil; 
+                memory_map[MaCaco_IN_s + slot] = Souliss_T1n_RstCmd;                
+                if(DEBUG_PLC) LOG.println("PLC ON"); 
+                
+            }
+            else {
+                memory_map[MaCaco_OUT_s + slot] = Souliss_T1n_OffCoil;
+                memory_map[MaCaco_IN_s + slot] = Souliss_T1n_RstCmd;                
+                if(DEBUG_PLC) LOG.println("PLC OFF");             
+            }
 }
 
 #endif

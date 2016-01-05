@@ -65,17 +65,11 @@ void PINS_CONFIG(){
 // *************************************************  PINS PCBrev2 ***************************************************
   #ifdef PCBrev2    //PCB NUEVA
 
-    if(ONOFF_MODE){
+    if(ONOFF_MODE || PULSE_MODE || PWM_MODE){
         LEDPWMP0 = 13;      //LED STRIP ON PIN 
         LEDPWMP1 = 12;      //LED STRIP ON PIN 
         LEDPWMP2 = 15;      //LED STRIP ON PIN 
     }
-    if(PWM_MODE){
-        LEDPWMP0 = 13;      //LED STRIP ON PIN 
-        LEDPWMP1 = 12;      //LED STRIP ON PIN 
-        LEDPWMP2 = 15;      //LED STRIP ON PIN 
-    }
-    
     if(PIR_MODE){
         LEDPWMP0 = 13;//5;      //LED STRIP ON PIN 12
         LEDPWMP1 = 12;//16;      //LED STRIP ON PIN 13
@@ -94,40 +88,37 @@ void PINS_CONFIG(){
     
     //PIN OPTIONS FOR CAPACITIVE - RELAY OR BMP180
     if(CAPACITIVE){
-        //SDA 5  SCL 4  PINS MUST CHANGE ON WIRE.H
         CAP0P = 4;//12;
         CAP1P = 5;//14;
     }
     
-    if(RELAY){
-        RELAY0P = 4;//12;
-        RELAY1P = 5;//14;
+    if(RELAY || PULSE_OUTPUT || GARAGE_DOOR || WINDOW_CURTAIN){
+        RELAY0P = 4;
+        RELAY1P = 5;
     }
     if(BMP180){
+        //SDA 5  SCL 4  PINS MUST CHANGE ON WIRE.H
         SCLP = 4;//12;
         SDAP = 5;//14;
     }
-    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP){
-      BUT0P = 4;
-      BUT1P = 5;
+    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP || BUTTONS_2_STATE){
+        BUT0P = 4;
+        BUT1P = 5;
     }
+    if(OPTO_AND_RELAY){
+        BUT0P = 4;          //Used to OPTO IN
+        RELAY1P = 5;        //Used to Relay
+    }
+    
   #endif
 // *************************************************  PINS PCB ***************************************************  
   #ifdef PCB    //PCB NUEVA
-    if(DHT_SENSOR){
-        //DHTPIN = 16;     // what pin we're connected to
-    }
-	if(ONOFF_MODE){
-    	LEDPWMP0 = 13;      //LED STRIP ON PIN 12
+
+	  if(ONOFF_MODE || PULSE_MODE || PWM_MODE){
+    	  LEDPWMP0 = 13;      //LED STRIP ON PIN 12
         LEDPWMP1 = 12;      //LED STRIP ON PIN 13
         LEDPWMP2 = 16;      //LED STRIP ON PIN 15
     }
-    if(PWM_MODE){
-        LEDPWMP0 = 13;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 12;      //LED STRIP ON PIN 13
-        LEDPWMP2 = 16;      //LED STRIP ON PIN 15
-    }
-    
     if(PIR_MODE){
         LEDPWMP0 = 13;//5;      //LED STRIP ON PIN 12
         LEDPWMP1 = 12;//16;      //LED STRIP ON PIN 13
@@ -146,33 +137,35 @@ void PINS_CONFIG(){
     
     //PIN OPTIONS FOR CAPACITIVE - RELAY OR BMP180
     if(CAPACITIVE){
-        //SDA 5  SCL 4  PINS MUST CHANGE ON WIRE.H
         CAP0P = 4;
         CAP1P = 5;
     }
     
-    if(RELAY){
+    if(RELAY || PULSE_OUTPUT || GARAGE_DOOR || WINDOW_CURTAIN){
         RELAY0P = 4;//12;
         RELAY1P = 5;//14;
     }
     if(BMP180){
+        //SDA 5  SCL 4  PINS MUST CHANGE ON WIRE.H
         SCLP = 4;//12;
         SDAP = 5;//14;
     }
-    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP){
-    	BUT0P = 4;
-    	BUT1P = 5;
+    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP || BUTTONS_2_STATE){
+        BUT0P = 4;
+        BUT1P = 5;
+    }
+    if(OPTO_AND_RELAY){
+        BUT0P =   4;          //Used to OPTO IN
+        RELAY1P = 5;        //Used to Relay
     }
   #endif
 // *************************************************  PINS STRIPBOARD ***************************************************
   #ifdef STRIPBOARD    
-    if(DHT_SENSOR){
-        //DHTPIN = 16;     // what pin we're connected to
-    }
-    if(PWM_MODE){
+
+    if(ONOFF_MODE || PULSE_MODE || PWM_MODE){
         LEDPWMP0 = 5;      //LED STRIP ON PIN 12
-        LEDPWMP1 = 2;//16;      //LED STRIP ON PIN 13
-        LEDPWMP2 = 15;      //LED STRIP ON PIN 15
+        LEDPWMP1 = 2;      //LED STRIP ON PIN 13
+        LEDPWMP2 = 15;     //LED STRIP ON PIN 15
     }
     
     if(PIR_MODE){
@@ -204,7 +197,7 @@ void PINS_CONFIG(){
         CAP1P = 14;
     }
     
-    if(RELAY){
+    if(RELAY || PULSE_OUTPUT || GARAGE_DOOR || WINDOW_CURTAIN){
         RELAY0P = 12;
         RELAY1P = 14;
     }
@@ -212,9 +205,13 @@ void PINS_CONFIG(){
         SCLP = 12;
         SDAP = 14;
     }
-    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP){
-    	BUT0P = 12;
-    	BUT1P = 14;
+    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP || BUTTONS_2_STATE){
+        BUT0P = 12;
+        BUT1P = 14;
+    }
+    if(OPTO_AND_RELAY){
+        BUT0P =   12;          //Used to OPTO IN
+        RELAY1P = 14;        //Used to Relay
     }
   #endif
 

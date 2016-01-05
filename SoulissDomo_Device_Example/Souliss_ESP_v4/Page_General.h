@@ -49,11 +49,12 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 	<select  id="byte1" name="byte1" onchange="getComboB(this)">
 		<option value="0">None</option>
 		<option value="1">ON-OFF MODE</option>
-		<option value="2">PWM MODE</option>
-		<option value="3">PIR_MODE</option>
-		<option value="4">RGB_MODE</option>
-        <option value="5">PIR_ALARM_MODE</option>
-        <option value="6">THERMOSTAT_MODE</option>
+    <option value="2">PULSE MODE</option>
+		<option value="3">PWM MODE</option>
+		<option value="4">PIR_MODE</option>
+		<option value="5">RGB_MODE</option>
+    <option value="6">PIR_ALARM_MODE</option>
+    <option value="7">THERMOSTAT_MODE</option>
 	</select>
 	</td></tr>
 	
