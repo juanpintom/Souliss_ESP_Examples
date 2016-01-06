@@ -305,10 +305,7 @@ void fastGeneral(){
                 nDigOut(THERM_FAN2P, Souliss_T3n_FanOn2   , THERMOSTAT);   // Fan2
                 nDigOut(THERM_FAN3P, Souliss_T3n_FanOn3   , THERMOSTAT);   // Fan3
                 
-                // We are not handling the cooling mode, if enabled by the user, force it back
-                // to disable
-                if(mOutput(THERMOSTAT) & Souliss_T3n_CoolingOn)
-                    mOutput(THERMOSTAT) &= ~Souliss_T3n_CoolingOn;
+                
             }
             if(GARAGE_DOOR){
                 //*** ENDSTOPS MISSING ***
@@ -382,10 +379,11 @@ void fastGeneral(){
                       String stringDallas = "Dallas_sensor: ";
                       stringDallas += i;
                       if(Send_Emon) SendEmoncms(stringDallas, DALLAS + (i*2));
+                      if(THERMOSTAT_MODE && i==0){
+                         Souliss_ImportAnalog(memory_map, THERMOSTAT+1, &dallas);  //IMPORTED FROM FIRST DALLAS SENSOR FOR NOW     
+                      }
                   }
-                  if(THERMOSTAT_MODE){
-                     Souliss_ImportAnalog(memory_map, THERMOSTAT+1, &dallas);  //IMPORTED FROM DALLAS SENSOR FOR NOW     
-                  }
+                  
             } 
             
         }
