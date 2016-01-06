@@ -409,10 +409,10 @@ bool EEPROM_CONFIG(){
     GARAGE_DOOR = false;
     WINDOW_CURTAIN = false;
     OPTO_AND_RELAY = false;
-    LOG.println("BYTE2: ");   
+    LOG.print("BYTE2: ");   
     switch (byte2) { 
         case 0:
-            //NONE
+            DEBUG.print("NONE"); //NONE
             break;
         case 1:
             CAPACITIVE = true;

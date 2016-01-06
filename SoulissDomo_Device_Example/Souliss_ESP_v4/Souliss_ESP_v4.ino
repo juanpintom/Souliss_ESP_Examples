@@ -88,9 +88,6 @@ unsigned int count = 0;
 void setup()
 {
     LOG.begin(115200);
-    if(IR_ENABLE){
-    	irrecv.enableIRIn();  // Start the receiver
-    }
     
     Initialize();
 // **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
@@ -202,6 +199,10 @@ void setup()
     MDNS.addService("http", "tcp", 80);
 
     //aio.begin();
+    if(IR_ENABLE){
+      DEBUG.println("IR_START");
+      irrecv.enableIRIn();  // Start the receiver
+    }
 }
 
 
