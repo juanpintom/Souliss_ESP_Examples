@@ -17,6 +17,7 @@ boolean DEBUG_DHT           = 0;
 boolean DEBUG_PRESSURE      = 0;
 boolean DEBUG_GETLUX        = 0;
 boolean DEBUG_DALLAS        = 0;
+boolean DEBUG_EMONCMS       = 1;
 boolean DEBUG_IR            = 1;
 boolean DEBUG_IR_FULL       = 0;
 boolean DEBUG_PLC           = 1;
@@ -142,20 +143,25 @@ String DeviceName = "Souliss";
 
 void SendEmoncms(String inputstring, byte SLOT){
   
-  float value = mOutputAsFloat(SLOT);
-  //LOG.println(value);
+  float valueSLOT = mOutputAsFloat(SLOT);
+  //LOG.println(valueSLOT);
   
   if (client.connect(serveremon, port))
   {
-    //LOG.println("connected");
-    // Make a HTTP request:
+    if(DEBUG_EMONCMS){
+      LOG.print("Emoncms: ");
+      LOG.print(inputstring);
+      LOG.print(": ");
+      LOG.println(valueSLOT);
+    }
+      // Make a HTTP request:
     client.print("POST ");
     client.print(path);
     client.print(DeviceName);
     client.print("_");
     client.print(inputstring);
     client.print(":");
-    client.print(value);
+    client.print(valueSLOT);
     client.print("&apikey=");
     client.print(API);
     client.println(" HTTP/1.1");
@@ -167,7 +173,12 @@ void SendEmoncms(String inputstring, byte SLOT){
   else
   {
     // if you didn't get a connection to the server:
-    //LOG.println("connection failed");
+    if(DEBUG_EMONCMS){
+      LOG.print("Emoncms: ");
+      LOG.print(inputstring);
+      LOG.print(": ");
+      LOG.println("connection failed");
+    }
   }
 }
 
@@ -912,11 +923,12 @@ float Souliss_GetPressure_BMP180(uint8_t SLOT_PRESSURE, uint8_t SLOT_TEMPERATURE
   else if(DEBUG_PRESSURE) LOG.print(F("error starting temperature measurement\n"));
  
 }
+boolean last_state;
 
 uint8_t SoulissPLC_Read(uint8_t slot, uint8_t button_pin, uint8_t plc_pin, uint8_t relay_pin){
                            
             if(mInput(slot) == Souliss_T1n_OnCmd || mInput(slot) == Souliss_T1n_OffCmd){
-                 if(DEBUG_PLC) LOG.println(mInput(slot));  
+                 if(DEBUG_PLC){ LOG.println("PLC Command Received: "); LOG.println(mInput(slot)); } 
                  digitalWrite(relay_pin, !digitalRead(relay_pin)); 
                  memory_map[MaCaco_IN_s + slot] = Souliss_T1n_RstCmd;
                  return 99;  //Return 99 when cmd received from Souliss App Just for test.
@@ -945,16 +957,16 @@ uint8_t SoulissPLC_Read(uint8_t slot, uint8_t button_pin, uint8_t plc_pin, uint8
             }
             
             
-            if(!digitalRead(plc_pin)) {    
+            if(!digitalRead(plc_pin)) {   
                 memory_map[MaCaco_OUT_s + slot] = Souliss_T1n_OnCoil; 
                 memory_map[MaCaco_IN_s + slot] = Souliss_T1n_RstCmd;                
-                if(DEBUG_PLC) LOG.println("PLC ON"); 
+                if(DEBUG_PLC) FAST_2110ms() { LOG.println("PLC ON"); }
                 
             }
             else {
                 memory_map[MaCaco_OUT_s + slot] = Souliss_T1n_OffCoil;
                 memory_map[MaCaco_IN_s + slot] = Souliss_T1n_RstCmd;                
-                if(DEBUG_PLC) LOG.println("PLC OFF");             
+                if(DEBUG_PLC) FAST_2110ms() { LOG.println("PLC OFF"); }             
             }
 }
 

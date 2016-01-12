@@ -7,6 +7,8 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <a href="admin.html"  class="btn btn--s"><</a>&nbsp;&nbsp;<strong>Souliss Slot Settings</strong>
 <hr>
+<a href="config.html" align="center" style="width:300px" class="btn btn--m btn--blue" >Configure Network First!</a><br>
+<hr>
 <form action="" method="post">
 <table border="0"  cellspacing="0" cellpadding="3" >
   <tr>

@@ -307,17 +307,7 @@ void fastGeneral(){
                 
                 
             }
-            if(GARAGE_DOOR){
-                //*** ENDSTOPS MISSING ***
-                Logic_GarageDoor(T2X);
-                DigOut(RELAY0P, Souliss_T2n_Coil_Open,  T2X);    
-                DigOut(RELAY1P, Souliss_T2n_Coil_Close, T2X);                
-            }
-            if(WINDOW_CURTAIN){
-                Logic_Windows(T2X);
-                DigOut(RELAY0P, Souliss_T2n_Coil_Open,  T2X);    
-                DigOut(RELAY1P, Souliss_T2n_Coil_Close, T2X);
-            }
+           
             if(OPTO_AND_RELAY){
                 //CODE MISSING get from here:
                 //https://github.com/juanpintom/Souliss_Examples/blob/master/E00_Souliss_Wall_Switch_with_PLC_Reading.ino
@@ -346,6 +336,17 @@ void fastGeneral(){
               Read_T51(CAP1);
               Read_T51(THRE);
            }
+           if(GARAGE_DOOR){
+                //*** ENDSTOPS MISSING ***
+                Logic_GarageDoor(T2X);
+                DigOut(RELAY0P, Souliss_T2n_Coil_Open,  T2X);    
+                DigOut(RELAY1P, Souliss_T2n_Coil_Close, T2X);                
+            }
+            if(WINDOW_CURTAIN){
+                Logic_Windows(T2X);
+                DigOut(RELAY0P, Souliss_T2n_Coil_Open,  T2X);    
+                DigOut(RELAY1P, Souliss_T2n_Coil_Close, T2X);
+            }
         }
         FAST_x10ms(PULSE_TIMER/10){
             if(PULSE_MODE){
@@ -376,7 +377,7 @@ void fastGeneral(){
                         LOG.println(dallas);
                       }
                       Souliss_ImportAnalog(memory_map, DALLAS + (i*2), &dallas);
-                      String stringDallas = "Dallas_sensor: ";
+                      String stringDallas = "Dallas_sensor_";
                       stringDallas += i;
                       if(Send_Emon) SendEmoncms(stringDallas, DALLAS + (i*2));
                       if(THERMOSTAT_MODE && i==0){
@@ -411,7 +412,7 @@ void fastGeneral(){
             }
         } 
         
-        FAST_7110ms()
+        FAST_x10ms(999)
         { 
             if(LDR_SENSOR){
                 float ldr_read = Souliss_GetLux(in, out, SIZEOF)*10.0;  //ORIGINAL

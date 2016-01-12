@@ -1,8 +1,8 @@
 #ifndef PinsConfig_h
 #define PinsConfig_h
 
-#define PCB
-//#define PCBrev2
+//#define PCB
+#define PCBrev2
 //#define STRIPBOARD
 
 //**********************  PIN VARIABLES  *************************

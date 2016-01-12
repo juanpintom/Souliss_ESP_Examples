@@ -9,8 +9,8 @@
  
 ***************************************************************************/
 
-#define SERIALPORT_INSKETCH
-  #define LOG Serial
+//#define SERIALPORT_INSKETCH
+//  #define LOG Serial
  
 // ************************* IR LIBRARY ***********************************
 // To use the IR Functions you need to add this library to your Arduino libraries:
@@ -58,6 +58,15 @@
 #include <EEPROM.h>
 #include <WiFiUdp.h>
 
+
+// ************************* TELNET DEBUG ******************************
+#define MAX_SRV_CLIENTS 1
+WiFiServer telnet(23);
+WiFiClient serverClients[MAX_SRV_CLIENTS];
+
+#define SERIALPORT_INSKETCH
+#define LOG serverClients[0]
+//#define LOG Serial
 // ***************************  SOULISS  LIBRARIES ***************************
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
@@ -78,6 +87,10 @@
 //OTA_Setup();  
 ESP8266HTTPUpdateServer httpUpdater;
 
+
+
+
+ 
 /*#include "Adafruit_IO_Client.h"
 //#define AIO_KEY    "...your Adafruit IO key value ..."
 #define AIO_KEY    "65b1e1717e6d08e3f58768c1de502d5363d6a64e"
@@ -85,11 +98,62 @@ Adafruit_IO_Client aio = Adafruit_IO_Client(client, AIO_KEY);
 Adafruit_IO_Feed testFeed = aio.getFeed("esptestfeed");
 unsigned int count = 0;
 */
+
+#include "Adafruit_MQTT.h"
+#include "Adafruit_MQTT_Client.h"
+
+/************************* Adafruit.io Setup *********************************/
+
+#define AIO_SERVER      "io.adafruit.com"
+#define AIO_SERVERPORT  1883
+#define AIO_USERNAME    "juanpintom"
+#define AIO_KEY         "7d5d2fa70f894f9aade434d0814f5c3ad13cfdd8"
+
+/************ Global State (you don't need to change this!) ******************/
+
+// Store the MQTT server, username, and password in flash memory.
+// This is required for using the Adafruit MQTT library.
+const char MQTT_SERVER[] PROGMEM    = AIO_SERVER;
+const char MQTT_USERNAME[] PROGMEM  = AIO_USERNAME;
+const char MQTT_PASSWORD[] PROGMEM  = AIO_KEY;
+
+// Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
+Adafruit_MQTT_Client mqtt(&client, MQTT_SERVER, AIO_SERVERPORT, MQTT_USERNAME, MQTT_PASSWORD);
+
+/****************************** Feeds ***************************************/
+
+// Setup a feed called 'photocell' for publishing.
+// Notice MQTT paths for AIO follow the form: <username>/feeds/<feedname>
+const char PHOTOCELL_FEED[] PROGMEM = AIO_USERNAME "/feeds/photocell";
+Adafruit_MQTT_Publish photocell = Adafruit_MQTT_Publish(&mqtt, PHOTOCELL_FEED);
+
+// Setup a feed called 'onoff' for subscribing to changes.
+const char ONOFF_FEED[] PROGMEM = AIO_USERNAME "/feeds/onoff";
+Adafruit_MQTT_Subscribe onoffbutton = Adafruit_MQTT_Subscribe(&mqtt, ONOFF_FEED);
+
+/*************************** Sketch Code ************************************/
+
+// Bug workaround for Arduino 1.6.6, it seems to need a function declaration
+// for some reason (only affects ESP8266, likely an arduino-builder bug).
+void MQTT_connect();
+
+//****************************************************************************
+//************************** SETUP FUNCTION **********************************
+//****************************************************************************
+
 void setup()
 {
-    LOG.begin(115200);
-    
+    //LOG.begin(115200);
+    Serial.begin(115200);
     Initialize();
+    
+    //************************************** TELNET SETUP *************************
+    telnet.begin();
+    telnet.setNoDelay(true);
+    Serial.print("Start: "); Serial.println(millis());
+    while(Telnet_Loop() || millis() > 10000){ Serial.println(10000 - millis()); }
+    
+
 // **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
 //  STILL DISABLED, TESTING
     EEPROM.begin(512);
@@ -133,29 +197,29 @@ void setup()
     // Read the IP configuration from the EEPROM, if not available start
     // the node as access point
     if(!ReadIPConfiguration()) 
-	{	
-		// Start the node as access point with a configuration WebServer
-		SetAccessPoint();
-		startWebServer();
-
-		// We have nothing more than the WebServer for the configuration
-		// to run, once configured the node will quit this.
-		while(1)
-		{
-			yield();
-			runWebServer(); 
-		}
+	  {	
+  		// Start the node as access point with a configuration WebServer
+  		SetAccessPoint();
+  		startWebServer();
   
-	}
+  		// We have nothing more than the WebServer for the configuration
+  		// to run, once configured the node will quit this.
+  		while(1)
+  		{
+  			yield();
+  			runWebServer(); 
+  		}
+  
+	  }
     ReadConfig_Slots();
-    if(DEBUG_PRESSURE){
+    /*if(DEBUG_PRESSURE){
       LOG.print("ALTITUD: ");
       LOG.println(ALTITUDE);
     }
     
     
     LOG.print("EEPROM GW: ");
-    LOG.println(EEPROM.read(STORE__GATEWAY_s));
+    LOG.println(EEPROM.read(STORE__GATEWAY_s));*/
     
     if (IsRuntimeGateway())
     {
@@ -198,14 +262,18 @@ void setup()
     httpUpdater.setup(&server);
     MDNS.addService("http", "tcp", 80);
 
+
+
     //aio.begin();
+    mqtt.subscribe(&onoffbutton);
+    
     if(IR_ENABLE){
       DEBUG.println("IR_START");
       irrecv.enableIRIn();  // Start the receiver
     }
 }
 
-
+uint32_t x=0;
 
 void loop()
 {  
@@ -216,7 +284,13 @@ void loop()
         
     EXECUTEFAST() {                     
         UPDATEFAST();   
-        
+        FAST_x10ms(5){
+            //MQTT_Loop();
+        }
+        FAST_x10ms(500){
+            //MQTT_Loop_Slow();
+            Telnet_Loop();
+        }        
         fastGeneral();
          
         // Run communication as Gateway or Peer
@@ -268,7 +342,108 @@ void loop()
             SLOW_PeerJoin();
     } 
     //OTA_Process();
-}    
+}  
 
+boolean Telnet_Loop(){
+  uint8_t i;
+  //check if there are any new clients
+  if (telnet.hasClient()){
+    for(i = 0; i < MAX_SRV_CLIENTS; i++){
+      //find free/disconnected spot
+      if (!serverClients[i] || !serverClients[i].connected()){
+        if(serverClients[i]) serverClients[i].stop();
+        serverClients[i] = telnet.available();
+        //Serial1.print("New client: "); Serial1.print(i);
+        return 1;
+        continue;
+      }
+    }
+    //no free/disconnected spot so reject
+    WiFiClient serverClient = telnet.available();
+    serverClient.stop();
+  }
+  return 0;
+  //check clients for data
+  /*for(i = 0; i < MAX_SRV_CLIENTS; i++){
+  //  if (serverClients[i] && serverClients[i].connected()){
+  //    if(serverClients[i].available()){
+  //      //get data from the telnet client and push it to the UART
+  //      while(serverClients[i].available()) Serial.write(serverClients[i].read());
+  //    }
+  //  }
+  //}
+  //check UART for data
+  if(Serial.available()){
+    size_t len = Serial.available();
+    uint8_t sbuf[len];
+    Serial.readBytes(sbuf, len);
+    //push UART data to all connected telnet clients
+    for(i = 0; i < MAX_SRV_CLIENTS; i++){
+      if (serverClients[i] && serverClients[i].connected()){
+        serverClients[i].write(sbuf, len);
+        delay(1);
+      }
+    }
+  }*/
+  
+  /*for(i = 0; i < MAX_SRV_CLIENTS; i++){
+      if (serverClients[i] && serverClients[i].connected()){
+        serverClients[i].println(millis());
+        delay(1);
+      }
+  }*/
+  
+  
+}  
 
+void MQTT_Loop(){
+  MQTT_connect();
+
+  // this is our 'wait for incoming subscription packets' busy subloop
+  Adafruit_MQTT_Subscribe *subscription;
+  //LOG.println(F("Start Suscription: "));
+  while ((subscription = mqtt.readSubscription(1000))) {
+    if (subscription == &onoffbutton) {
+      LOG.print(F("Got: "));
+      LOG.println((char *)onoffbutton.lastread);
+    }
+  }
+}
+void MQTT_Loop_Slow(){
+  // ping the server to keep the mqtt connection alive
+  if(! mqtt.ping()) {
+    mqtt.disconnect();
+  }
+  
+  // Now we can publish stuff!
+  LOG.print(F("\nSending photocell val "));
+  LOG.print(x);
+  LOG.print("...");
+  if (! photocell.publish(x++)) {
+    LOG.println(F("Failed"));
+  } else {
+    LOG.println(F("OK!"));
+  }
+  
+}
+// Function to connect and reconnect as necessary to the MQTT server.
+// Should be called in the loop function and it will take care if connecting.
+void MQTT_connect() {
+  int8_t ret;
+
+  // Stop if already connected.
+  if (mqtt.connected()) {
+    return;
+  }
+
+  LOG.print("Connecting to MQTT... ");
+
+  while ((ret = mqtt.connect()) != 0) { // connect will return 0 for connected
+       LOG.println(mqtt.connectErrorString(ret));
+       LOG.println("Retrying MQTT connection in 5 seconds...");
+       mqtt.disconnect();
+       delay(5000);  // wait 5 seconds
+  }
+  LOG.println("MQTT Connected!");
+}
 
