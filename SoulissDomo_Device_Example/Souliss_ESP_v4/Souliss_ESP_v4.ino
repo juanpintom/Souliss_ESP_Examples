@@ -65,8 +65,8 @@ WiFiServer telnet(23);
 WiFiClient serverClients[MAX_SRV_CLIENTS];
 
 #define SERIALPORT_INSKETCH
-#define LOG serverClients[0]
-//#define LOG Serial
+//#define LOG serverClients[0]
+#define LOG Serial
 // ***************************  SOULISS  LIBRARIES ***************************
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
@@ -145,49 +145,15 @@ void setup()
 {
     //LOG.begin(115200);
     Serial.begin(115200);
-    Initialize();
-    
+    deleteEEPROM();
+ 
     //************************************** TELNET SETUP *************************
     telnet.begin();
     telnet.setNoDelay(true);
     Serial.print("Start: "); Serial.println(millis());
-    while(Telnet_Loop() || millis() > 10000){ Serial.println(10000 - millis()); }
-    
+    //while(Telnet_Loop() || millis() > 10000){ Serial.println(10000 - millis()); }
 
-// **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
-//  STILL DISABLED, TESTING
-    EEPROM.begin(512);
-    LOG.println("");
-    LOG.println("Time to Reset");
-    delay(1000);
-    long previous = millis();
-    pinMode(0, INPUT);
-    if(!digitalRead(0)) LOG.println("GPIO0 PRESSED!");
-    while(!digitalRead(0)){
-      if(millis() < previous + 5000){
-        LOG.print("Deleting Addresses in: ");
-        LOG.println(5000 - (millis() - previous));
-        delay(500);
-      }else{
-        for(int i = STORE__ADDR_s; i <= STORE__PADDR_f; i++){
-          //EEPROM.write(i,0);
-        }
-        EEPROM.commit();
-        LOG.println("Address Deleted");
-        // DELETE EEPROM IF GPIO STILL PRESSED
-        if(millis() < previous + 10000){
-          LOG.print("Deleting EEPROM in: ");
-          LOG.println(10000 - (millis() - previous));
-          delay(500);
-        }else{
-          for(int i = 0; i <= 512; i++){
-            EEPROM.write(i,255);
-        }
-        EEPROM.commit();
-        LOG.println("EEPROM Deleted");
-        }
-      }
-    }
+    Initialize();
     
     //SetAddress(0xAB04,0x00FF,0xAB01);
     server.on ( "/", send_general_html  );
@@ -445,5 +411,44 @@ void MQTT_connect() {
        delay(5000);  // wait 5 seconds
   }
   LOG.println("MQTT Connected!");
+}
+
+void deleteEEPROM(){
+  // **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
+//  STILL DISABLED, TESTING
+    EEPROM.begin(512);
+    LOG.println("");
+    LOG.println("Time to Reset");
+    delay(1000);
+    long previous = millis();
+    pinMode(0, INPUT);
+    if(!digitalRead(0)) LOG.println("GPIO0 PRESSED!");
+    while(!digitalRead(0)){
+      if(millis() < previous + 5000){
+        LOG.print("Deleting Addresses in: ");
+        LOG.println(5000 - (millis() - previous));
+        delay(500);
+      }else{
+        for(int i = STORE__ADDR_s; i <= STORE__PADDR_f; i++){
+          //EEPROM.write(i,0);
+        }
+        EEPROM.commit();
+        LOG.println("Address Deleted");
+        // DELETE EEPROM IF GPIO STILL PRESSED
+        if(millis() < previous + 10000){
+          LOG.print("Deleting EEPROM in: ");
+          LOG.println(10000 - (millis() - previous));
+          delay(500);
+        }else{
+          for(int i = 0; i <= 512; i++){
+            EEPROM.write(i,255);
+        }
+        EEPROM.commit();
+        LOG.println("EEPROM Deleted");
+        }
+      }
+    }
+
+  
 }
 
