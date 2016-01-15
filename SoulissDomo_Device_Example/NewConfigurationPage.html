@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Souliss Node Configuration</title>
+</head>
+<body>
+
+<a href="admin.html"  class="btn btn--s"><</a>&nbsp;&nbsp;
+<strong>Souliss Slot Settings</strong>
+<hr>
+
+<a href="config.html" align="center" style="width:300px" class="btn btn--m btn--blue" >Configure Network First!</a><br>
+<hr>
+
+<form action="" method="post">
+<table border="0"  cellspacing="0" cellpadding="3" >
+  <tr>
+    <td align="left">Node Name</td>
+    <td><input type="text" id="devicename" name="devicename" value="" maxlength="10"></td>
+  </tr>
+  <td><hr></td>
+  
+  <tr><td align="left"><strong>Lights Configuration:(L1-L2-L3)</strong></td></tr>
+  <tr><td>L1 Output Mode:</td><td>
+    <select  id="L1" name="L1" onchange="getComboL1(this)">
+      <option value="0">None</option>
+      <option value="1">ON-OFF MODE</option>
+      <option value="2">PWM MODE</option>
+      <option value="3">RGB MODE</option>
+      <option value="4">PIR MODE</option>
+      <option value="5">PIR ALARM MODE</option>
+      <option value="6">PULSE MODE</option>
+    </select>
+    </td></tr>
+  <tr><td>L2 Output Mode:</td><td>
+    <select  id="L2" name="L2" onchange="getComboL2(this)">
+      <option value="0">None</option>
+      <option value="1">ON-OFF MODE</option>
+      <option value="2">PWM MODE</option>
+      <option value="3">RGB MODE</option>
+      <option value="4">PIR MODE</option>
+      <option value="5">PIR ALARM MODE</option>
+      <option value="6">PULSE MODE</option>
+    </select>
+    </td></tr>
+  <tr><td>L3 Output Mode:</td><td>
+    <select  id="L3" name="L3" onchange="getComboL3(this)">
+      <option value="0">None</option>
+      <option value="1">ON-OFF MODE</option>
+      <option value="2">PWM MODE</option>
+      <option value="3">RGB MODE</option>
+      <option value="4">PIR MODE</option>
+      <option value="5">PIR ALARM MODE</option>
+      <option value="6">PULSE MODE</option>
+    </select>
+    </td></tr>
+  
+  <td><hr></td>
+  <tr><td align="left"><strong>Sensors Configuration:(S1-S2-S3)</strong></td></tr>
+  <tr><td id="ComboA">Sensors Configuration:</td><td>
+  <select  id="byte0" name="byte0" onchange="getComboA(this)">
+    <option value="0">None</option>
+    <option value="1">DHT |........|.......</option>
+    <option value="2">.......| LDR |.......</option>
+    <option value="3">.......|........| DALLAS</option>
+    <option value="4">DHT | LDR |.......</option>
+    <option value="5">DHT |........| DALLAS</option>
+    <option value="6">.......| LDR | DALLAS</option>
+    <option value="7">DHT | LDR | DALLAS</option>
+  </select>
+  </td></tr>
+  
+  <tr><td align="left"><strong>(S1) GPIO14 Configuration:</strong></td></tr>
+  
+  <tr>
+    <td><input type="radio" id="Dallas" name="GPIO14" onclick="getGPIO14(this)">Dallas Sensor</td>
+    <td align="left" id="qty">Qty: <input type="text" id="dallas_qty" name="dallas_qty" size="2" value="1"></td>
+  </tr>
+  
+  <tr>
+    <td><input type="radio" id="Other" name="GPIO14" onclick="getGPIO14(this)">Other Sensor</td>
+  </tr>
+  
+  <tr><td align="left"><strong>(S2) GPIO16 Configuration:</strong></td></tr>
+  <tr>
+    <td><input type="radio" id="DHT" name="GPIO16" onclick="getGPIO16(this)">DHT Sensor</td>
+    <td align="left" id="type" name="type"> Type:
+     <select  id="dht_type" name="dht_type">
+        <option value="0">DHT11</option>
+        <option value="1">DHT22</option>
+   </select>
+    </td>
+  </tr>
+  
+  <tr>
+    <td><input type="radio" id="RAIN" name="GPIO16" onclick="getGPIO16(this)">RAIN Sensor</td>
+  </tr>
+  
+  <tr><td align="left"><strong>(S3) Analog Configuration:</strong></td></tr>
+   
+  <tr>
+    <td><input type="radio" id="LDR" name="Analog" onclick="getAnalog(this)">LDR Sensor</td>
+  </tr>
+  
+  <tr>
+    <td><input type="radio" id="Soil" name="Analog" onclick="getAnalog(this)">Soil Sensor</td>
+  </tr> 
+  
+  <td><hr></td>
+  <tr><td align="left"><strong>Other Sensors:</strong></td></tr>
+  <tr><td>Others: </td><td>
+    <select  id="byte2" name="byte2" onchange="getComboC(this)">
+      <option value="0">None</option>
+      <option value="1">CAPACITIVE (S4)</option>
+      <option value="2">RELAY</option>
+      <option value="3">PRESSURE SENSOR (S4)</option>
+      <option value="4">CAPACITIVE /w DEBUG (S4)</option>
+      <option value="5">BUTTONS (S4)</option>
+      <option value="6">BUTTONS_PULLUP (S4)</option>
+      <option value="7">ALARM_ENDSTOP</option>
+      <option value="8">BUTTONS_2_STATE (S4)</option>
+      <option value="9">PULSE_OUTPUT</option>
+      <option value="10">GARAGE_DOOR</option>
+      <option value="11">WINDOW_CURTAIN</option>
+      <option value="12">220V_OPTO_AND_RELAY</option>
+    </select>
+    </td></tr>
+  
+ <tr id="Thresold">
+  <td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
+  <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td>
+ </tr>
+ <tr id="Altitude">
+  <td align="left" id="Altitude_line"> Altitude:</td>
+  <td><input type="text" id="Altitude_id" name="Altitude_id" size="2" value="20"></td>
+ </tr>
+ <td><hr></td>
+  
+    <tr id="Emoncms">
+      <td><input type="checkbox" id="Send_Emon" name="Send_Emon" onclick="getEmon(this)"> Send Sensors to EmonCMS?: </td>
+      <td id="API_text"><input type="text" id="API" name="API" value="" maxlength="32"> API Key</td>
+    </tr>
+ 
+    <tr>
+  <td align="left"> Enable IR Receive on this Node?:</td>
+  <td><input type="checkbox" id="IR_ENABLE" name="IR_ENABLE" onclick="getChk(this)"></td>
+ </tr>
+  <tr>
+    <td align="left"> Enable this Node as USART Bridge?:</td>
+    <td><input type="checkbox" id="usartbridge" name="usartbridge"></td>
+  </tr>
+
+  <tr><td><hr></td><td><hr></td></tr>
+  <tr><td align="left"><strong>DEBUG Configuration:</strong></td>
+  <td><input type="checkbox" id="DEBUG" name="DEBUG" onclick="getDebug(this)"></td></tr>
+</table>
+<table id="LOG">  
+  <tr><td><input type="checkbox" id="DEBUG_LOG" name="DEBUG_LOG">Debug LOG</td></tr>
+  <tr><td><input type="checkbox" id="DEBUG_CAPSENSE" name="DEBUG_CAPSENSE">Debug CAPSENSE</td></tr>
+  <tr><td><input type="checkbox" id="DEBUG_CAPSENSE_ALL" name="DEBUG_CAPSENSE_ALL">Debug DEBUG_CAPSENSE_ALL</td></tr>
+  <tr><td><input type="checkbox" id="DEBUG_DHT" name="DEBUG_DHT">Debug DHT</td></tr>
+  <tr><td><input type="checkbox" id="DEBUG_PRESSURE" name="DEBUG_PRESSURE">Debug PRESSURE</td></tr>
+  <tr><td><input type="checkbox" id="DEBUG_GETLUX" name="DEBUG_GETLUX">Debug GETLUX</td></tr>
+  <tr><td><input type="checkbox" id="DEBUG_DALLAS" name="DEBUG_DALLAS">Debug DALLAS</td></tr>
+  <tr><td><input type="checkbox" id="DEBUG_IR" name="DEBUG_IR">Debug IR</td></tr>
+  <tr><td><input type="checkbox" id="DEBUG_IR_FULL" name="DEBUG_IR_FULL">Debug IR_FULL</td></tr>
+  <tr><td><input type="checkbox" id="DEBUG_PLC" name="DEBUG_PLC">Debug PLC</td></tr>
+  <td><hr></td>
+</table>
+  
+<table>  
+<tr><td colspan="2" align="center"><input type="submit" style="width:150px" class="btn btn--m btn--blue" value="Save"></td></tr>
+</table>
+<strong>Remember Get Souliss Nodes again from the app after Save Settings</strong>
+</form>
+
+<script>
+ 
+window.onload = function ()
+{
+ load("style.css","css", function() 
+ {
+  load("microajax.js","js", function() 
+  {       
+        setValues("/admin/generalvalues");    
+  });
+ });
+}
+function load(e,t,n){
+  getConfig();
+  if("js"==t){
+    var a=document.createElement("script");
+    a.src=e,a.type="text/javascript",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
+  }else if("css"==t){
+    var a=document.createElement("link");
+    a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
+  }
+}
+  function getConfig(){
+    document.getElementById("ComboA").style.display = "none";  //QUITAR!!
+    document.getElementById("byte0").style.display = "none";  //QUITAR!!
+    
+    if(document.getElementById("DHT").checked){
+      document.getElementById("type").style.display = "block";  //none;  
+    }else{
+      document.getElementById("type").style.display = "none";  //none;  
+    }
+
+    if(document.getElementById("Dallas").checked){
+      document.getElementById("qty").style.display = "block";  //none;  
+    }else{
+      document.getElementById("qty").style.display = "none";  //none;  
+    }
+    
+    if(document.getElementById("Send_Emon").checked){
+      document.getElementById("API_text").style.display = "block";  //none;  
+    } else { 
+      document.getElementById("API_text").style.display = "none"; 
+    } 
+    
+    value = document.getElementById("byte2");
+    if(value == 1 || value == 4) {
+       document.getElementById("Thresold").style.display = "block";  //none;  
+    } else { 
+       document.getElementById("Thresold").style.display = "none"; 
+    }
+   
+    if(value == 3) {
+      document.getElementById("Altitude").style.display = "block";  //none;  
+    } else {
+      document.getElementById("Altitude").style.display = "none";  
+    }
+    
+    if(document.getElementById("DEBUG").checked){
+      document.getElementById("LOG").style.display = "block";  //none;  
+    }else{
+      document.getElementById("LOG").style.display = "none";  //none;  
+    }
+  }
+  
+  
+  function getGPIO16(sel) {
+    if(sel.id == "DHT"){
+      document.getElementById("type").style.display = "block";  //none;  
+    } else { 
+      document.getElementById("type").style.display = "none"; 
+    }
+    if(sel.id == "RAIN"){
+      //alert("RAIN")
+    }  
+  }
+  
+  function getGPIO14(sel) {
+    if(sel.id == "Dallas"){
+      document.getElementById("qty").style.display = "block";  //none;  
+    } else { 
+      document.getElementById("qty").style.display = "none"; 
+    } 
+  }
+  
+  function getAnalog(sel) {
+    if(sel.id == "LDR"){
+      //alert("LDR")
+    }
+  }
+  
+  function getEmon(sel) {
+    if(sel.checked){
+      document.getElementById("API_text").style.display = "block";  //none;  
+    } else { 
+      document.getElementById("API_text").style.display = "none"; 
+    } 
+  }
+  
+  function getChk(sel) {
+    alert(sel.checked)
+  }
+
+  function getComboA(sel) {
+    var value = sel.value;
+    if(value == 1 || value == 4 || value == 5 || value == 7) {
+     document.getElementById("DHT").style.display = "block";  //none;  
+    } else { 
+     document.getElementById("DHT").style.display = "none"; 
+    }
+   
+    if(value == 3 || value == 5 || value == 6 || value == 7) {
+      document.getElementById("Dallas").style.display = "block";  //none;  
+   } else {
+    document.getElementById("Dallas").style.display = "none";  
+   }
+}
+
+function getComboL1(sel) {
+  var value = sel.value;
+  if(value == 5){
+     document.getElementById("L2").value = 5;
+     document.getElementById("L3").value = 5;
+  } else {
+    if(document.getElementById("L2").value == 5){
+       document.getElementById("L2").value = 0;
+    }
+    if(document.getElementById("L3").value == 5){
+       document.getElementById("L3").value = 0;
+    } 
+  } 
+}
+
+function getComboL2(sel) {
+  var value = sel.value;
+  if(value == 5){
+     document.getElementById("L1").value = 5;
+     document.getElementById("L3").value = 5;
+  } else {
+    if(document.getElementById("L1").value == 5){
+       document.getElementById("L1").value = 0;
+    }
+    if(document.getElementById("L3").value == 5){
+       document.getElementById("L3").value = 0;
+    } 
+  } 
+    
+}
+
+function getComboL3(sel) {
+  var value = sel.value;
+  if(value == 5){
+     document.getElementById("L1").value = 5;
+     document.getElementById("L2").value = 5;
+  } else {
+    if(document.getElementById("L1").value == 5){
+       document.getElementById("L1").value = 0;
+    }
+    if(document.getElementById("L2").value == 5){
+       document.getElementById("L2").value = 0;
+    } 
+  } 
+    
+}
+  
+  
+function getComboC(sel) {
+   var value = sel.value;
+   if(value == 1 || value == 4) {
+       document.getElementById("Thresold").style.display = "block";  //none;  
+   } else { 
+       document.getElementById("Thresold").style.display = "none"; 
+   }
+   
+   if(value == 3) {
+      document.getElementById("Altitude").style.display = "block";  //none;  
+   } else {
+      document.getElementById("Altitude").style.display = "none";  
+   }
+}
+
+function getDebug(sel){
+  if(sel.checked){
+        document.getElementById("LOG").style.display = "block";  //none;  
+  } else {
+    document.getElementById("LOG").style.display = "none";  
+  }
+}  
+</script>
+    
+</body>
+</html>
