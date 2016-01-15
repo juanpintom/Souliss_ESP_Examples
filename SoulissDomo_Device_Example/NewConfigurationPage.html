@@ -19,44 +19,49 @@
     <td><input type="text" id="devicename" name="devicename" value="" maxlength="10"></td>
   </tr>
   <td><hr></td>
+  </table>
   
-  <tr><td align="left"><strong>Lights Configuration:(L1-L2-L3)</strong></td></tr>
+  <div align="center" style="width:380px"><strong>Lights Configuration:(L1-L2-L3)</strong></div>
+  
+  <table style="width:500px">
   <tr><td>L1 Output Mode:</td><td>
-    <select  id="L1" name="L1" onchange="getComboL1(this)">
+    <select  id="L1" name="L1" onchange="getComboL1(this)" style="width:180px">
       <option value="0">None</option>
       <option value="1">ON-OFF MODE</option>
       <option value="2">PWM MODE</option>
-      <option value="3">RGB MODE</option>
+      <option value="3">RGB MODE (RED)</option>
       <option value="4">PIR MODE</option>
       <option value="5">PIR ALARM MODE</option>
       <option value="6">PULSE MODE</option>
     </select>
     </td></tr>
   <tr><td>L2 Output Mode:</td><td>
-    <select  id="L2" name="L2" onchange="getComboL2(this)">
+    <select  id="L2" name="L2" onchange="getComboL2(this)" style="width:180px">
       <option value="0">None</option>
       <option value="1">ON-OFF MODE</option>
       <option value="2">PWM MODE</option>
-      <option value="3">RGB MODE</option>
+      <option value="3">RGB MODE (GREEN)</option>
       <option value="4">PIR MODE</option>
       <option value="5">PIR ALARM MODE</option>
       <option value="6">PULSE MODE</option>
     </select>
     </td></tr>
   <tr><td>L3 Output Mode:</td><td>
-    <select  id="L3" name="L3" onchange="getComboL3(this)">
+    <select  id="L3" name="L3" onchange="getComboL3(this)"style="width:180px">
       <option value="0">None</option>
       <option value="1">ON-OFF MODE</option>
       <option value="2">PWM MODE</option>
-      <option value="3">RGB MODE</option>
+      <option value="3">RGB MODE (BLUE)</option>
       <option value="4">PIR MODE</option>
       <option value="5">PIR ALARM MODE</option>
       <option value="6">PULSE MODE</option>
     </select>
     </td></tr>
-  
   <td><hr></td>
-  <tr><td align="left"><strong>Sensors Configuration:(S1-S2-S3)</strong></td></tr>
+  </table>
+  
+  <div align="center" style="width:380px"><strong>Sensors Configuration:(S1-S2-S3)</strong></div>
+  <table>
   <tr><td id="ComboA">Sensors Configuration:</td><td>
   <select  id="byte0" name="byte0" onchange="getComboA(this)">
     <option value="0">None</option>
@@ -70,46 +75,46 @@
   </select>
   </td></tr>
   
-  <tr><td align="left"><strong>(S1) GPIO14 Configuration:</strong></td></tr>
-  
-  <tr>
-    <td><input type="radio" id="Dallas" name="GPIO14" onclick="getGPIO14(this)">Dallas Sensor</td>
+  <tr><td>(S1) GPIO14 Configuration: </td><td>
+    <select  id="S1" name="S1" onchange="getComboS1(this)" style="width:180px">
+      <option value="0">None</option>
+      <option value="1">Dallas (Temperature)</option>
+      <option value="2">Other</option>
+    </select>
     <td align="left" id="qty">Qty: <input type="text" id="dallas_qty" name="dallas_qty" size="2" value="1"></td>
-  </tr>
-  
+    </td></tr>
   <tr>
-    <td><input type="radio" id="Other" name="GPIO14" onclick="getGPIO14(this)">Other Sensor</td>
-  </tr>
-  
-  <tr><td align="left"><strong>(S2) GPIO16 Configuration:</strong></td></tr>
-  <tr>
-    <td><input type="radio" id="DHT" name="GPIO16" onclick="getGPIO16(this)">DHT Sensor</td>
+    
+  <tr><td>(S2) GPIO16 Configuration: </td><td>
+    <select  id="S2" name="S2" onchange="getComboS2(this)"style="width:180px">
+      <option value="0">None</option>
+      <option value="1">DHT (Temp - Humidity)</option>
+      <option value="2">Rain Sensor</option>
+    </select>
     <td align="left" id="type" name="type"> Type:
      <select  id="dht_type" name="dht_type">
         <option value="0">DHT11</option>
         <option value="1">DHT22</option>
-   </select>
+        </select>
     </td>
-  </tr>
+    </td></tr>
   
-  <tr>
-    <td><input type="radio" id="RAIN" name="GPIO16" onclick="getGPIO16(this)">RAIN Sensor</td>
-  </tr>
-  
-  <tr><td align="left"><strong>(S3) Analog Configuration:</strong></td></tr>
-   
-  <tr>
-    <td><input type="radio" id="LDR" name="Analog" onclick="getAnalog(this)">LDR Sensor</td>
-  </tr>
-  
-  <tr>
-    <td><input type="radio" id="Soil" name="Analog" onclick="getAnalog(this)">Soil Sensor</td>
-  </tr> 
-  
+  <tr><td>(S3) Analog Configuration: </td><td>
+    <select  id="S3" name="S3" onchange="getComboS3(this)"style="width:180px">
+      <option value="0">None</option>
+      <option value="1">LDR (Luminosity)</option>
+      <option value="2">Soil Sensor</option>
+    </select>
+    </td></tr>
+  <tr id="Emoncms"><td><input type="checkbox" id="Send_Emon" name="Send_Emon" onclick="getEmon(this)"> Send to EmonCMS?: </td>
+  <td id="API_text"><input type="text" id="API" name="API" value="" maxlength="32"> API Key</td></tr>
   <td><hr></td>
-  <tr><td align="left"><strong>Other Sensors:</strong></td></tr>
-  <tr><td>Others: </td><td>
-    <select  id="byte2" name="byte2" onchange="getComboC(this)">
+  </table>
+  
+  <div align="center" style="width:380px"><strong>Other Sensors: (S4-S5)</strong></div>
+  <table style="width:500px">
+  <tr><td style="width:170px">Others: (S4-S5) </td><td>
+    <select id="byte2" name="byte2" onchange="getComboC(this)">
       <option value="0">None</option>
       <option value="1">CAPACITIVE (S4)</option>
       <option value="2">RELAY</option>
@@ -135,18 +140,16 @@
   <td><input type="text" id="Altitude_id" name="Altitude_id" size="2" value="20"></td>
  </tr>
  <td><hr></td>
-  
-    <tr id="Emoncms">
-      <td><input type="checkbox" id="Send_Emon" name="Send_Emon" onclick="getEmon(this)"> Send Sensors to EmonCMS?: </td>
-      <td id="API_text"><input type="text" id="API" name="API" value="" maxlength="32"> API Key</td>
-    </tr>
- 
-    <tr>
-  <td align="left"> Enable IR Receive on this Node?:</td>
+ </table>
+    
+  <table>
+  <tr>
+  <td align="left">Receive IR on this Node?:</td>
   <td><input type="checkbox" id="IR_ENABLE" name="IR_ENABLE" onclick="getChk(this)"></td>
  </tr>
+  <td><hr></td>  
   <tr>
-    <td align="left"> Enable this Node as USART Bridge?:</td>
+    <td align="left"> Node is USART Bridge?:</td>
     <td><input type="checkbox" id="usartbridge" name="usartbridge"></td>
   </tr>
 
@@ -154,7 +157,8 @@
   <tr><td align="left"><strong>DEBUG Configuration:</strong></td>
   <td><input type="checkbox" id="DEBUG" name="DEBUG" onclick="getDebug(this)"></td></tr>
 </table>
-<table id="LOG">  
+<table id="LOG">
+  <tr><td><input type="checkbox" id="ALL_LOG" name="ALL_LOG" onclick="getAllLog(this)"><strong>Enable All </strong></td></tr>
   <tr><td><input type="checkbox" id="DEBUG_LOG" name="DEBUG_LOG">Debug LOG</td></tr>
   <tr><td><input type="checkbox" id="DEBUG_CAPSENSE" name="DEBUG_CAPSENSE">Debug CAPSENSE</td></tr>
   <tr><td><input type="checkbox" id="DEBUG_CAPSENSE_ALL" name="DEBUG_CAPSENSE_ALL">Debug DEBUG_CAPSENSE_ALL</td></tr>
@@ -162,6 +166,7 @@
   <tr><td><input type="checkbox" id="DEBUG_PRESSURE" name="DEBUG_PRESSURE">Debug PRESSURE</td></tr>
   <tr><td><input type="checkbox" id="DEBUG_GETLUX" name="DEBUG_GETLUX">Debug GETLUX</td></tr>
   <tr><td><input type="checkbox" id="DEBUG_DALLAS" name="DEBUG_DALLAS">Debug DALLAS</td></tr>
+  <tr><td><input type="checkbox" id="DEBUG_EMONCMS" name="DEBUG_EMONCMS">Debug EMONCMS</td></tr>
   <tr><td><input type="checkbox" id="DEBUG_IR" name="DEBUG_IR">Debug IR</td></tr>
   <tr><td><input type="checkbox" id="DEBUG_IR_FULL" name="DEBUG_IR_FULL">Debug IR_FULL</td></tr>
   <tr><td><input type="checkbox" id="DEBUG_PLC" name="DEBUG_PLC">Debug PLC</td></tr>
@@ -200,13 +205,13 @@ function load(e,t,n){
     document.getElementById("ComboA").style.display = "none";  //QUITAR!!
     document.getElementById("byte0").style.display = "none";  //QUITAR!!
     
-    if(document.getElementById("DHT").checked){
+    if(document.getElementById("S2").value == 1){
       document.getElementById("type").style.display = "block";  //none;  
     }else{
       document.getElementById("type").style.display = "none";  //none;  
     }
 
-    if(document.getElementById("Dallas").checked){
+    if(document.getElementById("S1").value == 1){
       document.getElementById("qty").style.display = "block";  //none;  
     }else{
       document.getElementById("qty").style.display = "none";  //none;  
@@ -237,29 +242,29 @@ function load(e,t,n){
       document.getElementById("LOG").style.display = "none";  //none;  
     }
   }
-  
-  
-  function getGPIO16(sel) {
-    if(sel.id == "DHT"){
-      document.getElementById("type").style.display = "block";  //none;  
-    } else { 
-      document.getElementById("type").style.display = "none"; 
-    }
-    if(sel.id == "RAIN"){
-      //alert("RAIN")
-    }  
-  }
-  
-  function getGPIO14(sel) {
-    if(sel.id == "Dallas"){
+   
+  function getComboS1(sel) {
+    if(sel.value == 1){
       document.getElementById("qty").style.display = "block";  //none;  
     } else { 
       document.getElementById("qty").style.display = "none"; 
     } 
   }
   
-  function getAnalog(sel) {
-    if(sel.id == "LDR"){
+  function getComboS2(sel) {
+    if(sel.value == 1){
+      document.getElementById("type").style.display = "block";  //none;  
+    } else { 
+      document.getElementById("type").style.display = "none"; 
+    }
+    if(sel.value == 2){
+      //alert("RAIN")
+    }  
+  }
+ 
+  
+  function getComboS3(sel) {
+    if(sel.value == 1){
       //alert("LDR")
     }
   }
@@ -356,12 +361,40 @@ function getComboC(sel) {
 
 function getDebug(sel){
   if(sel.checked){
-        document.getElementById("LOG").style.display = "block";  //none;  
+    document.getElementById("LOG").style.display = "block";  //none;  
   } else {
     document.getElementById("LOG").style.display = "none";  
   }
 }  
+function getAllLog(sel){
+  if(sel.checked){
+    document.getElementById("DEBUG_LOG").checked = true;    
+    document.getElementById("DEBUG_CAPSENSE").checked = true;  
+    document.getElementById("DEBUG_CAPSENSE_ALL").checked = true;  
+    document.getElementById("DEBUG_DHT").checked = true;  
+    document.getElementById("DEBUG_PRESSURE").checked = true;  
+    document.getElementById("DEBUG_GETLUX").checked = true;  
+    document.getElementById("DEBUG_DALLAS").checked = true;  
+    document.getElementById("DEBUG_EMONCMS").checked = true;  
+    document.getElementById("DEBUG_IR").checked = true;
+    document.getElementById("DEBUG_IR_FULL").checked = true;
+    document.getElementById("DEBUG_PLC").checked = true;
+  } else {
+    document.getElementById("DEBUG_LOG").checked = false;    
+    document.getElementById("DEBUG_CAPSENSE").checked = false;  
+    document.getElementById("DEBUG_CAPSENSE_ALL").checked = false;  
+    document.getElementById("DEBUG_DHT").checked = false;  
+    document.getElementById("DEBUG_PRESSURE").checked = false;  
+    document.getElementById("DEBUG_GETLUX").checked = false;  
+    document.getElementById("DEBUG_DALLAS").checked = false;  
+    document.getElementById("DEBUG_EMONCMS").checked = false;  
+    document.getElementById("DEBUG_IR").checked = false;
+    document.getElementById("DEBUG_IR_FULL").checked = false;
+    document.getElementById("DEBUG_PLC").checked = false;
+  }
+}
 </script>
     
 </body>
 </html>
+
