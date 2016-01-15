@@ -117,18 +117,18 @@
   <tr><td style="width:170px">Others: (S4-S5) </td><td>
     <select id="byte2" name="byte2" onchange="getComboC(this)">
       <option value="0">None</option>
-      <option value="1">CAPACITIVE (S4)</option>
-      <option value="2">RELAY</option>
-      <option value="3">PRESSURE SENSOR (S4)</option>
-      <option value="4">CAPACITIVE /w DEBUG (S4)</option>
-      <option value="5">BUTTONS (S4)</option>
-      <option value="6">BUTTONS_PULLUP (S4)</option>
-      <option value="7">ALARM_ENDSTOP</option>
-      <option value="8">BUTTONS_2_STATE (S4)</option>
-      <option value="9">PULSE_OUTPUT</option>
-      <option value="10">GARAGE_DOOR</option>
-      <option value="11">WINDOW_CURTAIN</option>
-      <option value="12">220V_OPTO_AND_RELAY</option>
+      <option value="1">(S5) CAPACITIVE</option>
+      <option value="2">(S4) RELAY</option>
+      <option value="3">(S5) PRESSURE SENSOR</option>
+      <option value="4">(S5) CAPACITIVE /w DEBUG</option>
+      <option value="5">(S5) BUTTONS</option>
+      <option value="6">(S5) BUTTONS_PULLUP</option>
+      <option value="7">(S5) ALARM_ENDSTOP</option>
+      <option value="8">(S5) BUTTONS_2_STATE</option>
+      <option value="9">(S4) PULSE_OUTPUT</option>
+      <option value="10">(S4) GARAGE_DOOR</option>
+      <option value="11">(S4) WINDOW_CURTAIN</option>
+      <option value="12">(S4) 220V_OPTO_AND_RELAY</option>
     </select>
     </td></tr>
   
@@ -154,7 +154,7 @@
   <table>
     <tr>
     <td align="left" style="width:230px"> Node is USART Bridge?: (S4)</td>
-    <td><input type="checkbox" id="usartbridge" name="usartbridge"></td>
+    <td><input type="checkbox" id="usartbridge" name="usartbridge" onclick="getUSART(this)"></td>
     </tr></table>
   
   <td style="width:500px"><hr></td>
@@ -330,19 +330,30 @@ function getComboL3(sel) {
   
   
 function getComboC(sel) {
-   var value = sel.value;
-   if(value == 1 || value == 4) {
+  var value = sel.value;
+  if(value == 1 || value == 4) {
        document.getElementById("Thresold").style.display = "block";  //none;  
-   } else { 
+  } else { 
        document.getElementById("Thresold").style.display = "none"; 
-   }
+  }
    
-   if(value == 3) {
+  if(value == 3) {
       document.getElementById("Altitude").style.display = "block";  //none;  
-   } else {
+  } else {
       document.getElementById("Altitude").style.display = "none";  
-   }
+  }
+  if(value == 2 || value == 9 || value == 10 || value == 11 || value == 12){
+    document.getElementById("usartbridge").checked = false;  
+  
+  }
 }
+function getUSART(sel){
+  if(sel.checked){
+    document.getElementById("byte2").value = 0;   
+  }
+
+}
+  
 
 function getDebug(sel){
   if(sel.checked){
