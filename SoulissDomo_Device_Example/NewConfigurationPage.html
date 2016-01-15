@@ -19,7 +19,7 @@
     <td align="right"><input type="text" id="devicename" name="devicename" value="" maxlength="10"></td>
   </tr>
   </table>
-  <td style="width:500px"><hr></td>
+  <td><hr></td>
   
   <div align="center" style="width:380px"><strong>Lights Configuration:(L1-L2-L3)</strong></div>
   
@@ -59,7 +59,8 @@
     </td></tr>
 
   </table>
-  <td style="width:500px"><hr></td>  
+  
+  <td><hr></td>  
   <div align="center" style="width:380px"><strong>Sensors Configuration:(S1-S2-S3)</strong></div>
   <table>
   <tr><td id="ComboA">Sensors Configuration:</td><td>
@@ -109,7 +110,8 @@
   <tr id="Emoncms"><td><input type="checkbox" id="Send_Emon" name="Send_Emon" onclick="getEmon(this)"> Send to EmonCMS?: </td>
   <td id="API_text"><input type="text" id="API" name="API" value="" maxlength="32"> API Key</td></tr>
   </table>
-  <td style="width:500px"><hr></td>  
+    
+  <td><hr></td>  
   <div align="center" style="width:280px"><strong>Other Sensors: (S4-S5)</strong></div>
   <table style="width:500px">
   <tr><td style="width:170px">Others: (S4-S5) </td><td>
@@ -140,42 +142,45 @@
  </tr>
  </table>
 
-  <td style="width:500px"><hr></td>    
+  <td><hr></td>    
     
   <table>
-  <tr>
-  <td align="left">Receive IR on this Node?:</td>
-  <td><input type="checkbox" id="IR_ENABLE" name="IR_ENABLE" onclick="getChk(this)"></td>
- </tr>
+    <tr>
+    <td align="left" style="width:200px">Receive IR on this Node?:</td>
+    <td><input type="checkbox" id="IR_ENABLE" name="IR_ENABLE" onclick="getChk(this)"></td>
+    </tr></table>
+    
   <td style="width:500px"><hr></td>
-  <tr>
-    <td align="left"> Node is USART Bridge?:</td>
+  <table>
+    <tr>
+    <td align="left" style="width:200px"> Node is USART Bridge?:</td>
     <td><input type="checkbox" id="usartbridge" name="usartbridge"></td>
-  </tr>
-
+    </tr></table>
+  
   <td style="width:500px"><hr></td>
-  <tr><td align="left"><strong>DEBUG Configuration:</strong></td>
-  <td><input type="checkbox" id="DEBUG" name="DEBUG" onclick="getDebug(this)"></td></tr>
-</table>
-<table id="LOG">
-  <tr><td><input type="checkbox" id="ALL_LOG" name="ALL_LOG" onclick="getAllLog(this)"><strong>Enable All </strong></td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_LOG" name="DEBUG_LOG">Debug LOG</td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_CAPSENSE" name="DEBUG_CAPSENSE">Debug CAPSENSE</td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_CAPSENSE_ALL" name="DEBUG_CAPSENSE_ALL">Debug DEBUG_CAPSENSE_ALL</td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_DHT" name="DEBUG_DHT">Debug DHT</td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_PRESSURE" name="DEBUG_PRESSURE">Debug PRESSURE</td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_GETLUX" name="DEBUG_GETLUX">Debug GETLUX</td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_DALLAS" name="DEBUG_DALLAS">Debug DALLAS</td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_EMONCMS" name="DEBUG_EMONCMS">Debug EMONCMS</td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_IR" name="DEBUG_IR">Debug IR</td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_IR_FULL" name="DEBUG_IR_FULL">Debug IR_FULL</td></tr>
-  <tr><td><input type="checkbox" id="DEBUG_PLC" name="DEBUG_PLC">Debug PLC</td></tr>
-</table>
-  <td style="width:500px"><hr></td>
-<table>  
-<tr><td colspan="2" align="center"><input type="submit" style="width:150px" class="btn btn--m btn--blue" value="Save"></td></tr>
-</table>
-<strong>Remember Get Souliss Nodes again from the app after Save Settings</strong>
+  <table>
+    <tr><td align="left" style="width:200px"><strong>DEBUG Configuration:</strong></td>
+    <td><input type="checkbox" id="DEBUG" name="DEBUG" onclick="getDebug(this)"> <-Check to Show</td></tr></table>
+    
+  <table id="LOG">
+    <tr><td><input type="checkbox" id="ALL_LOG" name="ALL_LOG" onclick="getAllLog(this)"><strong>Enable All </strong></td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_LOG" name="DEBUG_LOG">Debug LOG</td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_CAPSENSE" name="DEBUG_CAPSENSE">Debug CAPSENSE</td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_CAPSENSE_ALL" name="DEBUG_CAPSENSE_ALL">Debug DEBUG_CAPSENSE_ALL</td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_DHT" name="DEBUG_DHT">Debug DHT</td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_PRESSURE" name="DEBUG_PRESSURE">Debug PRESSURE</td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_GETLUX" name="DEBUG_GETLUX">Debug GETLUX</td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_DALLAS" name="DEBUG_DALLAS">Debug DALLAS</td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_EMONCMS" name="DEBUG_EMONCMS">Debug EMONCMS</td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_IR" name="DEBUG_IR">Debug IR</td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_IR_FULL" name="DEBUG_IR_FULL">Debug IR_FULL</td></tr>
+    <tr><td><input type="checkbox" id="DEBUG_PLC" name="DEBUG_PLC">Debug PLC</td></tr>
+  </table>
+    <td style="width:500px"><hr></td>
+  <table>  
+  <tr><td colspan="2" align="center"><input type="submit" style="width:150px" class="btn btn--m btn--blue" value="Save"></td></tr>
+  </table>
+  <strong>Remember Get Souliss Nodes again from the app after Save Settings</strong>
 </form>
 
 <script>
