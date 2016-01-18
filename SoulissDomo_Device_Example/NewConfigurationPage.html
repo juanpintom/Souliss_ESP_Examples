@@ -110,8 +110,33 @@
   <tr id="Emoncms"><td><input type="checkbox" id="Send_Emon" name="Send_Emon" onclick="getEmon(this)"> Send to EmonCMS?: </td>
   <td id="API_text"><input type="text" id="API" name="API" value="" maxlength="32"> API Key</td></tr>
   </table>
-    
+  
   <td><hr></td>  
+  
+  <tr><td>(S4) Configuration: </td><td>
+    <select  id="S4" name="S4" onchange="getComboS4(this)"style="width:180px">
+      <option value="0">None</option>
+      <option value="1">CAPACITIVE</option>
+      <option value="2">CAPACITIVE /w DEBUG</option>
+      <option value="3">BUTTONS</option>
+      <option value="4">BUTTONS_PULLUP</option>
+      <option value="5">ALARM_ENDSTOP</option>
+      <option value="6">BUTTONS_2_STATE</option>
+    </select>
+    </td></tr>
+    
+  <tr><td>(S5) Configuration: </td><td>
+    <select  id="S5" name="S5" onchange="getComboS5(this)"style="width:180px">
+      <option value="0">None</option>
+      <option value="1">RELAY</option>
+      <option value="2">PULSE_OUTPUT</option>
+      <option value="3">GARAGE_DOOR</option>
+      <option value="4">WINDOW_CURTAIN</option>
+      <option value="5">ALARM_ENDSTOP</option>
+      <option value="6">220V_OPTO_AND_RELAY</option>
+    </select>
+    </td></tr>
+  
   <div align="center" style="width:280px"><strong>Other Sensors: (S4-S5)</strong></div>
   <table style="width:500px">
   <tr><td style="width:170px">Others: (S4-S5) </td><td>
