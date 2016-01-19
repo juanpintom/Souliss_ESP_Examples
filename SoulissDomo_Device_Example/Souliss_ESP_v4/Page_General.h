@@ -124,7 +124,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="6">BUTTONS_2_STATE</option>
     </select>
     </td></tr>
-    
+  <td><hr></td> 
   <tr><td>(S5) Configuration: </td><td>
     <select  id="S5" name="S5" onchange="getComboS5(this)"style="width:180px">
       <option value="0">None</option>
@@ -468,12 +468,12 @@ void send_general_configuration_values_html()
 	values += "L1|" +  (String) L1 + "|input\n";
 	values += "L2|" +  (String) L2 + "|input\n";
 	values += "L3|" +  (String) L3 + "|input\n";
-  values += "S1|" +  (String) L1 + "|input\n";
-  values += "S2|" +  (String) L2 + "|input\n";
-  values += "S3|" +  (String) L3 + "|input\n";
-  values += "S4|" +  (String) L1 + "|input\n";
-  values += "S5|" +  (String) L2 + "|input\n";
-  values += "S6|" +  (String) L3 + "|input\n";
+  values += "S1|" +  (String) S1 + "|input\n";
+  values += "S2|" +  (String) S2 + "|input\n";
+  values += "S3|" +  (String) S3 + "|input\n";
+  values += "S4|" +  (String) S4 + "|input\n";
+  values += "S5|" +  (String) S5 + "|input\n";
+  values += "S6|" +  (String) S6 + "|input\n";
 	values += "cap_thresold|" +  (String) cap_thresold + "|input\n";
 	values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
 	values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
@@ -494,8 +494,7 @@ void send_general_configuration_values_html()
   values += "DEBUG_IR|" +  (String) (DEBUG_IR ? "checked" : "") + "|chk\n";
   values += "DEBUG_IR_FULL|" +  (String) (DEBUG_IR_FULL ? "checked" : "") + "|chk\n";
   values += "DEBUG_PLC|" +  (String) (DEBUG_PLC ? "checked" : "") + "|chk\n";
-  
- 
+
 	server.send ( 200, "text/plain", values);
 	LOG.println(__FUNCTION__); 
 }

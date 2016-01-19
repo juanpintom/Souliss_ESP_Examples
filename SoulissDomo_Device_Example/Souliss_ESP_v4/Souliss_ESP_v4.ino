@@ -65,8 +65,8 @@ WiFiServer telnet(23);
 WiFiClient serverClients[MAX_SRV_CLIENTS];
 
 #define SERIALPORT_INSKETCH
-#define LOG serverClients[0]
-//#define LOG Serial
+//#define LOG serverClients[0]
+#define LOG Serial
 // ***************************  SOULISS  LIBRARIES ***************************
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
@@ -144,7 +144,7 @@ void MQTT_connect();
 void setup()
 {
     //LOG.begin(115200);
-    //Serial.begin(115200);
+    Serial.begin(115200);
     
  
     //************************************** TELNET SETUP *************************

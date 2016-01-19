@@ -3,7 +3,7 @@
 
 int valorPWM;
 
-#define STORE_CUSTOM 450
+#define STORE_CUSTOM 430
 
 //Autocalibrate Capacitive Sensors ON
 #define AUTOCALIBRATE         1
