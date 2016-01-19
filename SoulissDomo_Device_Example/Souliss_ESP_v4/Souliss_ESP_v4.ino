@@ -65,8 +65,8 @@ WiFiServer telnet(23);
 WiFiClient serverClients[MAX_SRV_CLIENTS];
 
 #define SERIALPORT_INSKETCH
-//#define LOG serverClients[0]
-#define LOG Serial
+#define LOG serverClients[0]
+//#define LOG Serial
 // ***************************  SOULISS  LIBRARIES ***************************
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
@@ -144,8 +144,8 @@ void MQTT_connect();
 void setup()
 {
     //LOG.begin(115200);
-    Serial.begin(115200);
-    deleteEEPROM();
+    //Serial.begin(115200);
+    
  
     //************************************** TELNET SETUP *************************
     telnet.begin();
@@ -154,12 +154,13 @@ void setup()
     //while(Telnet_Loop() || millis() > 10000){ Serial.println(10000 - millis()); }
 
     Initialize();
+    deleteEEPROM();
     
-    //SetAddress(0xAB04,0x00FF,0xAB01);
     server.on ( "/", send_general_html  );
     server.on ( "/general.html", send_general_html  );
     server.on ( "/admin/generalvalues", send_general_configuration_values_html);
-    
+
+    ReadConfig_Slots();
     // Read the IP configuration from the EEPROM, if not available start
     // the node as access point
     if(!ReadIPConfiguration()) 
@@ -177,15 +178,6 @@ void setup()
   		}
   
 	  }
-    ReadConfig_Slots();
-    /*if(DEBUG_PRESSURE){
-      LOG.print("ALTITUD: ");
-      LOG.println(ALTITUDE);
-    }
-    
-    
-    LOG.print("EEPROM GW: ");
-    LOG.println(EEPROM.read(STORE__GATEWAY_s));*/
     
     if (IsRuntimeGateway())
     {

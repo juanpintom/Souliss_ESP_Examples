@@ -63,26 +63,26 @@ void irButtons(byte function){
   if(function == ir_ONOFF || function == ir_PWM){
     // ************************    OFF ALL    *****************************    
       if(Souliss_IrIn(b2, 0, 254, &results)){
-        mInput(LEDPWM0) = Souliss_T1n_OffCmd;
-        mInput(LEDPWM1) = Souliss_T1n_OffCmd; 
-        mInput(LEDPWM2) = Souliss_T1n_OffCmd;   
+        mInput(LED1) = Souliss_T1n_OffCmd;
+        mInput(LED2) = Souliss_T1n_OffCmd; 
+        mInput(LED3) = Souliss_T1n_OffCmd;   
       }
     // ************************    ON ALL    ******************************* 
       if(Souliss_IrIn(b3, 0, 254, &results)){
         
-        mInput(LEDPWM0) = Souliss_T1n_OnCmd;
-        mInput(LEDPWM1) = Souliss_T1n_OnCmd; 
-        mInput(LEDPWM2) = Souliss_T1n_OnCmd; 
+        mInput(LED1) = Souliss_T1n_OnCmd;
+        mInput(LED2) = Souliss_T1n_OnCmd; 
+        mInput(LED3) = Souliss_T1n_OnCmd; 
       }
     // ************************    TOGGLES    *******************************
-      Souliss_IrIn(b11, Souliss_T1n_ToggleCmd, LEDPWM0, &results);
-      Souliss_IrIn(b15, Souliss_T1n_ToggleCmd, LEDPWM1, &results);
-      Souliss_IrIn(b19, Souliss_T1n_ToggleCmd, LEDPWM2, &results);
+      Souliss_IrIn(b11, Souliss_T1n_ToggleCmd, LED1, &results);
+      Souliss_IrIn(b15, Souliss_T1n_ToggleCmd, LED2, &results);
+      Souliss_IrIn(b19, Souliss_T1n_ToggleCmd, LED3, &results);
       
     // ************************    TIMERS     *******************************
-      Souliss_IrIn(b10, Souliss_T1n_Timed_StdVal, LEDPWM0, &results);
-      Souliss_IrIn(b14, Souliss_T1n_Timed_StdVal, LEDPWM1, &results);
-      Souliss_IrIn(b18, Souliss_T1n_Timed_StdVal, LEDPWM2, &results);
+      Souliss_IrIn(b10, Souliss_T1n_Timed_StdVal, LED1, &results);
+      Souliss_IrIn(b14, Souliss_T1n_Timed_StdVal, LED2, &results);
+      Souliss_IrIn(b18, Souliss_T1n_Timed_StdVal, LED3, &results);
       
   }
 // ************************************************************************* 
@@ -105,29 +105,29 @@ void irButtons(byte function){
    // *******************   BRIGHT CONTROL   *******************************   
       switch (remote_mode) {
           case 0:
-              Souliss_IrIn(b0, Souliss_T1n_BrightUp,   LEDPWM0, &results);
-              Souliss_IrIn(b1, Souliss_T1n_BrightDown, LEDPWM0, &results);
+              Souliss_IrIn(b0, Souliss_T1n_BrightUp,   LED1, &results);
+              Souliss_IrIn(b1, Souliss_T1n_BrightDown, LED1, &results);
               break;
           case 1:
-              Souliss_IrIn(b0, Souliss_T1n_BrightUp,   LEDPWM1, &results);
-              Souliss_IrIn(b1, Souliss_T1n_BrightDown, LEDPWM1, &results);
+              Souliss_IrIn(b0, Souliss_T1n_BrightUp,   LED2, &results);
+              Souliss_IrIn(b1, Souliss_T1n_BrightDown, LED2, &results);
               break;
           case 2:
-              Souliss_IrIn(b0, Souliss_T1n_BrightUp,   LEDPWM2, &results);
-              Souliss_IrIn(b1, Souliss_T1n_BrightDown, LEDPWM2, &results);
+              Souliss_IrIn(b0, Souliss_T1n_BrightUp,   LED3, &results);
+              Souliss_IrIn(b1, Souliss_T1n_BrightDown, LED3, &results);
               break;
           case 3:
         // ************************    BRIGHT UP ALL    ************************
               if(Souliss_IrIn(b0, 0, 254, &results)){
-                  mInput(LEDPWM0) = Souliss_T1n_BrightUp;
-                  mInput(LEDPWM1) = Souliss_T1n_BrightUp; 
-                  mInput(LEDPWM2) = Souliss_T1n_BrightUp; 
+                  mInput(LED1) = Souliss_T1n_BrightUp;
+                  mInput(LED2) = Souliss_T1n_BrightUp; 
+                  mInput(LED3) = Souliss_T1n_BrightUp; 
               }
         // **********************    BRIGHT DOWN ALL    ************************      
               if(Souliss_IrIn(b1, 0, 254, &results)){
-                  mInput(LEDPWM0) = Souliss_T1n_BrightDown;
-                  mInput(LEDPWM1) = Souliss_T1n_BrightDown; 
-                  mInput(LEDPWM2) = Souliss_T1n_BrightDown;
+                  mInput(LED1) = Souliss_T1n_BrightDown;
+                  mInput(LED2) = Souliss_T1n_BrightDown; 
+                  mInput(LED3) = Souliss_T1n_BrightDown;
               }
               break;
       }
@@ -139,23 +139,23 @@ void irButtons(byte function){
     
       // ************************    BRIGHT UP ALL    ************************
           if(Souliss_IrIn(b4, 0, 254, &results)){
-              mInput(LEDPWM0) = Souliss_T1n_BrightUp;
-              mInput(LEDPWM1) = Souliss_T1n_BrightUp; 
-              mInput(LEDPWM2) = Souliss_T1n_BrightUp; 
+              mInput(LED1) = Souliss_T1n_BrightUp;
+              mInput(LED2) = Souliss_T1n_BrightUp; 
+              mInput(LED3) = Souliss_T1n_BrightUp; 
           }
       // **********************    BRIGHT DOWN ALL    ************************      
           if(Souliss_IrIn(b1, 0, 254, &results)){
-              mInput(LEDPWM0) = Souliss_T1n_BrightDown;
-              mInput(LEDPWM1) = Souliss_T1n_BrightDown; 
-              mInput(LEDPWM2) = Souliss_T1n_BrightDown;
+              mInput(LED1) = Souliss_T1n_BrightDown;
+              mInput(LED2) = Souliss_T1n_BrightDown; 
+              mInput(LED3) = Souliss_T1n_BrightDown;
           }
       // *****************    BRIGHT UP - DOWN BUTTONS    ************************       
-          Souliss_IrIn(b8,  Souliss_T1n_BrightUp,   LEDPWM0, &results);
-          Souliss_IrIn(b9,  Souliss_T1n_BrightDown, LEDPWM0, &results);  
-          Souliss_IrIn(b12, Souliss_T1n_BrightUp,   LEDPWM1, &results);
-          Souliss_IrIn(b13, Souliss_T1n_BrightDown, LEDPWM1, &results); 
-          Souliss_IrIn(b16, Souliss_T1n_BrightUp,   LEDPWM2, &results);
-          Souliss_IrIn(b17, Souliss_T1n_BrightDown, LEDPWM2, &results);       
+          Souliss_IrIn(b8,  Souliss_T1n_BrightUp,   LED1, &results);
+          Souliss_IrIn(b9,  Souliss_T1n_BrightDown, LED1, &results);  
+          Souliss_IrIn(b12, Souliss_T1n_BrightUp,   LED2, &results);
+          Souliss_IrIn(b13, Souliss_T1n_BrightDown, LED2, &results); 
+          Souliss_IrIn(b16, Souliss_T1n_BrightUp,   LED3, &results);
+          Souliss_IrIn(b17, Souliss_T1n_BrightDown, LED3, &results);       
   }
 // ************************************************************************* 
 // *************************************************************************  
