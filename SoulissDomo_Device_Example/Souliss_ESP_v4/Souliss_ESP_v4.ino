@@ -144,13 +144,13 @@ void MQTT_connect();
 void setup()
 {
     //LOG.begin(115200);
-    Serial.begin(115200);
+    DEBUG.begin(115200);
     
  
     //************************************** TELNET SETUP *************************
     telnet.begin();
     telnet.setNoDelay(true);
-    Serial.print("Start: "); Serial.println(millis());
+    DEBUG.print("Start: "); DEBUG.println(millis());
     //while(Telnet_Loop() || millis() > 10000){ Serial.println(10000 - millis()); }
 
     Initialize();
@@ -182,7 +182,7 @@ void setup()
     if (IsRuntimeGateway())
     {
         // Connect to the WiFi network and get an address from DHCP     
-        LOG.println("Gateway Mode");        
+        DEBUG.println("Gateway Mode");        
         SetAsGateway(myvNet_dhcp);       // Set this node as gateway for SoulissApp  
         SetAddressingServer();
         
@@ -191,30 +191,30 @@ void setup()
     {
         // This board request an address to the gateway at runtime, no need
         // to configure any parameter here.
-        LOG.println("Peer Mode");
+        DEBUG.println("Peer Mode");
         SetDynamicAddressing();  
         GetAddress();
         
     }
     setupGeneral();
     startWebServer();
-    LOG.print("vNet Media : ");
-    LOG.println (vNet_GetAddress(vNet_MyMedia()),HEX);
-    LOG.print("vNet 1 : ");
-    LOG.print(vNet_GetAddress(1),HEX);
-    LOG.print(" | IP: ");
-    LOG.println(vNet_GetAddress(1),DEC);
-    LOG.print("vNet 2 : ");
-    LOG.println (vNet_GetAddress(2),HEX);
-    LOG.print("vNet 3 : ");
-    LOG.println (vNet_GetAddress(3),HEX);
-    LOG.print("vNet 4 : ");
-    LOG.println (vNet_GetAddress(4),HEX);
-    LOG.print("vNet 5 : ");
-    LOG.println (vNet_GetAddress(5),HEX);
+    DEBUG.print("vNet Media : ");
+    DEBUG.println (vNet_GetAddress(vNet_MyMedia()),HEX);
+    DEBUG.print("vNet 1 : ");
+    DEBUG.print(vNet_GetAddress(1),HEX);
+    DEBUG.print(" | IP: ");
+    DEBUG.println(vNet_GetAddress(1),DEC);
+    DEBUG.print("vNet 2 : ");
+    DEBUG.println (vNet_GetAddress(2),HEX);
+    DEBUG.print("vNet 3 : ");
+    DEBUG.println (vNet_GetAddress(3),HEX);
+    DEBUG.print("vNet 4 : ");
+    DEBUG.println (vNet_GetAddress(4),HEX);
+    DEBUG.print("vNet 5 : ");
+    DEBUG.println (vNet_GetAddress(5),HEX);
 
-    LOG.print("STORE__SIZE: ");
-    LOG.println(STORE__SIZE);
+    DEBUG.print("STORE__SIZE: ");
+    DEBUG.println(STORE__SIZE);
     //OTA_Init(); 
     
     httpUpdater.setup(&server);
@@ -428,15 +428,15 @@ void deleteEEPROM(){
         LOG.println("Address Deleted");
         // DELETE EEPROM IF GPIO STILL PRESSED
         if(millis() < previous + 10000){
-          LOG.print("Deleting EEPROM in: ");
+          LOG.print("Deleting Custom Data in: ");
           LOG.println(10000 - (millis() - previous));
           delay(500);
         }else{
-          for(int i = 0; i <= 512; i++){
+          for(int i = STORE_CUSTOM; i <= 512; i++){
             EEPROM.write(i,255);
         }
         EEPROM.commit();
-        LOG.println("EEPROM Deleted");
+        LOG.println("Custom Data Deleted");
         }
       }
     }
