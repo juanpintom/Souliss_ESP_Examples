@@ -30,7 +30,6 @@
       <option value="2">PWM MODE</option>
       <option value="3">RGB MODE (RED)</option>
       <option value="4">PIR MODE</option>
-      <option value="5">PIR ALARM MODE</option>
       <option value="6">PULSE MODE</option>
     </select>
     </td></tr>
@@ -54,6 +53,8 @@
       <option value="6">PULSE MODE</option>
     </select>
     </td></tr>
+    <tr id="ALARM_TD"><td align="left">Alarm MODE?:</td>
+      <td><input type="checkbox" id="ALARM" name="ALARM" onclick="getALARM(this)"></td></tr>
   </table>
   
   <hr>  
@@ -95,8 +96,8 @@
   
   <hr>
   <table>
-  <tr><td>(S4) Configuration: </td><td>
-    <select  id="S4" name="S4" onchange="getComboS4(this)"style="width:180px">
+  <tr><td>(S4-1) Configuration: </td><td>
+    <select  id="S41" name="S41" onchange="getComboS41(this)"style="width:180px">
       <option value="0">None</option>
       <option value="1">CAPACITIVE</option>
       <option value="2">CAPACITIVE /w DEBUG</option>
@@ -106,6 +107,17 @@
       <option value="6">BUTTONS_2_STATE</option>
     </select>
     </td></tr>
+  <tr><td>(S4-2) Configuration: </td><td>
+    <select  id="S42" name="S42" onchange="getComboS42(this)"style="width:180px">
+      <option value="0">None</option>
+      <option value="1">CAPACITIVE</option>
+      <option value="2">CAPACITIVE /w DEBUG</option>
+      <option value="3">BUTTONS</option>
+      <option value="4">BUTTONS_PULLUP</option>
+      <option value="5">ALARM_ENDSTOP</option>
+      <option value="6">BUTTONS_2_STATE</option>
+    </select>
+    </td></tr>    
   <tr id="Thresold">
     <td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
     <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td></tr>    
@@ -113,8 +125,8 @@
   
   <hr>
   <table>
-  <tr><td>(S5) Configuration: </td><td>
-    <select  id="S5" name="S5" onchange="getComboS5(this)"style="width:180px">
+  <tr><td>(S5-1) Configuration: </td><td>
+    <select  id="S51" name="S51" onchange="getComboS51(this)"style="width:180px">
       <option value="0">None</option>
       <option value="1">RELAY</option>
       <option value="2">PULSE_OUTPUT</option>
@@ -124,7 +136,19 @@
       <option value="6">220V_OPTO_AND_RELAY</option>
     </select>
     </td></tr>
-  <tr id="Altitude">
+  <tr><td>(S5-2) Configuration: </td><td>
+    <select  id="S52" name="S52" onchange="getComboS52(this)"style="width:180px">
+      <option value="0">None</option>
+      <option value="1">RELAY</option>
+      <option value="2">PULSE_OUTPUT</option>
+      <option value="3">PRESSURE_SENSOR</option>
+      <option value="4">GARAGE_DOOR</option>
+      <option value="5">WINDOW_CURTAIN</option>
+      <option value="6">220V_OPTO_AND_RELAY</option>
+    </select>
+    </td></tr>
+
+    <tr id="Altitude">
     <td align="left" id="Altitude_line"> Altitude:</td>
     <td><input type="text" id="Altitude_id" name="Altitude_id" size="2" value="20"></td></tr>
     </table>
@@ -216,7 +240,7 @@ function getConfig(){
        document.getElementById("Thresold").style.display = "none"; 
     }
    
-    value = document.getElementById("S5");
+    value = document.getElementById("S51");
     if(value == 3) {
       document.getElementById("Altitude").style.display = "block";  //none;  
     } else {
@@ -277,7 +301,13 @@ function getComboL1(sel) {
        document.getElementById("L3").value = 0;
     } 
   } 
+  if(value == 4){
+    document.getElementById("ALARM_TD").style.display = "block";  //none;  
+  } else { 
+    document.getElementById("ALARM_TD").style.display = "none"; 
+  } 
 }
+  
 function getComboL2(sel) {
   var value = sel.value;
   if(value == 3){
@@ -290,7 +320,12 @@ function getComboL2(sel) {
     if(document.getElementById("L3").value == 3){
        document.getElementById("L3").value = 0;
     } 
-  }     
+  } 
+  if(value == 4){
+    document.getElementById("ALARM_TD").style.display = "block";  //none;  
+  } else { 
+    document.getElementById("ALARM_TD").style.display = "none"; 
+  } 
 }
 function getComboL3(sel) {
   var value = sel.value;
@@ -304,30 +339,72 @@ function getComboL3(sel) {
     if(document.getElementById("L2").value == 3){
        document.getElementById("L2").value = 0;
     } 
-  }     
+  }
+  if(value == 4){
+    document.getElementById("ALARM_TD").style.display = "block";  //none;  
+  } else { 
+    document.getElementById("ALARM_TD").style.display = "none"; 
+  }   
 }
   
   
-function getComboS4(sel) {
+function getComboS41(sel) {
   var value = sel.value;
   if(value == 1 || value == 2) {
        document.getElementById("Thresold").style.display = "block";  //none;  
   } else { 
        document.getElementById("Thresold").style.display = "none"; 
   }
+  if(value == 5){
+    document.getElementById("ALARM_TD").style.display = "block";  //none;  
+  } else { 
+    document.getElementById("ALARM_TD").style.display = "none"; 
+  }  
   if(value > 0){
     document.getElementById("usartbridge").checked = false; 
   }
 }
 
-function getComboS5(sel) {
+function getComboS42(sel) {
+  var value = sel.value;
+  if(value == 1 || value == 2) {
+       document.getElementById("Thresold").style.display = "block";  //none;  
+  } else { 
+       document.getElementById("Thresold").style.display = "none"; 
+  }
+  if(value == 5 && ){
+    document.getElementById("ALARM_TD").style.display = "block";  //none;  
+  } else { 
+    document.getElementById("ALARM_TD").style.display = "none"; 
+  }  
+
+  if(value > 0){
+    document.getElementById("usartbridge").checked = false; 
+  }
+}  
+  
+function getComboS51(sel) {
   var value = sel.value;  
   if(value == 3) {
-      document.getElementById("Altitude").style.display = "block";  //none;  
+      document.getElementById("Altitude").style.display = "block";  //none;
+      document.getElementById("S52").value = 3;
   } else {
-      document.getElementById("Altitude").style.display = "none";  
+      document.getElementById("Altitude").style.display = "none";
+      document.getElementById("S52").value = 0;
   }
 }
+  
+function getComboS52(sel) {
+  var value = sel.value;  
+  if(value == 3) {
+      document.getElementById("Altitude").style.display = "block";  //none;
+      document.getElementById("S51").value = 3;
+  } else {
+      document.getElementById("Altitude").style.display = "none";
+      document.getElementById("S51").value = 0;
+  }
+}
+  
 function getUSART(sel){
   if(sel.checked){
     document.getElementById("S4").value = 0;   
@@ -374,4 +451,5 @@ function getAllLog(sel){
     
 </body>
 </html>
+
 
