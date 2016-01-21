@@ -98,19 +98,17 @@
   
   <hr>
   <table>
-  <tr><td>(S4-1) TX Configuration: </td><td>
-    <select  id="S41" name="S41" onchange="getComboS41(this)"style="width:200px">
+  <tr><td>(S4-1) Configuration: </td><td>
+    <select  id="S41" name="S41" onchange="getComboS41(this)"style="width:220px">
       <option value="0">None</option>
       <option value="1">Capacitive</option>
-      <option value="2">*Buttons</option>
       <option value="3">Buttons_PullUp</option>
       <option value="4">Alarm EndStop</option>
-      <option value="5">*Buttons 2 State</option>
       <option value="6">Garage EndStop (UP)</option>
-    </select>
+    </select> TX
     </td></tr>
-  <tr><td>(S4-2) RX Configuration: </td><td>
-    <select  id="S42" name="S42" onchange="getComboS42(this)"style="width:200px">
+  <tr><td>(S4-2) Configuration: </td><td>
+    <select  id="S42" name="S42" onchange="getComboS42(this)"style="width:220px">
       <option value="0">None</option>
       <option value="1">Capacitive</option>
       <option value="2">Buttons</option>
@@ -118,38 +116,42 @@
       <option value="4">Alarm EndStop</option>
       <option value="5">Buttons 2 State</option>
       <option value="6">Garage EndStop (DOWN)</option>     
-    </select>
+    </select> RX
     </td></tr> 
   </table>
-  <table id="Thresold">
-    <tr><td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
-    <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td></tr> 
-    <tr><td align="left"> Capacitive /w Debug:</td>
-    <td><input type="checkbox" id="cap_debug" name="cap_debug"></td></tr> 
-    </table>
   
   <hr>
   <table>
   <tr><td>(S5-1) Configuration: </td><td>
     <select  id="S51" name="S51" onchange="getComboS51(this)"style="width:220px">
       <option value="0">None</option>
-      <option value="1">Relay</option>
-      <option value="2">Pulse Output</option>
-      <option value="3">Pressure Sensor</option>
-      <option value="4">Garage Door (UP)</option>
-      <option value="5">Window Curtain (OPEN) </option>
-      <option value="6">220V_Relay</option>
+      <option value="1">Capacitive</option>
+      <option value="2">Buttons</option>
+      <option value="3">Buttons_PullUp</option>
+      <option value="4">Alarm EndStop</option>
+      <option value="5">Buttons 2 State</option>      
+      <option value="6">Relay</option>
+      <option value="7">Pulse Output</option>
+      <option value="8">Pressure Sensor</option>
+      <option value="9">Garage Door (UP)</option>
+      <option value="10">Window Curtain (OPEN) </option>
+      <option value="11">220V_Relay</option>
     </select>
     </td></tr>
   <tr><td>(S5-2) Configuration: </td><td>
     <select  id="S52" name="S52" onchange="getComboS52(this)"style="width:220px">
       <option value="0">None</option>
-      <option value="1">Relay</option>
-      <option value="2">Pulse Output</option>
-      <option value="3">Pressure Sensor</option>
-      <option value="4">Garage Door (DOWN)</option>
-      <option value="5">Window Curtain (CLOSE) </option>
-      <option value="6">220V_Opto</option>
+      <option value="1">Capacitive</option>
+      <option value="2">Buttons</option>
+      <option value="3">Buttons_PullUp</option>
+      <option value="4">Alarm EndStop</option>
+      <option value="5">Buttons 2 State</option>      
+      <option value="6">Relay</option>
+      <option value="7">Pulse Output</option>
+      <option value="8">Pressure Sensor</option>
+      <option value="9">Garage Door (UP)</option>
+      <option value="10">Window Curtain (OPEN) </option>
+      <option value="11">220V_Relay</option>
     </select>
     </td></tr>
 
@@ -157,6 +159,12 @@
     <td align="left" id="Altitude_line"> Altitude:</td>
     <td><input type="text" id="Altitude_id" name="Altitude_id" size="2" value="20"></td></tr>
     </table>
+    <table id="Thresold">
+      <tr><td align="left" id="cap_thresold_line"> Capacitive Thresold: </td>
+      <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td></tr> 
+      <tr><td align="left">Capacitive /w Debug:</td>
+      <td><input type="checkbox" id="cap_debug" name="cap_debug"></td></tr> 
+      </table>
 
   <hr>    
   <table>
@@ -166,11 +174,11 @@
     
   <hr>
   <table>
-    <tr><td align="left" style="width:230px"> Node is USART Bridge?: (S4)</td>
+    <tr id="usart"><td align="left" style="width:230px"> Node is USART Bridge?: (S4)</td>
     <td><input type="checkbox" id="usartbridge" name="usartbridge" onclick="getUSART(this)"></td>
     </tr></table>
   
-  <hr>
+  
   <table>
     <tr><td align="left" style="width:230px"><strong>DEBUG Configuration:</strong></td>
     <td><input type="checkbox" id="DEBUG" name="DEBUG" onclick="getDebug(this)">Check to Show</td></tr></table>
@@ -231,13 +239,17 @@ function getConfig(){
     var S42 = document.getElementById("S42");
     var S51 = document.getElementById("S51");
     var S52 = document.getElementById("S52");
-  
+    
+    document.getElementById("usart").style.display = "none";
   //  ALARM
-    if(L1.value == 4 || L2.value == 4 || L3.value == 4 || S41.value == 4 || S42.value == 4){
+    if(L1.value == 4 || L2.value == 4 || L3.value == 4 || S41.value == 4 || S42.value == 4 || S51.value == 4 || S52.value == 4){
       document.getElementById("ALARM_TD").style.display = "block";  //none;  
     }else{
       document.getElementById("ALARM_TD").style.display = "none";  //none;  
       document.getElementById("ALARM").checked = false;  
+    }
+    if(S41.value == 4 || S42.value == 4 || S51.value == 4 || S52.value == 4){
+      document.getElementById("ALARM").checked = true;    
     }
   
   //  DALLAS  
@@ -260,14 +272,14 @@ function getConfig(){
     } 
     
   //  CAPACITIVE    
-    if(S41.value == 1 || S42.value == 1) {  //|| S51.value == 1 || S51.value == 2) {
+    if(S41.value == 1 || S42.value == 1 || S51.value == 1 || S52.value == 1) {
        document.getElementById("Thresold").style.display = "block";  //none;  
     } else { 
        document.getElementById("Thresold").style.display = "none"; 
     }
    
   //  BMP180
-    if(S51.value == 3 || S52.value == 3) {
+    if(S51.value == 8 || S52.value == 8) {
       document.getElementById("Altitude").style.display = "block";  //none;  
     } else {
       document.getElementById("Altitude").style.display = "none";  
@@ -350,10 +362,10 @@ function getComboS41(sel) {
   if(sel.value > 0){
     document.getElementById("usartbridge").checked = false;
   }
-  if(sel.value == 6){
+  if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S42").value = sel.value;
-    document.getElementById("S51").value = 4;
-    document.getElementById("S52").value = 4;
+    document.getElementById("S51").value = 9;
+    document.getElementById("S52").value = 9;
   }else if(document.getElementById("S42").value == 6){
     document.getElementById("S42").value = 0;
     document.getElementById("S51").value = 0;
@@ -366,10 +378,10 @@ function getComboS42(sel) {
   if(sel.value > 0){
     document.getElementById("usartbridge").checked = false;
   }
-  if(sel.value == 6){
+  if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S41").value = sel.value;
-    document.getElementById("S51").value = 4;
-    document.getElementById("S52").value = 4;
+    document.getElementById("S51").value = 9;
+    document.getElementById("S52").value = 9;
   }else if(document.getElementById("S41").value == 6){
     document.getElementById("S41").value = 0; 
     document.getElementById("S51").value = 0;
@@ -380,14 +392,14 @@ function getComboS42(sel) {
   
 function getComboS51(sel) {
   var value = sel.value;
-  if(value > 2 && value < 7) {
+  if(value > 7 && value < 12) {
       document.getElementById("S52").value = value;
   } else {
-    if(document.getElementById("S52").value > 2 && document.getElementById("S52").value < 7){
+    if(document.getElementById("S52").value > 7 && document.getElementById("S52").value < 12){
       document.getElementById("S52").value = 0;
     }
   }
-  if(value == 4) {
+  if(value == 9) {  //GARAGE_DOOR
     document.getElementById("S41").value = 6;
     document.getElementById("S42").value = 6;
   } else if(document.getElementById("S41").value == 6){
@@ -399,14 +411,14 @@ function getComboS51(sel) {
   
 function getComboS52(sel) {
   var value = sel.value;  
-  if(value > 2 && value < 7) {
+  if(value > 7 && value < 12) {
       document.getElementById("S51").value = value;
   } else {
-    if(document.getElementById("S51").value > 2 && document.getElementById("S51").value < 7){  
+    if(document.getElementById("S51").value > 7 && document.getElementById("S51").value < 12){  
       document.getElementById("S51").value = 0;
     } 
   }
-  if(value == 4) {
+  if(value == 9) {
     document.getElementById("S41").value = 6;
     document.getElementById("S42").value = 6;
   } else if(document.getElementById("S41").value == 6){
@@ -420,7 +432,7 @@ function getUSART(sel){
   if(sel.checked){
     document.getElementById("S41").value = 0;   
     document.getElementById("S42").value = 0;
-    if(document.getElementById("S51").value == 4){
+    if(document.getElementById("S51").value == 9){  //GARAGE_DOOR
       document.getElementById("S51").value = 0;
       document.getElementById("S52").value = 0;        
     }
