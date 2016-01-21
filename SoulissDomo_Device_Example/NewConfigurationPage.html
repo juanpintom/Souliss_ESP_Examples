@@ -55,6 +55,27 @@
     </td></tr>
     <tr id="ALARM_TD"><td align="left">Alarm MODE?:</td>
       <td><input type="checkbox" id="ALARM" name="ALARM" onclick="getALARM(this)"></td></tr>
+    
+    <tr id="PIR1"><td>L1 PIR Sensor:</td><td>
+    <select  id="L1PIR" name="L1PIR" style="width:180px">
+      <option value="0">PIR Sensor 1</option>
+      <option value="1">PIR Sensor 2</option>
+    </select>
+    </td></tr>
+    
+    <tr id="PIR2"><td>L2 PIR Sensor:</td><td>
+    <select  id="L2PIR" name="L2PIR" style="width:180px">
+      <option value="0">PIR Sensor 1</option>
+      <option value="1">PIR Sensor 2</option>
+    </select>
+    </td></tr>
+    
+    <tr id="PIR3"><td>L3 PIR Sensor:</td><td>
+    <select  id="L3PIR" name="L3PIR" style="width:180px">
+      <option value="0">PIR Sensor 1</option>
+      <option value="1">PIR Sensor 2</option>
+    </select>
+    </td></tr>    
   </table>
   
   <hr>  
@@ -132,10 +153,11 @@
       <option value="5">Buttons 2 State</option>      
       <option value="6">Relay</option>
       <option value="7">Pulse Output</option>
-      <option value="8">Pressure Sensor</option>
-      <option value="9">Garage Door (UP)</option>
-      <option value="10">Window Curtain (OPEN) </option>
-      <option value="11">220V_Relay</option>
+      <option value="8">PIR Sensor 1</option>
+      <option value="9">Pressure Sensor</option>
+      <option value="10">Garage Door (UP)</option>
+      <option value="11">Window Curtain (OPEN) </option>
+      <option value="12">220V_Relay</option>
     </select>
     </td></tr>
   <tr><td>(S5-2) Configuration: </td><td>
@@ -148,10 +170,11 @@
       <option value="5">Buttons 2 State</option>      
       <option value="6">Relay</option>
       <option value="7">Pulse Output</option>
-      <option value="8">Pressure Sensor</option>
-      <option value="9">Garage Door (UP)</option>
-      <option value="10">Window Curtain (OPEN) </option>
-      <option value="11">220V_Relay</option>
+      <option value="8">PIR Sensor 2</option>
+      <option value="9">Pressure Sensor</option>
+      <option value="10">Garage Door (UP)</option>
+      <option value="11">Window Curtain (OPEN) </option>
+      <option value="12">220V_Relay</option>
     </select>
     </td></tr>
 
@@ -251,6 +274,22 @@ function getConfig(){
     if(S41.value == 4 || S42.value == 4 || S51.value == 4 || S52.value == 4){
       document.getElementById("ALARM").checked = true;    
     }
+  // PIR SENSORS
+    if(L1.value == 4){
+      document.getElementById("PIR1").style.display = "block";  //none;  
+    }else{
+      document.getElementById("PIR1").style.display = "none";  //none;  
+    }
+    if(L2.value == 4){
+      document.getElementById("PIR2").style.display = "block";  //none;  
+    }else{
+      document.getElementById("PIR2").style.display = "none";  //none;  
+    }
+    if(L3.value == 4){
+      document.getElementById("PIR3").style.display = "block";  //none;  
+    }else{
+      document.getElementById("PIR3").style.display = "none";  //none;  
+    }  
   
   //  DALLAS  
     if(S1.value == 1){
@@ -279,7 +318,7 @@ function getConfig(){
     }
    
   //  BMP180
-    if(S51.value == 8 || S52.value == 8) {
+    if(S51.value == 9 || S52.value == 9) {
       document.getElementById("Altitude").style.display = "block";  //none;  
     } else {
       document.getElementById("Altitude").style.display = "none";  
@@ -364,8 +403,8 @@ function getComboS41(sel) {
   }
   if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S42").value = sel.value;
-    document.getElementById("S51").value = 9;
-    document.getElementById("S52").value = 9;
+    document.getElementById("S51").value = 10;
+    document.getElementById("S52").value = 10;
   }else if(document.getElementById("S42").value == 6){
     document.getElementById("S42").value = 0;
     document.getElementById("S51").value = 0;
@@ -380,8 +419,8 @@ function getComboS42(sel) {
   }
   if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S41").value = sel.value;
-    document.getElementById("S51").value = 9;
-    document.getElementById("S52").value = 9;
+    document.getElementById("S51").value = 10;
+    document.getElementById("S52").value = 10;
   }else if(document.getElementById("S41").value == 6){
     document.getElementById("S41").value = 0; 
     document.getElementById("S51").value = 0;
@@ -392,14 +431,14 @@ function getComboS42(sel) {
   
 function getComboS51(sel) {
   var value = sel.value;
-  if(value > 7 && value < 12) {
+  if(value > 8 && value < 13) {
       document.getElementById("S52").value = value;
   } else {
-    if(document.getElementById("S52").value > 7 && document.getElementById("S52").value < 12){
+    if(document.getElementById("S52").value > 8 && document.getElementById("S52").value < 13){
       document.getElementById("S52").value = 0;
     }
   }
-  if(value == 9) {  //GARAGE_DOOR
+  if(value == 10) {  //GARAGE_DOOR
     document.getElementById("S41").value = 6;
     document.getElementById("S42").value = 6;
   } else if(document.getElementById("S41").value == 6){
@@ -411,14 +450,14 @@ function getComboS51(sel) {
   
 function getComboS52(sel) {
   var value = sel.value;  
-  if(value > 7 && value < 12) {
+  if(value > 8 && value < 13) {
       document.getElementById("S51").value = value;
   } else {
-    if(document.getElementById("S51").value > 7 && document.getElementById("S51").value < 12){  
+    if(document.getElementById("S51").value > 8 && document.getElementById("S51").value < 13){  
       document.getElementById("S51").value = 0;
     } 
   }
-  if(value == 9) {
+  if(value == 10) {
     document.getElementById("S41").value = 6;
     document.getElementById("S42").value = 6;
   } else if(document.getElementById("S41").value == 6){
@@ -432,7 +471,7 @@ function getUSART(sel){
   if(sel.checked){
     document.getElementById("S41").value = 0;   
     document.getElementById("S42").value = 0;
-    if(document.getElementById("S51").value == 9){  //GARAGE_DOOR
+    if(document.getElementById("S51").value == 10){  //GARAGE_DOOR
       document.getElementById("S51").value = 0;
       document.getElementById("S52").value = 0;        
     }
