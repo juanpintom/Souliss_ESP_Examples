@@ -26,31 +26,31 @@
   <tr><td>L1 Output Mode:</td><td>
     <select  id="L1" name="L1" onchange="getComboL1(this)" style="width:180px">
       <option value="0">None</option>
-      <option value="1">ON-OFF MODE</option>
-      <option value="2">PWM MODE</option>
-      <option value="3">RGB MODE (RED)</option>
-      <option value="4">PIR MODE</option>
-      <option value="6">PULSE MODE</option>
+      <option value="1">ON-OFF Mode</option>
+      <option value="2">Dimmable Mode</option>
+      <option value="3">RGB Mode (RED)</option>
+      <option value="4">PIR Mode</option>
+      <option value="6">Pulse Mode</option>
     </select>
     </td></tr>
   <tr><td>L2 Output Mode:</td><td>
     <select  id="L2" name="L2" onchange="getComboL2(this)" style="width:180px">
       <option value="0">None</option>
-      <option value="1">ON-OFF MODE</option>
-      <option value="2">PWM MODE</option>
-      <option value="3">RGB MODE (GREEN)</option>
-      <option value="4">PIR MODE</option>
-      <option value="6">PULSE MODE</option>
+      <option value="1">ON-OFF Mode</option>
+      <option value="2">Dimmable Mode</option>
+      <option value="3">RGB Mode (GREEN)</option>
+      <option value="4">PIR Mode</option>
+      <option value="6">Pulse Mode</option>
     </select>
     </td></tr>
   <tr><td>L3 Output Mode:</td><td>
     <select  id="L3" name="L3" onchange="getComboL3(this)"style="width:180px">
       <option value="0">None</option>
-      <option value="1">ON-OFF MODE</option>
-      <option value="2">PWM MODE</option>
-      <option value="3">RGB MODE (BLUE)</option>
-      <option value="4">PIR MODE</option>
-      <option value="6">PULSE MODE</option>
+      <option value="1">ON-OFF Mode</option>
+      <option value="2">Dimmable Mode</option>
+      <option value="3">RGB Mode (BLUE)</option>
+      <option value="4">PIR Mode</option>
+      <option value="6">Pulse Mode</option>
     </select>
     </td></tr>
     <tr id="ALARM_TD"><td align="left">Alarm MODE?:</td>
@@ -65,7 +65,7 @@
     <select  id="S1" name="S1" onchange="getComboS1(this)" style="width:180px">
       <option value="0">None</option>
       <option value="1">Dallas (Temperature)</option>
-      <option value="2">Other</option>
+      <option value="2">More comming...</option>
     </select>
     <td align="left" id="qty">Qty: <input type="text" id="dallas_qty" name="dallas_qty" size="2" value="1"></td>
     </td></tr>
@@ -75,6 +75,7 @@
       <option value="0">None</option>
       <option value="1">DHT (Temp - Humidity)</option>
       <option value="2">Rain Sensor</option>
+      <option value="3">More comming...</option>
     </select>
     <td align="left" id="type" name="type"> Type:
      <select  id="dht_type" name="dht_type">
@@ -88,6 +89,7 @@
       <option value="0">None</option>
       <option value="1">LDR (Luminosity)</option>
       <option value="2">Soil Sensor</option>
+      <option value="3">More comming...</option>
     </select>
     </td></tr>
   <tr id="Emoncms"><td><input type="checkbox" id="Send_Emon" name="Send_Emon" onclick="getEmon(this)"> Send to EmonCMS?: </td>
@@ -96,55 +98,58 @@
   
   <hr>
   <table>
-  <tr><td>(S4-1) Configuration: </td><td>
-    <select  id="S41" name="S41" onchange="getComboS41(this)"style="width:180px">
+  <tr><td>(S4-1) TX Configuration: </td><td>
+    <select  id="S41" name="S41" onchange="getComboS41(this)"style="width:200px">
       <option value="0">None</option>
-      <option value="1">CAPACITIVE</option>
-      <option value="2">CAPACITIVE /w DEBUG</option>
-      <option value="3">BUTTONS</option>
-      <option value="4">BUTTONS_PULLUP</option>
-      <option value="5">ALARM_ENDSTOP</option>
-      <option value="6">BUTTONS_2_STATE</option>
+      <option value="1">Capacitive</option>
+      <option value="3">*Buttons</option>
+      <option value="4">Buttons_PullUp</option>
+      <option value="5">Alarm EndStop</option>
+      <option value="6">*Buttons 2 State</option>
+      <option value="7">Garage EndStop (UP)</option>
     </select>
     </td></tr>
-  <tr><td>(S4-2) Configuration: </td><td>
-    <select  id="S42" name="S42" onchange="getComboS42(this)"style="width:180px">
+  <tr><td>(S4-2) RX Configuration: </td><td>
+    <select  id="S42" name="S42" onchange="getComboS42(this)"style="width:200px">
       <option value="0">None</option>
-      <option value="1">CAPACITIVE</option>
-      <option value="2">CAPACITIVE /w DEBUG</option>
-      <option value="3">BUTTONS</option>
-      <option value="4">BUTTONS_PULLUP</option>
-      <option value="5">ALARM_ENDSTOP</option>
-      <option value="6">BUTTONS_2_STATE</option>
+      <option value="1">Capacitive</option>
+      <option value="3">Buttons</option>
+      <option value="4">Buttons_PullUp</option>
+      <option value="5">Alarm EndStop</option>
+      <option value="6">Buttons 2 State</option>
+      <option value="7">Garage EndStop (DOWN)</option>     
     </select>
-    </td></tr>    
-  <tr id="Thresold">
-    <td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
-    <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td></tr>    
+    </td></tr> 
+  </table>
+  <table id="Thresold">
+    <tr><td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
+    <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td></tr> 
+    <tr><td align="left"> Capacitive /w Debug:</td>
+    <td><input type="checkbox" id="cap_debug" name="cap_debug"></td></tr> 
     </table>
   
   <hr>
   <table>
   <tr><td>(S5-1) Configuration: </td><td>
-    <select  id="S51" name="S51" onchange="getComboS51(this)"style="width:180px">
+    <select  id="S51" name="S51" onchange="getComboS51(this)"style="width:220px">
       <option value="0">None</option>
-      <option value="1">RELAY</option>
-      <option value="2">PULSE_OUTPUT</option>
-      <option value="3">PRESSURE_SENSOR</option>
-      <option value="4">GARAGE_DOOR</option>
-      <option value="5">WINDOW_CURTAIN</option>
-      <option value="6">220V_OPTO_AND_RELAY</option>
+      <option value="1">Relay</option>
+      <option value="2">Pulse Output</option>
+      <option value="3">Pressure Sensor</option>
+      <option value="4">Garage Door (UP)</option>
+      <option value="5">Window Curtain (OPEN) </option>
+      <option value="6">220V_Relay</option>
     </select>
     </td></tr>
   <tr><td>(S5-2) Configuration: </td><td>
-    <select  id="S52" name="S52" onchange="getComboS52(this)"style="width:180px">
+    <select  id="S52" name="S52" onchange="getComboS52(this)"style="width:220px">
       <option value="0">None</option>
-      <option value="1">RELAY</option>
-      <option value="2">PULSE_OUTPUT</option>
-      <option value="3">PRESSURE_SENSOR</option>
-      <option value="4">GARAGE_DOOR</option>
-      <option value="5">WINDOW_CURTAIN</option>
-      <option value="6">220V_OPTO_AND_RELAY</option>
+      <option value="1">Relay</option>
+      <option value="2">Pulse Output</option>
+      <option value="3">Pressure Sensor</option>
+      <option value="4">Garage Door (DOWN)</option>
+      <option value="5">Window Curtain (CLOSE) </option>
+      <option value="6">220V_Opto</option>
     </select>
     </td></tr>
 
@@ -216,78 +221,66 @@ function load(e,t,n){
   }
 }
 function getConfig(){
-    if(document.getElementById("S2").value == 1){
-      document.getElementById("type").style.display = "block";  //none;  
+    var L1 = document.getElementById("L1");
+    var L2 = document.getElementById("L2");
+    var L3 = document.getElementById("L3");
+    var S1 = document.getElementById("S1");
+    var S2 = document.getElementById("S2");
+    var S3 = document.getElementById("S3");
+    var S41 = document.getElementById("S41");
+    var S42 = document.getElementById("S42");
+    var S51 = document.getElementById("S51");
+    var S52 = document.getElementById("S52");
+  
+  //  ALARM
+    if(L1.value == 4 || L2.value == 4 || L3.value == 4 || S41.value == 5 || S42.value == 5){
+      document.getElementById("ALARM_TD").style.display = "block";  //none;  
     }else{
-      document.getElementById("type").style.display = "none";  //none;  
+      document.getElementById("ALARM_TD").style.display = "none";  //none;  
+      document.getElementById("ALARM").checked = false;  
     }
-    if(document.getElementById("S1").value == 1){
+  
+  //  DALLAS  
+    if(S1.value == 1){
       document.getElementById("qty").style.display = "block";  //none;  
     }else{
       document.getElementById("qty").style.display = "none";  //none;  
     }
-    
+  //  DHT  
+    if(S2.value == 1){
+      document.getElementById("type").style.display = "block";  //none;  
+    }else{
+      document.getElementById("type").style.display = "none";  //none;  
+    }
+  // EMONCMS CHECK  
     if(document.getElementById("Send_Emon").checked){
       document.getElementById("API_text").style.display = "block";  //none;  
     } else { 
       document.getElementById("API_text").style.display = "none"; 
     } 
     
-    value = document.getElementById("S4");
-    if(value == 1 || value == 2) {
+  //  CAPACITIVE    
+    if(S41.value == 1 || S42.value == 1) {  //|| S51.value == 1 || S51.value == 2) {
        document.getElementById("Thresold").style.display = "block";  //none;  
     } else { 
        document.getElementById("Thresold").style.display = "none"; 
     }
    
-    value = document.getElementById("S51");
-    if(value == 3) {
+  //  BMP180
+    if(S51.value == 3 || S52.value == 3) {
       document.getElementById("Altitude").style.display = "block";  //none;  
     } else {
       document.getElementById("Altitude").style.display = "none";  
     }
-    
+  
+  //  DEBUG  
     if(document.getElementById("DEBUG").checked){
       document.getElementById("LOG").style.display = "block";  //none;  
     }else{
       document.getElementById("LOG").style.display = "none";  //none;  
     }
 }
-   
-function getComboS1(sel) {
-    if(sel.value == 1){
-      document.getElementById("qty").style.display = "block";  //none;  
-    } else { 
-      document.getElementById("qty").style.display = "none"; 
-    } 
-}
-  
-function getComboS2(sel) {
-    if(sel.value == 1){
-      document.getElementById("type").style.display = "block";  //none;  
-    } else { 
-      document.getElementById("type").style.display = "none"; 
-    }
-    if(sel.value == 2){
-      //alert("RAIN")
-    }  
-}
- 
-  
-function getComboS3(sel) {
-    if(sel.value == 1){
-      //alert("LDR")
-    }
-}
-  
-function getEmon(sel) {
-  if(sel.checked){
-    document.getElementById("API_text").style.display = "block";  //none;  
-  } else { 
-    document.getElementById("API_text").style.display = "none"; 
-  } 
-}
-  
+
 function getComboL1(sel) {
   var value = sel.value;
   if(value == 3){
@@ -301,11 +294,7 @@ function getComboL1(sel) {
        document.getElementById("L3").value = 0;
     } 
   } 
-  if(value == 4){
-    document.getElementById("ALARM_TD").style.display = "block";  //none;  
-  } else { 
-    document.getElementById("ALARM_TD").style.display = "none"; 
-  } 
+  getConfig();
 }
   
 function getComboL2(sel) {
@@ -321,11 +310,7 @@ function getComboL2(sel) {
        document.getElementById("L3").value = 0;
     } 
   } 
-  if(value == 4){
-    document.getElementById("ALARM_TD").style.display = "block";  //none;  
-  } else { 
-    document.getElementById("ALARM_TD").style.display = "none"; 
-  } 
+  getConfig();
 }
 function getComboL3(sel) {
   var value = sel.value;
@@ -340,75 +325,107 @@ function getComboL3(sel) {
        document.getElementById("L2").value = 0;
     } 
   }
-  if(value == 4){
-    document.getElementById("ALARM_TD").style.display = "block";  //none;  
-  } else { 
-    document.getElementById("ALARM_TD").style.display = "none"; 
-  }   
+  getConfig();
 }
   
   
+function getComboS1(sel) {
+    getConfig();
+}
+  
+function getComboS2(sel) {
+    getConfig();
+}
+ 
+  
+function getComboS3(sel) {
+    getConfig();
+}
+  
+function getEmon(sel) {
+    getConfig();
+}
+  
 function getComboS41(sel) {
-  var value = sel.value;
-  if(value == 1 || value == 2) {
-       document.getElementById("Thresold").style.display = "block";  //none;  
-  } else { 
-       document.getElementById("Thresold").style.display = "none"; 
+  if(sel.value > 0){
+    document.getElementById("usartbridge").checked = false;
   }
-  if(value == 5){
-    document.getElementById("ALARM_TD").style.display = "block";  //none;  
-  } else { 
-    document.getElementById("ALARM_TD").style.display = "none"; 
-  }  
-  if(value > 0){
-    document.getElementById("usartbridge").checked = false; 
+  if(sel.value == 7){
+    document.getElementById("S42").value = sel.value;
+    document.getElementById("S51").value = 4;
+    document.getElementById("S52").value = 4;
+  }else if(document.getElementById("S42").value == 7){
+    document.getElementById("S42").value = 0;
+    document.getElementById("S51").value = 0;
+    document.getElementById("S52").value = 0;
   }
+  getConfig();
 }
 
 function getComboS42(sel) {
-  var value = sel.value;
-  if(value == 1 || value == 2) {
-       document.getElementById("Thresold").style.display = "block";  //none;  
-  } else { 
-       document.getElementById("Thresold").style.display = "none"; 
+  if(sel.value > 0){
+    document.getElementById("usartbridge").checked = false;
   }
-  if(value == 5){
-    document.getElementById("ALARM_TD").style.display = "block";  //none;  
-  } else { 
-    document.getElementById("ALARM_TD").style.display = "none"; 
-  }  
-
-  if(value > 0){
-    document.getElementById("usartbridge").checked = false; 
+  if(sel.value == 7){
+    document.getElementById("S41").value = sel.value;
+    document.getElementById("S51").value = 4;
+    document.getElementById("S52").value = 4;
+  }else if(document.getElementById("S41").value == 7){
+    document.getElementById("S41").value = 0; 
+    document.getElementById("S51").value = 0;
+    document.getElementById("S52").value = 0;
   }
+  getConfig();
 }  
   
 function getComboS51(sel) {
-  var value = sel.value;  
-  if(value == 3) {
-      document.getElementById("Altitude").style.display = "block";  //none;
-      document.getElementById("S52").value = 3;
+  var value = sel.value;
+  if(value > 2 && value < 7) {
+      document.getElementById("S52").value = value;
   } else {
-      document.getElementById("Altitude").style.display = "none";
+    if(document.getElementById("S52").value > 2 && document.getElementById("S52").value < 7){
       document.getElementById("S52").value = 0;
+    }
   }
+  if(value == 4) {
+    document.getElementById("S41").value = 7;
+    document.getElementById("S42").value = 7;
+  } else if(document.getElementById("S41").value == 7){
+    document.getElementById("S41").value = 0;
+    document.getElementById("S42").value = 0;      
+  } 
+  getConfig();
 }
   
 function getComboS52(sel) {
   var value = sel.value;  
-  if(value == 3) {
-      document.getElementById("Altitude").style.display = "block";  //none;
-      document.getElementById("S51").value = 3;
+  if(value > 2 && value < 7) {
+      document.getElementById("S51").value = value;
   } else {
-      document.getElementById("Altitude").style.display = "none";
+    if(document.getElementById("S52").value > 2 && document.getElementById("S52").value < 7){  
       document.getElementById("S51").value = 0;
+    } 
   }
+  if(value == 4) {
+    document.getElementById("S41").value = 7;
+    document.getElementById("S42").value = 7;
+  } else if(document.getElementById("S41").value == 7){
+    document.getElementById("S41").value = 0;
+    document.getElementById("S42").value = 0;      
+  } 
+  getConfig();
 }
   
 function getUSART(sel){
   if(sel.checked){
-    document.getElementById("S4").value = 0;   
+    document.getElementById("S41").value = 0;   
+    document.getElementById("S42").value = 0;
+    if(document.getElementById("S51").value == 4){
+      document.getElementById("S51").value = 0;
+      document.getElementById("S52").value = 0;        
+    }
   }
+  getConfig();
 }
   
 function getDebug(sel){
@@ -451,7 +468,3 @@ function getAllLog(sel){
     
 </body>
 </html>
-
-
-
-
