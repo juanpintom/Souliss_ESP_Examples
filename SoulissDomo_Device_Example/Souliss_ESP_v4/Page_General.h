@@ -52,7 +52,10 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="4">PIR Mode</option>
       <option value="5">Pulse Mode</option>
     </select>
-    </td></tr>
+    </td></tr></table>
+
+    
+    <table style="width:500px">
     <tr id="ALARM_TD"><td align="left">Alarm MODE?:</td><td>
     <select  id="ALARM_MODE" name="ALARM_MODE" style="width:180px">
       <option value="0">No</option>
@@ -91,9 +94,9 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="0">None</option>
       <option value="1">Dallas (Temperature)</option>
       <option value="2">More comming...</option>
-    </select>
+    </select></td>
     <td align="left" id="qty">Qty: <input type="text" id="dallas_qty" name="dallas_qty" size="2" value="1"></td>
-    </td></tr>
+    </tr>
     
   <tr><td>(S2) GPIO16 Configuration: </td><td>
     <select  id="S2" name="S2" onchange="getComboS2(this)"style="width:180px">
@@ -101,13 +104,13 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="1">DHT (Temp - Humidity)</option>
       <option value="2">Rain Sensor</option>
       <option value="3">More comming...</option>
-    </select>
-    <td align="left" id="type" name="type"> Type:
+    </select></td>
+    <td align="left" id="type" name="type"> Type:</td><td>
      <select  id="dht_type" name="dht_type">
         <option value="0">DHT11</option>
         <option value="1">DHT22</option>
         </select></td>
-    </td></tr>
+    </tr>
   
   <tr><td>(S3) Analog Configuration: </td><td>
     <select  id="S3" name="S3" onchange="getComboS3(this)"style="width:180px">
@@ -595,21 +598,22 @@ void send_general_html()
         if (server.argName(i) == "S51") S51 = server.arg(i).toInt();
         if (server.argName(i) == "S42") S42 = server.arg(i).toInt();
         if (server.argName(i) == "S52") S52 = server.arg(i).toInt();
-        if (server.argName(i) == "S6") S6 = server.arg(i).toInt();        
+        //if (server.argName(i) == "S6") S6 = server.arg(i).toInt();        
         if (server.argName(i) == "L1PIR") L1PIR = server.arg(i).toInt();
         if (server.argName(i) == "L2PIR") L2PIR = server.arg(i).toInt();
         if (server.argName(i) == "L3PIR") L3PIR = server.arg(i).toInt();
         if (server.argName(i) == "cap_thresold") cap_thresold = server.arg(i).toInt();
-        if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
-        if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
-        if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
+        if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt(); 
         if (server.argName(i) == "IR_ENABLE") IR_ENABLE = server.arg(i).toInt();
         if (server.argName(i) == "ALARM_MODE") ALARM_MODE = server.arg(i).toInt();
         if (server.argName(i) == "cap_debug") cap_debug = server.arg(i).toInt();
         if (server.argName(i) == "usartbridge") usartbridge = server.arg(i).toInt();
         if (server.argName(i) == "Send_Emon") Send_Emon = server.arg(i).toInt();
         if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
-        if (server.argName(i) == "API") API = urldecode(server.arg(i));       
+        if (server.argName(i) == "API") API = urldecode(server.arg(i));
+        if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
+        if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt();   
+            
 
     }
     WriteConfig_Slots();
@@ -625,6 +629,23 @@ void send_general_html()
 void send_general_configuration_values_html()
 {
   String values ="";
+  values += "cap_thresold|" +  (String) cap_thresold + "|input\n";
+  values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
+  values += "IR_ENABLE|" +  (String)  IR_ENABLE +  "|input\n";
+  values += "ALARM_MODE|" +  (String)  ALARM_MODE +  "|input\n";
+  values += "cap_debug|" +  (String)  cap_debug +  "|input\n";
+  values += "usartbridge|" +  (String)  usartbridge +  "|input\n";
+  values += "Send_Emon|" +  (String)  Send_Emon +  "|input\n";
+  values += "devicename|" +  (String)  DeviceName +  "|input\n";
+  values += "API|" +  (String)  API +  "|input\n";
+  values += "dht_type|" +  (String)  dht_type +  "|input\n";
+  values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
+  
+//  server.send ( 200, "text/plain", values);
+//  LOG.println(__FUNCTION__); 
+//  LOG.println(values);
+//  delay(500);
+//  values ="";
   values += "L1|" +  (String) L1 + "|input\n";
   values += "L2|" +  (String) L2 + "|input\n";
   values += "L3|" +  (String) L3 + "|input\n";
@@ -635,29 +656,10 @@ void send_general_configuration_values_html()
   values += "S51|" +  (String) S51 + "|input\n";
   values += "S42|" +  (String) S42 + "|input\n";
   values += "S52|" +  (String) S52 + "|input\n";
-  values += "S6|" +  (String) S6 + "|input\n";
+  //values += "S6|" +  (String) S6 + "|input\n";
   values += "L1PIR|" +  (String) L1PIR + "|input\n";
   values += "L2PIR|" +  (String) L2PIR + "|input\n";
   values += "L3PIR|" +  (String) L3PIR + "|input\n";
-
-
-  server.send ( 200, "text/plain", values);
-  LOG.println(__FUNCTION__); 
-  LOG.println(values);
-  delay(50);
-  values ="";
-  values += "cap_thresold|" +  (String) cap_thresold + "|input\n";
-  values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
-  values += "dht_type|" +  (String)  dht_type +  "|input\n";
-  values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
-  values += "IR_ENABLE|" +  (String)  IR_ENABLE +  "|input\n";
-  values += "ALARM_MODE|" +  (String)  ALARM_MODE +  "|input\n";
-  values += "cap_debug|" +  (String)  cap_debug +  "|input\n";
-  values += "usartbridge|" +  (String)  usartbridge +  "|input\n";
-  values += "Send_Emon|" +  (String)  Send_Emon +  "|input\n";
-  values += "devicename|" +  (String)  DeviceName +  "|input\n";
-  values += "API|" +  (String)  API +  "|input\n";
-
 
   server.send ( 200, "text/plain", values);
   LOG.println(values);
