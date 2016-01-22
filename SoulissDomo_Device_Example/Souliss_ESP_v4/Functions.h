@@ -33,9 +33,14 @@ byte L3;
 byte S1;
 byte S2;
 byte S3;
-byte S4;
-byte S5;
+byte S41;
+byte S42;
+byte S51;
+byte S52;
 byte S6;
+byte L1PIR;
+byte L2PIR;
+byte L3PIR;
 
 //byte byte0;   //STORE SENSOR CONFIGURATION
 //byte byte1;   //STORE LIGHTS CONFIGURATION
@@ -48,7 +53,9 @@ boolean IR_ENABLE = true;
 boolean dht_type = true;  //FALSE = DHT11 , TRUE = DHT22
 // ******************
 byte OPTIONS2;   //STORE DEBUG OPTIONS
-
+byte OPTIONS3;   //STORE DEBUG OPTIONS
+boolean ALARM_MODE;
+boolean cap_debug;
 byte cap_thresold;
 int ALTITUDE = 20;
 byte dallas_qty = 1;
@@ -82,9 +89,7 @@ byte dallas_qty = 1;
 #define PWM_MODE      2    
 #define RGB_MODE      3
 #define PIR_MODE      4
-#define ALARM_MODE    5
-#define PULSE_MODE    6
-
+#define PULSE_MODE    5
 
 #define LIGHT_ON_CYCLE 10    		// Light ON for 10 cycles if triggered by a PIR sensor
 
@@ -103,18 +108,18 @@ byte dallas_qty = 1;
 //boolean OPTO_AND_RELAY; 
 
 #define CAPACITIVE        1     
-#define CAPACITIVE_DEBUG  2
-#define BUTTONS           3
-#define BUTTONS_PULLUP    4
-#define ALARM_ENDSTOP     5
-#define BUTTONS_2_STATE   6
+#define BUTTONS           2
+#define BUTTONS_PULLUP    3
+#define ALARM_ENDSTOP     4
+#define BUTTONS_2_STATE   5
 
-#define RELAY             1         
-#define PULSE_OUTPUT      2
-#define BMP180            3
-#define GARAGE_DOOR       4
-#define WINDOW_CURTAIN    5  
-#define OPTO_AND_RELAY    6
+#define RELAY             6         
+#define PULSE_OUTPUT      7
+#define PIR               8
+#define BMP180            9
+#define GARAGE_DOOR       10
+#define WINDOW_CURTAIN    11 
+#define OPTO_AND_RELAY    12
  
 // Define the hold time of the outputs, by default the timer hold the relays for 16 times, so:
 // 221x10x16ms that is about 35 seconds. Change the parameter inside FAST_x10ms() to change this time.
@@ -137,6 +142,8 @@ byte LDR;
 byte DALLAS;
 byte CAP0;
 byte CAP1;
+byte CAP2;
+byte CAP3;
 byte RELAY0;
 byte RELAY1;
 byte PRESSURE0;
@@ -147,6 +154,7 @@ byte PULSE1;
 byte T2X;         //To use with Garage and Curtain Mode
 byte OPTO;        //To use with Opto + Relay Mode
 
+float temp;       // Temporal Float Variable to store CAPx Readings
 
 DHT dht11(DHTPIN, DHT11, 15);
 DHT dht22(DHTPIN, DHT22, 15);
@@ -229,7 +237,7 @@ void SLOT_CONFIG(){
   int NEXTSLOT = 0;
   LOG.println("SLOT CONFIG");  
 
-  if(L1 == ALARM_MODE || L2 == ALARM_MODE || L3 == ALARM_MODE || S4 == ALARM_ENDSTOP){
+  if(ALARM_MODE || S41 == ALARM_ENDSTOP || S42 == ALARM_ENDSTOP || S51 == ALARM_ENDSTOP || S52 == ALARM_ENDSTOP){
       ALARM = NEXTSLOT;
       NEXTSLOT = ALARM + 1;
       LOG.print("ALARM: "); LOG.println(ALARM);
@@ -262,7 +270,7 @@ void SLOT_CONFIG(){
       LOG.print("HUMI: "); LOG.println(HUMIDITY);      
   }*/
 
-  if(L1 == ONOFF_MODE || L1 == PIR_MODE || L1 == ALARM_MODE || L1 == PULSE_MODE){
+  if(L1 == ONOFF_MODE || L1 == PIR_MODE || L1 == PULSE_MODE){
         LED1 = NEXTSLOT;
         NEXTSLOT = LED1 + 1;
         DEBUG.print("LED1: "); DEBUG.println(LED1);
@@ -272,7 +280,7 @@ void SLOT_CONFIG(){
         DEBUG.print("LED1: PWM "); DEBUG.println(LED1);         
   }
 
-  if(L2 == ONOFF_MODE || L2 == PIR_MODE || L2 == ALARM_MODE || L2 == PULSE_MODE){
+  if(L2 == ONOFF_MODE || L2 == PIR_MODE || L2 == PULSE_MODE){
         LED2 = NEXTSLOT;
         NEXTSLOT = LED2 + 1;
         DEBUG.print("LED2: "); DEBUG.println(LED2);
@@ -282,7 +290,7 @@ void SLOT_CONFIG(){
         DEBUG.print("LED2: PWM "); DEBUG.println(LED2);          
   }
   
-  if(L3 == ONOFF_MODE || L3 == PIR_MODE || L3 == ALARM_MODE || L3 == PULSE_MODE){
+  if(L3 == ONOFF_MODE || L3 == PIR_MODE || L3 == PULSE_MODE){
         LED3 = NEXTSLOT;
         NEXTSLOT = LED3 + 1;
         DEBUG.print("LED3: "); DEBUG.println(LED3);
@@ -379,23 +387,49 @@ void SLOT_CONFIG(){
   }*/
   
   //GPIO 4-5 SLOT DEFINITIONS
-  switch (S4) {  
-        case 0:
-            //NONE
-            break;
-        case 1:
-            
-            break;
-        case 2:
-            CAP0 = NEXTSLOT; 
-            CAP1 = NEXTSLOT + 2;
-            THRE = NEXTSLOT + 4;
-            NEXTSLOT = THRE + 2;
-            LOG.print("CAP0: "); LOG.println(CAP0);   
-            LOG.print("CAP1: "); LOG.println(CAP1);             
-            LOG.print("THRE: "); LOG.println(THRE);                   
-            break;            
+
+  if(cap_debug){
+      if(S41 == CAPACITIVE){
+        CAP0 = NEXTSLOT;
+        NEXTSLOT = CAP0 + 2;
+        LOG.print("CAP0: "); LOG.println(CAP0); 
+      }
+      if(S42 == CAPACITIVE){
+        CAP1 = NEXTSLOT;
+        NEXTSLOT = CAP1 + 2;
+        LOG.print("CAP1: "); LOG.println(CAP1); 
+      }
+      if(S51 == CAPACITIVE){
+        CAP2 = NEXTSLOT;
+        NEXTSLOT = CAP2 + 2;
+        LOG.print("CAP2: "); LOG.println(CAP2); 
+      }
+      if(S52 == CAPACITIVE){
+        CAP3 = NEXTSLOT;
+        NEXTSLOT = CAP3 + 2;
+        LOG.print("CAP3: "); LOG.println(CAP3); 
+      } 
+      THRE = NEXTSLOT;
+      NEXTSLOT = THRE + 2;           
+      LOG.print("THRE: "); LOG.println(THRE);  
   }
+//  switch (S4) {  
+//        case 0:
+//            //NONE
+//            break;
+//        case 1:
+//            
+//            break;
+//        case 2:
+//            CAP0 = NEXTSLOT; 
+//            CAP1 = NEXTSLOT + 2;
+//            THRE = NEXTSLOT + 4;
+//            NEXTSLOT = THRE + 2;
+//            LOG.print("CAP0: "); LOG.println(CAP0);   
+//            LOG.print("CAP1: "); LOG.println(CAP1);             
+//            LOG.print("THRE: "); LOG.println(THRE);                   
+//            break;            
+//  }
   /*if(CAPACITIVE && DEBUG_CAPSENSE){
       CAP0 = NEXTSLOT; 
       CAP1 = NEXTSLOT + 2;
@@ -405,48 +439,70 @@ void SLOT_CONFIG(){
       LOG.print("CAP1: "); LOG.println(CAP1);             
       LOG.print("THRE: "); LOG.println(THRE);                   
   }*/
-  
-  switch (S5) {  
-        case 0:
-            //NONE
-            break;
-        case 1:
-            RELAY0 = NEXTSLOT;
-            RELAY1 = NEXTSLOT + 1;
-            NEXTSLOT = RELAY1 + 1;
-            LOG.print("RELAY0: "); LOG.println(RELAY0);   
-            LOG.print("RELAY1: "); LOG.println(RELAY1);       
-            break;
-        case 2:
-            PULSE0 = NEXTSLOT;
-            PULSE1 = PULSE0 + 1;
-            NEXTSLOT = PULSE1 + 1;
-            LOG.print("PULSE0: ");  LOG.println(PULSE0); 
-            LOG.print("PULSE1: ");  LOG.println(PULSE1);                   
-            break;            
-        case 3:
+  if(S51 == RELAY){
+    RELAY0 = NEXTSLOT;
+    NEXTSLOT = RELAY0 + 1;
+    LOG.print("RELAY0: "); LOG.println(RELAY0);
+  }
+  if(S52 == RELAY){
+    RELAY1 = NEXTSLOT;
+    NEXTSLOT = RELAY1 + 1;
+    LOG.print("RELAY1: "); LOG.println(RELAY1);
+  }
+  if(S51 == PULSE_MODE){
+    PULSE0 = NEXTSLOT;
+    NEXTSLOT = PULSE0 + 1;
+    LOG.print("PULSE0: ");  LOG.println(PULSE0);
+  }
+  if(S52 == PULSE_MODE){
+    PULSE1 = NEXTSLOT;
+    NEXTSLOT = PULSE1 + 1;
+    LOG.print("PULSE1: ");  LOG.println(PULSE1);  
+  }
+//  switch (S51) {  
+//        case 6:
+//            RELAY0 = NEXTSLOT;
+//            RELAY1 = NEXTSLOT + 1;
+//            NEXTSLOT = RELAY1 + 1;
+//            LOG.print("RELAY0: "); LOG.println(RELAY0);   
+//            LOG.print("RELAY1: "); LOG.println(RELAY1);       
+//            break;
+//        case 7:
+//            PULSE0 = NEXTSLOT;
+//            PULSE1 = PULSE0 + 1;
+//            NEXTSLOT = PULSE1 + 1;
+//            LOG.print("PULSE0: ");  LOG.println(PULSE0); 
+//            LOG.print("PULSE1: ");  LOG.println(PULSE1);                   
+//            break;            
+//                     
+//  }
+  switch (S52) {       
+        case 9:
             PRESSURE0 = NEXTSLOT;  
             BMP180TEMP = NEXTSLOT + 2;
             NEXTSLOT = BMP180TEMP + 2;
             LOG.print("PRESSURE0: ");  LOG.println(PRESSURE0);   
             LOG.print("BMP180TEMP: "); LOG.println(BMP180TEMP);                   
             break;                        
-        case 4:
+        case 10:
             T2X = NEXTSLOT;
             NEXTSLOT = T2X + 1;
             LOG.print("GARAGE: ");  LOG.println(T2X);                    
             break; 
-        case 5:
+        case 11:
             T2X = NEXTSLOT;
             NEXTSLOT = T2X + 1;
             LOG.print("CURTAIN: ");  LOG.println(T2X);                    
             break;  
-        case 6:
+        case 12:
             OPTO = NEXTSLOT;
             NEXTSLOT = OPTO + 1;
             LOG.print("OPTO: ");  LOG.println(OPTO);                  
             break;                       
   }
+
+
+  
   /*
   if(RELAY){
       RELAY0 = NEXTSLOT;
@@ -667,6 +723,15 @@ void WriteConfig_Slots() {
   bitWrite(OPTIONS2, 5, DEBUG_IR_FULL);
   bitWrite(OPTIONS2, 6, DEBUG_PLC);
   //bitWrite(OPTIONS2, 7, DEBUG_PLC);
+
+  bitWrite(OPTIONS3, 0, L1PIR);
+  bitWrite(OPTIONS3, 1, L2PIR);
+  bitWrite(OPTIONS3, 2, L3PIR);
+  bitWrite(OPTIONS3, 3, ALARM_MODE);
+  bitWrite(OPTIONS3, 4, cap_debug);
+//  bitWrite(OPTIONS3, 5, DEBUG_IR_FULL);
+//  bitWrite(OPTIONS3, 6, DEBUG_PLC);
+//  bitWrite(OPTIONS3, 7, DEBUG_PLC);  
   
   
   EEPROM.write(STORE_CUSTOM,	  cap_thresold);
@@ -676,15 +741,18 @@ void WriteConfig_Slots() {
   EEPROM.write(STORE_CUSTOM+4,  S1);
   EEPROM.write(STORE_CUSTOM+5,  S2);
   EEPROM.write(STORE_CUSTOM+6,  S3);
-  EEPROM.write(STORE_CUSTOM+7,  S4);
-  EEPROM.write(STORE_CUSTOM+8,  S5);
-  EEPROM.write(STORE_CUSTOM+9,  S6);
-  EEPROM.write(STORE_CUSTOM+10, OPTIONS1);
-  EEPROM.write(STORE_CUSTOM+11, OPTIONS2);
-  EEPROM.write(STORE_CUSTOM+12, ALTITUDE/20);
-  Store_String(STORE_CUSTOM+13, DeviceName);     //MAX 10 
-  Store_String(STORE_CUSTOM+23,	API);      //MAX 32    480
-  EEPROM.write(STORE_CUSTOM+56, dallas_qty);
+  EEPROM.write(STORE_CUSTOM+7,  S41);
+  EEPROM.write(STORE_CUSTOM+8,  S42);
+  EEPROM.write(STORE_CUSTOM+9,  S51);
+  EEPROM.write(STORE_CUSTOM+10,  S52);  
+  EEPROM.write(STORE_CUSTOM+11,  S6);
+  EEPROM.write(STORE_CUSTOM+12, OPTIONS1);
+  EEPROM.write(STORE_CUSTOM+13, OPTIONS2);
+  EEPROM.write(STORE_CUSTOM+14, OPTIONS3);
+  EEPROM.write(STORE_CUSTOM+15, ALTITUDE/20);
+  Store_String(STORE_CUSTOM+16, DeviceName);     //MAX 10 
+  Store_String(STORE_CUSTOM+26,	API);      //MAX 32    480
+  EEPROM.write(STORE_CUSTOM+59, dallas_qty);
 
   
   EEPROM.commit();
@@ -701,15 +769,18 @@ void ReadConfig_Slots()
   S1 =        EEPROM.read(STORE_CUSTOM+4);
   S2 =        EEPROM.read(STORE_CUSTOM+5);
   S3 =        EEPROM.read(STORE_CUSTOM+6);
-  S4 =        EEPROM.read(STORE_CUSTOM+7);
-  S5 =        EEPROM.read(STORE_CUSTOM+8);
-  S6 =        EEPROM.read(STORE_CUSTOM+9);
-  OPTIONS1 =  EEPROM.read(STORE_CUSTOM+10);
-  OPTIONS2 =  EEPROM.read(STORE_CUSTOM+11);
- 	ALTITUDE = EEPROM.read(STORE_CUSTOM+12)*20;
-  DeviceName = Return_String(STORE_CUSTOM+13,10);
-	API = Return_String(STORE_CUSTOM+23,32);
-	dallas_qty = EEPROM.read(STORE_CUSTOM+56);
+  S41 =       EEPROM.read(STORE_CUSTOM+7);
+  S42 =       EEPROM.read(STORE_CUSTOM+8);
+  S51 =       EEPROM.read(STORE_CUSTOM+9);
+  S52 =       EEPROM.read(STORE_CUSTOM+10);
+  S6 =        EEPROM.read(STORE_CUSTOM+11);
+  OPTIONS1 =  EEPROM.read(STORE_CUSTOM+12);
+  OPTIONS2 =  EEPROM.read(STORE_CUSTOM+13);
+  OPTIONS3 =  EEPROM.read(STORE_CUSTOM+14);  
+ 	ALTITUDE = EEPROM.read(STORE_CUSTOM+15)*20;
+  DeviceName = Return_String(STORE_CUSTOM+16,10);
+	API = Return_String(STORE_CUSTOM+26,32);
+	dallas_qty = EEPROM.read(STORE_CUSTOM+59);
 
   usartbridge = bitRead(OPTIONS1, 0);
   IR_ENABLE =   bitRead(OPTIONS1, 1);
@@ -721,15 +792,24 @@ void ReadConfig_Slots()
   DEBUG_CAPSENSE_ALL =  bitRead(OPTIONS1, 6);
   DEBUG_DHT =           bitRead(OPTIONS1, 7);
 
-  DEBUG_PRESSURE =   bitRead(OPTIONS2, 0);
-  DEBUG_GETLUX =   bitRead(OPTIONS2, 1);
-  DEBUG_DALLAS =   bitRead(OPTIONS2, 2);
+  DEBUG_PRESSURE =  bitRead(OPTIONS2, 0);
+  DEBUG_GETLUX =    bitRead(OPTIONS2, 1);
+  DEBUG_DALLAS =    bitRead(OPTIONS2, 2);
   DEBUG_EMONCMS =   bitRead(OPTIONS2, 3);
-  DEBUG_IR =   bitRead(OPTIONS2, 4);
+  DEBUG_IR =        bitRead(OPTIONS2, 4);
   DEBUG_IR_FULL =   bitRead(OPTIONS2, 5);
-  DEBUG_PLC =   bitRead(OPTIONS2, 6);
-  //DEBUG_LOG =   bitRead(OPTIONS2, 7);
-	
+  DEBUG_PLC =       bitRead(OPTIONS2, 6);
+  //DEBUG_LOG =     bitRead(OPTIONS2, 7);
+
+  L1PIR =         bitRead(OPTIONS3, 0);
+  L2PIR =         bitRead(OPTIONS3, 1);
+  L3PIR =         bitRead(OPTIONS3, 2);
+  ALARM_MODE =    bitRead(OPTIONS3, 3);
+  cap_debug =     bitRead(OPTIONS3, 4);
+//  DEBUG_IR_FULL = bitRead(OPTIONS3, 5);
+//  DEBUG_PLC =     bitRead(OPTIONS3, 6);
+//  DEBUG_LOG =   bitRead(OPTIONS3, 7);
+  
 	//*** DEBUG TO SERIAL ***
 	LOG.print(F("DeviceName: "));
 	LOG.println(DeviceName);
@@ -747,10 +827,14 @@ void ReadConfig_Slots()
   LOG.println(S2);
   LOG.print(F("S3: "));
   LOG.println(S3);
-  LOG.print(F("S4: "));
-  LOG.println(S4);
-  LOG.print(F("S5: "));
-  LOG.println(S5);
+  LOG.print(F("S41: "));
+  LOG.println(S41);
+  LOG.print(F("S42: "));
+  LOG.println(S42);
+  LOG.print(F("S51: "));
+  LOG.println(S51);
+  LOG.print(F("S52: "));
+  LOG.println(S52);  
   LOG.print(F("S6: "));
   LOG.println(S6);
   LOG.print(F("OPTIONS1: "));

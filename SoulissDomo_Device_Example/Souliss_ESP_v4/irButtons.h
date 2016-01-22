@@ -2,6 +2,8 @@
 #define irButtons_h
 
 
+//********************   NOTA!!  MIRAR TODAS LAS COMBINACIONES POSIBLES TAMBIEN PARA BOTONES IR **************
+
 /******************************** BUTTONS DEFINITIONS *************************/
 //This values are long values returned by IRremote library, to get your values enable DEBUG and see results on Serial Port
 #define b0  16748655

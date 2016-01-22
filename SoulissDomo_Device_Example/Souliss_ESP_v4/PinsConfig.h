@@ -11,7 +11,8 @@ byte LEDPWMP0;
 byte LEDPWMP1;
 byte LEDPWMP2;
 byte LEDP;
-byte PIRP;
+byte PIRP1 = 255;
+byte PIRP2 = 255;
 byte LEDRP;
 byte LEDGP;
 byte LEDBP;
@@ -24,6 +25,8 @@ byte SDAP;
 byte SCLP;
 byte BUT0P;
 byte BUT1P;
+byte BUT2P;
+byte BUT3P;
 byte THERM_HEATERP;
 byte THERM_FAN1P;
 byte THERM_FAN2P;
@@ -67,18 +70,19 @@ void PINS_CONFIG(){
 // *************************************************  PINS PCBrev2 ***************************************************
   #ifdef PCBrev2    //PCB NUEVA
     
-    if(L1 == ONOFF_MODE || L1 == PULSE_MODE || L1 == PWM_MODE || L1 == PIR_MODE || L1 == ALARM_MODE){
+    if(L1 == ONOFF_MODE || L1 == PULSE_MODE || L1 == PWM_MODE || L1 == PIR_MODE){
         LEDPWMP0 = 13;
     }
-    if(L2 == ONOFF_MODE || L2 == PULSE_MODE || L2 == PWM_MODE || L2 == PIR_MODE || L2 == ALARM_MODE){
+    if(L2 == ONOFF_MODE || L2 == PULSE_MODE || L2 == PWM_MODE || L2 == PIR_MODE){
         LEDPWMP1 = 12;
     }
-    if(L3 == ONOFF_MODE || L3 == PULSE_MODE || L3 == PWM_MODE || L3 == PIR_MODE || L3 == ALARM_MODE){
+    if(L3 == ONOFF_MODE || L3 == PULSE_MODE || L3 == PWM_MODE || L3 == PIR_MODE){
         LEDPWMP2 = 15;
     } 
 
-    if(L1 == PIR_MODE  || L1 == ALARM_MODE || L2 == PIR_MODE  || L2 == ALARM_MODE || L3 == PIR_MODE  || L3 == ALARM_MODE){
-        PIRP = 3;       //CHANGED PIR TO RX PIN 3 (POWERED WITH 5V)   
+    if(L1 == PIR_MODE  ||  L2 == PIR_MODE  ||  L3 == PIR_MODE){
+        if(L1PIR == 0 || L2PIR == 0 || L3PIR == 0) PIRP1 = 4;      
+        if(L1PIR == 1 || L2PIR == 1 || L3PIR == 1) PIRP2 = 5;                 
     }
        
 //    if(ONOFF_MODE || PULSE_MODE || PWM_MODE){
@@ -110,16 +114,32 @@ void PINS_CONFIG(){
     //PIN OPTIONS FOR CAPACITIVE - RELAY OR BMP180
 
 //**************************   REVISAAAAARR!!! *********************//
-
-    if(S4 = 1 || S4 == 2){
-        CAP0P = 4;//12;
-        CAP1P = 5;//14;
+    if(S41 == CAPACITIVE || S41 == BUTTONS || S41 == BUTTONS_PULLUP || S41 == ALARM_ENDSTOP || S41 == BUTTONS_2_STATE || S41 == 6){
+        BUT0P = TX; //TX FAIL RX OK
     }
+    if(S42 == CAPACITIVE || S42 == BUTTONS || S42 == BUTTONS_PULLUP || S42 == ALARM_ENDSTOP || S42 == BUTTONS_2_STATE || S42 == 6){
+        BUT1P = RX;
+    }
+    
+    if(S51 == CAPACITIVE || S51 == BUTTONS || S51 == BUTTONS_PULLUP || S51 == ALARM_ENDSTOP || S51 == BUTTONS_2_STATE){
+        BUT2P = 4;//TX; //TX FAIL RX OK
+    }
+    if(S52 == CAPACITIVE || S52 == BUTTONS || S52 == BUTTONS_PULLUP || S52 == ALARM_ENDSTOP || S52 == BUTTONS_2_STATE){
+        BUT3P = 5;
+    }
+
+    
 //    if(CAPACITIVE){
 //        CAP0P = 4;//12;
 //        CAP1P = 5;//14;
 //    }
-    if(S5 = 1 || S5 == 2 || S5 == 4 || S5 == 4){
+    if(S51 == RELAY || S51 == PULSE_OUTPUT){
+        RELAY0P = 4;
+    }
+    if(S52 == RELAY || S52 == PULSE_OUTPUT){
+        RELAY1P = 5;
+    }
+    if(S51 == GARAGE_DOOR || S51 == WINDOW_CURTAIN){
         RELAY0P = 4;
         RELAY1P = 5;
     }
@@ -127,7 +147,7 @@ void PINS_CONFIG(){
 //        RELAY0P = 4;
 //        RELAY1P = 5;
 //    }
-    if(S5 = 3){
+    if(S51 == BMP180){
         //SDA 5  SCL 4  PINS MUST CHANGE ON WIRE.H
         SCLP = 4;//12;
         SDAP = 5;//14;
@@ -137,16 +157,13 @@ void PINS_CONFIG(){
 //        SCLP = 4;//12;
 //        SDAP = 5;//14;
 //    }
-    if(S4 = 3 || S4 == 4 || S4 == 5 || S4 == 6){
-        BUT0P = 4;//TX; //TX FAIL RX OK
-        BUT1P = 5;;
-    }
+
 //    if(BUTTONS || BUTTONS_PULLUP || ALARM_ENDSTOP || BUTTONS_2_STATE){
 //        BUT0P = 4;//TX; //TX FAIL RX OK
 //        BUT1P = 5;
 //    }
 
-    if(S5 = 6){
+    if(S51 == OPTO_AND_RELAY){
         BUT0P = 4;          //Used to OPTO IN
         RELAY1P = 5;        //Used to Relay  
     }
