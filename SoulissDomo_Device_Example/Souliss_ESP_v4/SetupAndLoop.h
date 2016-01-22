@@ -733,7 +733,7 @@ void fastGeneral(){
         }
         FAST_9110ms()    {
 //            if(DALLAS){ 
-            if(S1 == DALLAS){ 
+            if(S1 == DALLAS_SENSOR){ 
                   // Acquire temperature from the microcontroller ADC
                   sensors.requestTemperatures(); //Prepara el sensor para la lectura
                   for(int i=0; i < dallas_qty; i++){
