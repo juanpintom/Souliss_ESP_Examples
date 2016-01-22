@@ -18,7 +18,7 @@ boolean DEBUG_DALLAS        = 0;
 boolean DEBUG_EMONCMS       = 1;
 boolean DEBUG_IR            = 1;
 boolean DEBUG_IR_FULL       = 0;
-boolean DEBUG_PLC           = 1;
+boolean DEBUG_PLC           = 0;
 
 #define DEBUG if(DEBUG_LOG)LOG
 
@@ -237,7 +237,7 @@ void SLOT_CONFIG(){
   int NEXTSLOT = 0;
   LOG.println("SLOT CONFIG");  
 
-  if(ALARM_MODE || S41 == ALARM_ENDSTOP || S42 == ALARM_ENDSTOP || S51 == ALARM_ENDSTOP || S52 == ALARM_ENDSTOP){
+  if(ALARM_MODE == 1 || S41 == ALARM_ENDSTOP || S42 == ALARM_ENDSTOP || S51 == ALARM_ENDSTOP || S52 == ALARM_ENDSTOP){
       ALARM = NEXTSLOT;
       NEXTSLOT = ALARM + 1;
       LOG.print("ALARM: "); LOG.println(ALARM);
@@ -409,9 +409,11 @@ void SLOT_CONFIG(){
         NEXTSLOT = CAP3 + 2;
         LOG.print("CAP3: "); LOG.println(CAP3); 
       } 
-      THRE = NEXTSLOT;
-      NEXTSLOT = THRE + 2;           
-      LOG.print("THRE: "); LOG.println(THRE);  
+      if(S41 == CAPACITIVE || S42 == CAPACITIVE || S51 == CAPACITIVE || S52 == CAPACITIVE){
+        THRE = NEXTSLOT;
+        NEXTSLOT = THRE + 2;           
+        LOG.print("THRE: "); LOG.println(THRE);
+      }  
   }
 //  switch (S4) {  
 //        case 0:
