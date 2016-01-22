@@ -54,7 +54,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
     </select>
     </td></tr>
     <tr id="ALARM_TD"><td align="left">Alarm MODE?:</td>
-      <td><input type="checkbox" id="ALARM" name="ALARM" onclick="getALARM(this)"></td></tr>
+      <td><input type="checkbox" id="ALARM_MODE" name="ALARM_MODE"></td></tr>
     
     <tr id="PIR1"><td>L1 PIR Sensor:</td><td>
     <select  id="L1PIR" name="L1PIR" style="width:180px">
@@ -242,7 +242,6 @@ window.onload = function ()
  });
 }
 function load(e,t,n){
-  getConfig();
   if("js"==t){
     var a=document.createElement("script");
     a.src=e,a.type="text/javascript",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
@@ -250,6 +249,7 @@ function load(e,t,n){
     var a=document.createElement("link");
     a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
   }
+  getConfig();
 }
 function getConfig(){
     var L1 = document.getElementById("L1");
@@ -269,10 +269,10 @@ function getConfig(){
       document.getElementById("ALARM_TD").style.display = "block";  //none;  
     }else{
       document.getElementById("ALARM_TD").style.display = "none";  //none;  
-      document.getElementById("ALARM").checked = false;  
+      document.getElementById("ALARM_MODE").checked = false;  
     }
     if(S41.value == 4 || S42.value == 4 || S51.value == 4 || S52.value == 4){
-      document.getElementById("ALARM").checked = true;    
+      document.getElementById("ALARM_MODE").checked = true;    
     }
   // PIR SENSORS
     if(L1.value == 4){
@@ -537,7 +537,7 @@ void send_general_html()
         if (server.argName(i) == "S42") S42 = server.arg(i).toInt();
         if (server.argName(i) == "S52") S52 = server.arg(i).toInt();
         if (server.argName(i) == "S6") S6 = server.arg(i).toInt();
-        if (server.argName(i) == "ALARM") ALARM_MODE = true;         
+        if (server.argName(i) == "ALARM_MODE") ALARM_MODE = true;         
         if (server.argName(i) == "L1PIR") L1PIR = server.arg(i).toInt();
         if (server.argName(i) == "L2PIR") L2PIR = server.arg(i).toInt();
         if (server.argName(i) == "L3PIR") L3PIR = server.arg(i).toInt();
@@ -587,7 +587,7 @@ void send_general_configuration_values_html()
   values += "S42|" +  (String) S42 + "|input\n";
   values += "S52|" +  (String) S52 + "|input\n";
   values += "S6|" +  (String) S6 + "|input\n";
-  values += "ALARM|" +  (String) (ALARM_MODE ? "checked" : "") + "|chk\n";
+  values += "ALARM_MODE|" +  (String) (ALARM_MODE ? "checked" : "") + "|chk\n";
   values += "L1PIR|" +  (String) L1PIR + "|input\n";
   values += "L2PIR|" +  (String) L2PIR + "|input\n";
   values += "L3PIR|" +  (String) L3PIR + "|input\n";

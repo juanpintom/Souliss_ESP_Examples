@@ -54,8 +54,8 @@ boolean dht_type = true;  //FALSE = DHT11 , TRUE = DHT22
 // ******************
 byte OPTIONS2;   //STORE DEBUG OPTIONS
 byte OPTIONS3;   //STORE DEBUG OPTIONS
-boolean ALARM_MODE;
-boolean cap_debug;
+boolean ALARM_MODE = false;
+boolean cap_debug = false;
 byte cap_thresold;
 int ALTITUDE = 20;
 byte dallas_qty = 1;
