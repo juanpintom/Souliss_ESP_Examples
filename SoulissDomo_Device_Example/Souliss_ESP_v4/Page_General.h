@@ -537,7 +537,7 @@ void send_general_html()
         if (server.argName(i) == "S42") S42 = server.arg(i).toInt();
         if (server.argName(i) == "S52") S52 = server.arg(i).toInt();
         if (server.argName(i) == "S6") S6 = server.arg(i).toInt();
-        if (server.argName(i) == "ALARM_MODE") ALARM_MODE = true;         
+        //if (server.argName(i) == "ALARM_MODE") ALARM_MODE = true;         
         if (server.argName(i) == "L1PIR") L1PIR = server.arg(i).toInt();
         if (server.argName(i) == "L2PIR") L2PIR = server.arg(i).toInt();
         if (server.argName(i) == "L3PIR") L3PIR = server.arg(i).toInt();
@@ -587,7 +587,7 @@ void send_general_configuration_values_html()
   values += "S42|" +  (String) S42 + "|input\n";
   values += "S52|" +  (String) S52 + "|input\n";
   values += "S6|" +  (String) S6 + "|input\n";
-  values += "ALARM_MODE|" +  (String) (ALARM_MODE ? "checked" : "") + "|chk\n";
+  //values += "ALARM_MODE|" +  (String) (ALARM_MODE ? "checked" : "") + "|chk\n";
   values += "L1PIR|" +  (String) L1PIR + "|input\n";
   values += "L2PIR|" +  (String) L2PIR + "|input\n";
   values += "L3PIR|" +  (String) L3PIR + "|input\n";
