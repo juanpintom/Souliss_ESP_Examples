@@ -121,7 +121,7 @@ void setupGeneral(){
     }
     
 //    if(DALLAS_SENSOR){
-    if(S3 == DALLAS_SENSOR){
+    if(S1 == DALLAS_SENSOR){
     	for(int i=0; i < dallas_qty; i++){
         	Set_Temperature(DALLAS + (i*2));
     	}	
@@ -140,7 +140,7 @@ void setupGeneral(){
         if(S42 == CAPACITIVE) Set_T51(CAP1);
         if(S51 == CAPACITIVE) Set_T51(CAP2);
         if(S52 == CAPACITIVE) Set_T51(CAP3);
-        Set_T51(THRE);
+        if(S41 == CAPACITIVE  || S42 == CAPACITIVE  || S51 == CAPACITIVE  || S52 == CAPACITIVE) Set_T51(THRE);
     }
 //    if(PULSE_OUTPUT){
     if(S51 == PULSE_OUTPUT){
@@ -662,18 +662,22 @@ void fastGeneral(){
             if(S52 == CAPACITIVE){
               temp = readCapacitivePin(BUT3P);
               if(temp>0) Souliss_ImportAnalog(memory_map, CAP3, &temp); 
-            }       
-            temp = cap_thresold;
-            Souliss_ImportAnalog(memory_map, THRE, &temp);       
+            }
+            if(S41 == CAPACITIVE || S42 == CAPACITIVE || S51 == CAPACITIVE || S52 == CAPACITIVE){       
+              temp = cap_thresold;
+              Souliss_ImportAnalog(memory_map, THRE, &temp);       
+            }
           }          
         }
 
         FAST_510ms(){
 //           if(CAPACITIVE && DEBUG_CAPSENSE){  
            if(cap_debug){          
-              Read_T51(CAP0);
-              Read_T51(CAP1);
-              Read_T51(THRE);
+              if(S41 == CAPACITIVE) Read_T51(CAP0);
+              if(S42 == CAPACITIVE) Read_T51(CAP1);
+              if(S51 == CAPACITIVE) Read_T51(CAP2);
+              if(S52 == CAPACITIVE) Read_T51(CAP3);
+              if(S41 == CAPACITIVE || S42 == CAPACITIVE || S51 == CAPACITIVE || S52 == CAPACITIVE) Read_T51(THRE);
            }
            
 //           if(GARAGE_DOOR){
