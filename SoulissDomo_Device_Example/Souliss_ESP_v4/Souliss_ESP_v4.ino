@@ -99,17 +99,18 @@ Adafruit_IO_Feed testFeed = aio.getFeed("esptestfeed");
 unsigned int count = 0;
 */
 
+/*
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 
-/************************* Adafruit.io Setup *********************************/
+// ************************* Adafruit.io Setup ********************************
 
 #define AIO_SERVER      "io.adafruit.com"
 #define AIO_SERVERPORT  1883
 #define AIO_USERNAME    "juanpintom"
 #define AIO_KEY         "7d5d2fa70f894f9aade434d0814f5c3ad13cfdd8"
 
-/************ Global State (you don't need to change this!) ******************/
+// ************ Global State (you don't need to change this!) *****************
 
 // Store the MQTT server, username, and password in flash memory.
 // This is required for using the Adafruit MQTT library.
@@ -120,7 +121,7 @@ const char MQTT_PASSWORD[] PROGMEM  = AIO_KEY;
 // Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
 Adafruit_MQTT_Client mqtt(&client, MQTT_SERVER, AIO_SERVERPORT, MQTT_USERNAME, MQTT_PASSWORD);
 
-/****************************** Feeds ***************************************/
+// ****************************** Feeds *************************************
 
 // Setup a feed called 'photocell' for publishing.
 // Notice MQTT paths for AIO follow the form: <username>/feeds/<feedname>
@@ -131,11 +132,12 @@ Adafruit_MQTT_Publish photocell = Adafruit_MQTT_Publish(&mqtt, PHOTOCELL_FEED);
 const char ONOFF_FEED[] PROGMEM = AIO_USERNAME "/feeds/onoff";
 Adafruit_MQTT_Subscribe onoffbutton = Adafruit_MQTT_Subscribe(&mqtt, ONOFF_FEED);
 
-/*************************** Sketch Code ************************************/
+// *************************** Sketch Code **********************************
 
 // Bug workaround for Arduino 1.6.6, it seems to need a function declaration
 // for some reason (only affects ESP8266, likely an arduino-builder bug).
 void MQTT_connect();
+*/
 
 //****************************************************************************
 //************************** SETUP FUNCTION **********************************
@@ -223,7 +225,7 @@ void setup()
 
 
     //aio.begin();
-    mqtt.subscribe(&onoffbutton);
+    //mqtt.subscribe(&onoffbutton);
     
     if(IR_ENABLE){
       DEBUG.println("IR_START");
@@ -353,7 +355,7 @@ boolean Telnet_Loop(){
   
   
 }  
-
+/*
 void MQTT_Loop(){
   MQTT_connect();
 
@@ -403,7 +405,7 @@ void MQTT_connect() {
        delay(5000);  // wait 5 seconds
   }
   LOG.println("MQTT Connected!");
-}
+}*/
 
 void deleteEEPROM(){
   // **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
