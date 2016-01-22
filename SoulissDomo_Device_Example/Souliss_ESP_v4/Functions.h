@@ -451,12 +451,12 @@ void SLOT_CONFIG(){
     NEXTSLOT = RELAY1 + 1;
     LOG.print("RELAY1: "); LOG.println(RELAY1);
   }
-  if(S51 == PULSE_MODE){
+  if(S51 == PULSE_OUTPUT){
     PULSE0 = NEXTSLOT;
     NEXTSLOT = PULSE0 + 1;
     LOG.print("PULSE0: ");  LOG.println(PULSE0);
   }
-  if(S52 == PULSE_MODE){
+  if(S52 == PULSE_OUTPUT){
     PULSE1 = NEXTSLOT;
     NEXTSLOT = PULSE1 + 1;
     LOG.print("PULSE1: ");  LOG.println(PULSE1);  
