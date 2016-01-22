@@ -53,8 +53,12 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="5">Pulse Mode</option>
     </select>
     </td></tr>
-    <tr id="ALARM_TD"><td align="left">Alarm MODE?:</td>
-      <td><input type="checkbox" id="ALARM_MODE" name="ALARM_MODE"></td></tr>
+    <tr id="ALARM_TD"><td align="left">Alarm MODE?:</td><td>
+    <select  id="ALARM_MODE" name="ALARM_MODE" style="width:180px">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+    </td></tr>
     
     <tr id="PIR1"><td>L1 PIR Sensor:</td><td>
     <select  id="L1PIR" name="L1PIR" style="width:180px">
@@ -113,8 +117,13 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="3">More comming...</option>
     </select>
     </td></tr>
-  <tr id="Emoncms"><td><input type="checkbox" id="Send_Emon" name="Send_Emon" onclick="getEmon(this)"> Send to EmonCMS?: </td>
-  <td id="API_text"><input type="text" id="API" name="API" value="" maxlength="32"> API Key</td></tr>
+    <tr id="Emoncms"><td align="left">Send to EmonCMS?:</td><td>
+      <select  id="Send_Emon" name="Send_Emon" style="width:180px" onclick="getEmon(this)">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select></td>
+      <td id="API_text"><input type="text" id="API" name="API" value="" maxlength="32"> API Key</td>
+      </tr>
   </table>
   
   <hr>
@@ -185,41 +194,28 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
     <table id="Thresold">
       <tr><td align="left" id="cap_thresold_line"> Capacitive Thresold: </td>
       <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td></tr> 
-      <tr><td align="left">Capacitive /w Debug:</td>
-      <td><input type="checkbox" id="cap_debug" name="cap_debug"></td></tr> 
+      <tr><td align="left">Capacitive /w Debug:</td><td>
+        <select  id="cap_debug" name="cap_debug" style="width:180px">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+          </select></td></tr>
       </table>
 
   <hr>    
   <table>
-    <tr><td align="left" style="width:230px">Receive IR on this Node? (S6):</td>
-    <td><input type="checkbox" id="IR_ENABLE" name="IR_ENABLE" onclick="getChk(this)"></td>
-    </tr></table>
+    <tr><td align="left" style="width:230px">Receive IR on this Node? (S6):</td><td>
+      <select  id="IR_ENABLE" name="IR_ENABLE" style="width:180px">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select></td></tr></table>
     
   <hr>
   <table>
-    <tr id="usart"><td align="left" style="width:230px"> Node is USART Bridge?: (S4)</td>
-    <td><input type="checkbox" id="usartbridge" name="usartbridge" onclick="getUSART(this)"></td>
-    </tr></table>
-  
-  
-  <table>
-    <tr><td align="left" style="width:230px"><strong>DEBUG Configuration:</strong></td>
-    <td><input type="checkbox" id="DEBUG" name="DEBUG" onclick="getDebug(this)">Check to Show</td></tr></table>
-    
-  <table id="LOG">
-    <tr><td><input type="checkbox" id="ALL_LOG" name="ALL_LOG" onclick="getAllLog(this)"><strong>Enable All </strong></td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_LOG" name="DEBUG_LOG">Debug LOG</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_CAPSENSE" name="DEBUG_CAPSENSE">Debug CAPSENSE</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_CAPSENSE_ALL" name="DEBUG_CAPSENSE_ALL">Debug DEBUG_CAPSENSE_ALL</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_DHT" name="DEBUG_DHT">Debug DHT</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_PRESSURE" name="DEBUG_PRESSURE">Debug PRESSURE</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_GETLUX" name="DEBUG_GETLUX">Debug GETLUX</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_DALLAS" name="DEBUG_DALLAS">Debug DALLAS</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_EMONCMS" name="DEBUG_EMONCMS">Debug EMONCMS</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_IR" name="DEBUG_IR">Debug IR</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_IR_FULL" name="DEBUG_IR_FULL">Debug IR_FULL</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_PLC" name="DEBUG_PLC">Debug PLC</td></tr>
-  </table>
+    <tr id="usart"><td align="left" style="width:230px"> Node is USART Bridge?: (S4)</td><td>
+      <select  id="usartbridge" name="usartbridge" style="width:180px" onclick="getUSART(this)">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select></td></tr></table>
   
   <hr>
   <table>  
@@ -242,6 +238,7 @@ window.onload = function ()
  });
 }
 function load(e,t,n){
+  getConfig();
   if("js"==t){
     var a=document.createElement("script");
     a.src=e,a.type="text/javascript",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
@@ -249,7 +246,6 @@ function load(e,t,n){
     var a=document.createElement("link");
     a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
   }
-  getConfig();
 }
 function getConfig(){
     var L1 = document.getElementById("L1");
@@ -269,10 +265,10 @@ function getConfig(){
       document.getElementById("ALARM_TD").style.display = "block";  //none;  
     }else{
       document.getElementById("ALARM_TD").style.display = "none";  //none;  
-      document.getElementById("ALARM_MODE").checked = false;  
+      document.getElementById("ALARM_MODE").value = 0;  
     }
     if(S41.value == 4 || S42.value == 4 || S51.value == 4 || S52.value == 4){
-      document.getElementById("ALARM_MODE").checked = true;    
+      document.getElementById("ALARM_MODE").value = 1;    
     }
   // PIR SENSORS
     if(L1.value == 4){
@@ -304,7 +300,7 @@ function getConfig(){
       document.getElementById("type").style.display = "none";  //none;  
     }
   // EMONCMS CHECK  
-    if(document.getElementById("Send_Emon").checked){
+    if(document.getElementById("Send_Emon").value == 1){
       document.getElementById("API_text").style.display = "block";  //none;  
     } else { 
       document.getElementById("API_text").style.display = "none"; 
@@ -324,12 +320,6 @@ function getConfig(){
       document.getElementById("Altitude").style.display = "none";  
     }
   
-  //  DEBUG  
-    if(document.getElementById("DEBUG").checked){
-      document.getElementById("LOG").style.display = "block";  //none;  
-    }else{
-      document.getElementById("LOG").style.display = "none";  //none;  
-    }
 }
 function getComboL1(sel) {
   var value = sel.value;
@@ -398,7 +388,7 @@ function getEmon(sel) {
   
 function getComboS41(sel) {
   if(sel.value > 0){
-    document.getElementById("usartbridge").checked = false;
+    document.getElementById("usartbridge").value = 0;
   }
   if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S42").value = sel.value;
@@ -413,7 +403,7 @@ function getComboS41(sel) {
 }
 function getComboS42(sel) {
   if(sel.value > 0){
-    document.getElementById("usartbridge").checked = false;
+    document.getElementById("usartbridge").value = 0;
   }
   if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S41").value = sel.value;
@@ -466,7 +456,7 @@ function getComboS52(sel) {
 }
   
 function getUSART(sel){
-  if(sel.checked){
+  if(sel.value == 1){
     document.getElementById("S41").value = 0;   
     document.getElementById("S42").value = 0;
     if(document.getElementById("S51").value == 10){  //GARAGE_DOOR
@@ -477,41 +467,7 @@ function getUSART(sel){
   getConfig();
 }
   
-function getDebug(sel){
-  if(sel.checked){
-    document.getElementById("LOG").style.display = "block";  //none;  
-  } else {
-    document.getElementById("LOG").style.display = "none";  
-  }
-}
-  
-function getAllLog(sel){
-  if(sel.checked){
-    document.getElementById("DEBUG_LOG").checked = true;    
-    document.getElementById("DEBUG_CAPSENSE").checked = true;  
-    document.getElementById("DEBUG_CAPSENSE_ALL").checked = true;  
-    document.getElementById("DEBUG_DHT").checked = true;  
-    document.getElementById("DEBUG_PRESSURE").checked = true;  
-    document.getElementById("DEBUG_GETLUX").checked = true;  
-    document.getElementById("DEBUG_DALLAS").checked = true;  
-    document.getElementById("DEBUG_EMONCMS").checked = true;  
-    document.getElementById("DEBUG_IR").checked = true;
-    document.getElementById("DEBUG_IR_FULL").checked = true;
-    document.getElementById("DEBUG_PLC").checked = true;
-  } else {
-    document.getElementById("DEBUG_LOG").checked = false;    
-    document.getElementById("DEBUG_CAPSENSE").checked = false;  
-    document.getElementById("DEBUG_CAPSENSE_ALL").checked = false;  
-    document.getElementById("DEBUG_DHT").checked = false;  
-    document.getElementById("DEBUG_PRESSURE").checked = false;  
-    document.getElementById("DEBUG_GETLUX").checked = false;  
-    document.getElementById("DEBUG_DALLAS").checked = false;  
-    document.getElementById("DEBUG_EMONCMS").checked = false;  
-    document.getElementById("DEBUG_IR").checked = false;
-    document.getElementById("DEBUG_IR_FULL").checked = false;
-    document.getElementById("DEBUG_PLC").checked = false;
-  }
-}
+
 </script>
 )=====";
 
@@ -649,22 +605,12 @@ void send_general_html()
         if (server.argName(i) == "API") API = urldecode(server.arg(i)); 
         if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
         if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
-        if (server.argName(i) == "IR_ENABLE") IR_ENABLE = true;
-        if (server.argName(i) == "ALARM_MODE") ALARM_MODE = true;
-        if (server.argName(i) == "cap_debug") cap_debug = true;
-        if (server.argName(i) == "usartbridge") usartbridge = true;
-        if (server.argName(i) == "Send_Emon") Send_Emon = true;         
-        if (server.argName(i) == "DEBUG_LOG") DEBUG_LOG = true;
-        if (server.argName(i) == "DEBUG_CAPSENSE") DEBUG_CAPSENSE = true;
-        if (server.argName(i) == "DEBUG_CAPSENSE_ALL") DEBUG_CAPSENSE_ALL = true;
-        if (server.argName(i) == "DEBUG_DHT") DEBUG_DHT = true;
-        if (server.argName(i) == "DEBUG_PRESSURE") DEBUG_PRESSURE = true;
-        if (server.argName(i) == "DEBUG_GETLUX") DEBUG_GETLUX = true;
-        if (server.argName(i) == "DEBUG_DALLAS") DEBUG_DALLAS = true;
-        if (server.argName(i) == "DEBUG_EMONCMS") DEBUG_EMONCMS = true;
-        if (server.argName(i) == "DEBUG_IR") DEBUG_IR = true;
-        if (server.argName(i) == "DEBUG_IR_FULL") DEBUG_IR_FULL = true; 
-        if (server.argName(i) == "DEBUG_PLC") DEBUG_PLC = true;
+        if (server.argName(i) == "IR_ENABLE") IR_ENABLE = server.arg(i).toInt();;
+        if (server.argName(i) == "ALARM_MODE") ALARM_MODE = server.arg(i).toInt();;
+        if (server.argName(i) == "cap_debug") cap_debug = server.arg(i).toInt();;
+        if (server.argName(i) == "usartbridge") usartbridge = server.arg(i).toInt();;
+        if (server.argName(i) == "Send_Emon") Send_Emon = server.arg(i).toInt();;         
+
     }
     WriteConfig_Slots();
     //firstStart = true;
@@ -699,22 +645,12 @@ void send_general_configuration_values_html()
   values += "API|" +  (String)  API +  "|input\n";
   values += "dht_type|" +  (String)  dht_type +  "|input\n";
   values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
-  values += "IR_ENABLE|" +  (String) (IR_ENABLE ? "checked" : "") + "|chk\n";
-  values += "ALARM_MODE|" +  (String) (ALARM_MODE ? "checked" : "") + "|chk\n";
-  values += "cap_debug|" +  (String) (cap_debug ? "checked" : "") + "|chk\n";
-  values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
-  values += "Send_Emon|" +  (String) (Send_Emon ? "checked" : "") + "|chk\n";
-  values += "DEBUG_LOG|" +  (String) (DEBUG_LOG ? "checked" : "") + "|chk\n";
-  values += "DEBUG_CAPSENSE|" +  (String) (DEBUG_CAPSENSE ? "checked" : "") + "|chk\n";
-  values += "DEBUG_CAPSENSE_ALL|" +  (String) (DEBUG_CAPSENSE_ALL ? "checked" : "") + "|chk\n";
-  values += "DEBUG_DHT|" +  (String) (DEBUG_DHT ? "checked" : "") + "|chk\n";
-  values += "DEBUG_PRESSURE|" +  (String) (DEBUG_PRESSURE ? "checked" : "") + "|chk\n";
-  values += "DEBUG_GETLUX|" +  (String) (DEBUG_GETLUX ? "checked" : "") + "|chk\n";
-  values += "DEBUG_DALLAS|" +  (String) (DEBUG_DALLAS ? "checked" : "") + "|chk\n";
-  values += "DEBUG_EMONCMS|" +  (String) (DEBUG_EMONCMS ? "checked" : "") + "|chk\n";
-  values += "DEBUG_IR|" +  (String) (DEBUG_IR ? "checked" : "") + "|chk\n";
-  values += "DEBUG_IR_FULL|" +  (String) (DEBUG_IR_FULL ? "checked" : "") + "|chk\n";
-  values += "DEBUG_PLC|" +  (String) (DEBUG_PLC ? "checked" : "") + "|chk\n";
+  values += "IR_ENABLE|" +  (String)  IR_ENABLE +  "|input\n";
+  values += "ALARM_MODE|" +  (String)  ALARM_MODE +  "|input\n";
+  values += "cap_debug|" +  (String)  cap_debug +  "|input\n";
+  values += "usartbridge|" +  (String)  usartbridge +  "|input\n";
+  values += "Send_Emon|" +  (String)  Send_Emon +  "|input\n";
+
 
   server.send ( 200, "text/plain", values);
   LOG.println(__FUNCTION__); 

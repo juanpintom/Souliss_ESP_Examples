@@ -427,7 +427,7 @@ void deleteEEPROM(){
         for(int i = STORE__ADDR_s; i <= STORE__PADDR_f; i++){
           //EEPROM.write(i,0);
         }
-        EEPROM.commit();
+        //EEPROM.commit();
         LOG.println("Address Deleted");
         // DELETE EEPROM IF GPIO STILL PRESSED
         if(millis() < previous + 10000){

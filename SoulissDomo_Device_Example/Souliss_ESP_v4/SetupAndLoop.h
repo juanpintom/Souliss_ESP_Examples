@@ -775,7 +775,7 @@ void fastGeneral(){
             }                  
             
 //            if(BMP180){
-            if(S51 = BMP180){
+            if(S51 == BMP180){
                   Logic_Pressure(PRESSURE0);  
                   Logic_Temperature(BMP180TEMP);
             }
@@ -888,7 +888,7 @@ void slowGeneral(){
     SLOW_x10s(2) {
 
 //        if(DHT_SENSOR){
-        if(S2 = DHT_SENSOR){
+        if(S2 == DHT_SENSOR){
             Souliss_GetDHT(TEMPERATURE, HUMIDITY, true);  
             if(Send_Emon) {
               SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
