@@ -515,20 +515,123 @@ function getAllLog(sel){
 </script>
 )=====";
 
+//void send_general_html()
+//{
+//	
+//	if (server.args() > 0 )  // Save Settings
+//	{
+//		//byte0 = 0;
+//		//byte1 = 0;
+//		//byte2 = 0;
+//		String temp = "";
+//		usartbridge = false;
+//		for ( uint8_t i = 0; i < server.args(); i++ ) {
+//		    if (server.argName(i) == "L1") L1 = server.arg(i).toInt(); 
+//		    if (server.argName(i) == "L2") L2 = server.arg(i).toInt();
+//		    if (server.argName(i) == "L3") L3 = server.arg(i).toInt();
+//        if (server.argName(i) == "S1") S1 = server.arg(i).toInt();
+//        if (server.argName(i) == "S2") S2 = server.arg(i).toInt();
+//        if (server.argName(i) == "S3") S3 = server.arg(i).toInt();
+//        if (server.argName(i) == "S41") S41 = server.arg(i).toInt();
+//        if (server.argName(i) == "S51") S51 = server.arg(i).toInt();
+//        if (server.argName(i) == "S42") S42 = server.arg(i).toInt();
+//        if (server.argName(i) == "S52") S52 = server.arg(i).toInt();
+//        if (server.argName(i) == "S6") S6 = server.arg(i).toInt();
+//        if (server.argName(i) == "ALARM_MODE") ALARM_MODE = true;         
+//        if (server.argName(i) == "L1PIR") L1PIR = server.arg(i).toInt();
+//        if (server.argName(i) == "L2PIR") L2PIR = server.arg(i).toInt();
+//        if (server.argName(i) == "L3PIR") L3PIR = server.arg(i).toInt();
+//        if (server.argName(i) == "cap_debug") cap_debug = true;
+//     		if (server.argName(i) == "cap_thresold") cap_thresold = server.arg(i).toInt();
+//      	if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
+//      	if (server.argName(i) == "usartbridge") usartbridge = true;
+//      	if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
+//      	if (server.argName(i) == "API") API = urldecode(server.arg(i));
+//      	if (server.argName(i) == "Send_Emon") Send_Emon = true; 
+//      	if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
+//      	if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
+//      	if (server.argName(i) == "IR_ENABLE") IR_ENABLE = true;
+//        if (server.argName(i) == "DEBUG_LOG") DEBUG_LOG = true;
+//        if (server.argName(i) == "DEBUG_CAPSENSE") DEBUG_CAPSENSE = true;
+//        if (server.argName(i) == "DEBUG_CAPSENSE_ALL") DEBUG_CAPSENSE_ALL = true;
+//        if (server.argName(i) == "DEBUG_DHT") DEBUG_DHT = true;
+//        if (server.argName(i) == "DEBUG_PRESSURE") DEBUG_PRESSURE = true;
+//        if (server.argName(i) == "DEBUG_GETLUX") DEBUG_GETLUX = true;
+//        if (server.argName(i) == "DEBUG_DALLAS") DEBUG_DALLAS = true;
+//        if (server.argName(i) == "DEBUG_EMONCMS") DEBUG_EMONCMS = true;
+//        if (server.argName(i) == "DEBUG_IR") DEBUG_IR = true;
+//        if (server.argName(i) == "DEBUG_IR_FULL") DEBUG_IR_FULL = true; 
+//        if (server.argName(i) == "DEBUG_PLC") DEBUG_PLC = true;
+//		}
+//		WriteConfig_Slots();
+//		//firstStart = true;
+//		ESP.restart();
+//	}
+//	server.send ( 200, "text/html", PAGE_AdminGeneralSettings ); 
+//	LOG.println(__FUNCTION__); 
+//	
+//	
+//}
+//
+//void send_general_configuration_values_html()
+//{
+//	String values ="";
+//	values += "L1|" +  (String) L1 + "|input\n";
+//	values += "L2|" +  (String) L2 + "|input\n";
+//	values += "L3|" +  (String) L3 + "|input\n";
+//  values += "S1|" +  (String) S1 + "|input\n";
+//  values += "S2|" +  (String) S2 + "|input\n";
+//  values += "S3|" +  (String) S3 + "|input\n";
+//  values += "S41|" +  (String) S41 + "|input\n";
+//  values += "S51|" +  (String) S51 + "|input\n";
+//  values += "S42|" +  (String) S42 + "|input\n";
+//  values += "S52|" +  (String) S52 + "|input\n";
+//  values += "S6|" +  (String) S6 + "|input\n";
+//  values += "ALARM_MODE|" +  (String) (ALARM_MODE ? "checked" : "") + "|chk\n";
+//  values += "L1PIR|" +  (String) L1PIR + "|input\n";
+//  values += "L2PIR|" +  (String) L2PIR + "|input\n";
+//  values += "L3PIR|" +  (String) L3PIR + "|input\n";
+//  values += "cap_debug|" +  (String) (cap_debug ? "checked" : "") + "|chk\n";
+//	values += "cap_thresold|" +  (String) cap_thresold + "|input\n";
+//	values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
+//	values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
+//	values += "devicename|" +  (String)  DeviceName +  "|input\n";
+//	values += "API|" +  (String)  API +  "|input\n";
+//	values += "Send_Emon|" +  (String) (Send_Emon ? "checked" : "") + "|chk\n";
+//	values += "dht_type|" +  (String)  dht_type +  "|input\n";
+//	values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
+//	values += "IR_ENABLE|" +  (String) (IR_ENABLE ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_LOG|" +  (String) (DEBUG_LOG ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_CAPSENSE|" +  (String) (DEBUG_CAPSENSE ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_CAPSENSE_ALL|" +  (String) (DEBUG_CAPSENSE_ALL ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_DHT|" +  (String) (DEBUG_DHT ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_PRESSURE|" +  (String) (DEBUG_PRESSURE ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_GETLUX|" +  (String) (DEBUG_GETLUX ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_DALLAS|" +  (String) (DEBUG_DALLAS ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_EMONCMS|" +  (String) (DEBUG_EMONCMS ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_IR|" +  (String) (DEBUG_IR ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_IR_FULL|" +  (String) (DEBUG_IR_FULL ? "checked" : "") + "|chk\n";
+//  values += "DEBUG_PLC|" +  (String) (DEBUG_PLC ? "checked" : "") + "|chk\n";
+//
+//	server.send ( 200, "text/plain", values);
+//	LOG.println(__FUNCTION__); 
+//  LOG.println(values);
+//}
+
 void send_general_html()
 {
-	
-	if (server.args() > 0 )  // Save Settings
-	{
-		//byte0 = 0;
-		//byte1 = 0;
-		//byte2 = 0;
-		String temp = "";
-		usartbridge = false;
-		for ( uint8_t i = 0; i < server.args(); i++ ) {
-		    if (server.argName(i) == "L1") L1 = server.arg(i).toInt(); 
-		    if (server.argName(i) == "L2") L2 = server.arg(i).toInt();
-		    if (server.argName(i) == "L3") L3 = server.arg(i).toInt();
+  
+  if (server.args() > 0 )  // Save Settings
+  {
+    //byte0 = 0;
+    //byte1 = 0;
+    //byte2 = 0;
+    String temp = "";
+    usartbridge = false;
+    for ( uint8_t i = 0; i < server.args(); i++ ) {
+        if (server.argName(i) == "L1") L1 = server.arg(i).toInt(); 
+        if (server.argName(i) == "L2") L2 = server.arg(i).toInt();
+        if (server.argName(i) == "L3") L3 = server.arg(i).toInt();
         if (server.argName(i) == "S1") S1 = server.arg(i).toInt();
         if (server.argName(i) == "S2") S2 = server.arg(i).toInt();
         if (server.argName(i) == "S3") S3 = server.arg(i).toInt();
@@ -536,21 +639,21 @@ void send_general_html()
         if (server.argName(i) == "S51") S51 = server.arg(i).toInt();
         if (server.argName(i) == "S42") S42 = server.arg(i).toInt();
         if (server.argName(i) == "S52") S52 = server.arg(i).toInt();
-        if (server.argName(i) == "S6") S6 = server.arg(i).toInt();
-        //if (server.argName(i) == "ALARM_MODE") ALARM_MODE = true;         
+        if (server.argName(i) == "S6") S6 = server.arg(i).toInt();        
         if (server.argName(i) == "L1PIR") L1PIR = server.arg(i).toInt();
         if (server.argName(i) == "L2PIR") L2PIR = server.arg(i).toInt();
         if (server.argName(i) == "L3PIR") L3PIR = server.arg(i).toInt();
+        if (server.argName(i) == "cap_thresold") cap_thresold = server.arg(i).toInt();
+        if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
+        if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
+        if (server.argName(i) == "API") API = urldecode(server.arg(i)); 
+        if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
+        if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
+        if (server.argName(i) == "IR_ENABLE") IR_ENABLE = true;
+        if (server.argName(i) == "ALARM_MODE") ALARM_MODE = true;
         if (server.argName(i) == "cap_debug") cap_debug = true;
-     		if (server.argName(i) == "cap_thresold") cap_thresold = server.arg(i).toInt();
-      	if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
-      	if (server.argName(i) == "usartbridge") usartbridge = true;
-      	if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
-      	if (server.argName(i) == "API") API = urldecode(server.arg(i));
-      	if (server.argName(i) == "Send_Emon") Send_Emon = true; 
-      	if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
-      	if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
-      	if (server.argName(i) == "IR_ENABLE") IR_ENABLE = true;
+        if (server.argName(i) == "usartbridge") usartbridge = true;
+        if (server.argName(i) == "Send_Emon") Send_Emon = true;         
         if (server.argName(i) == "DEBUG_LOG") DEBUG_LOG = true;
         if (server.argName(i) == "DEBUG_CAPSENSE") DEBUG_CAPSENSE = true;
         if (server.argName(i) == "DEBUG_CAPSENSE_ALL") DEBUG_CAPSENSE_ALL = true;
@@ -562,23 +665,23 @@ void send_general_html()
         if (server.argName(i) == "DEBUG_IR") DEBUG_IR = true;
         if (server.argName(i) == "DEBUG_IR_FULL") DEBUG_IR_FULL = true; 
         if (server.argName(i) == "DEBUG_PLC") DEBUG_PLC = true;
-		}
-		WriteConfig_Slots();
-		//firstStart = true;
-		ESP.restart();
-	}
-	server.send ( 200, "text/html", PAGE_AdminGeneralSettings ); 
-	LOG.println(__FUNCTION__); 
-	
-	
+    }
+    WriteConfig_Slots();
+    //firstStart = true;
+    ESP.restart();
+  }
+  server.send ( 200, "text/html", PAGE_AdminGeneralSettings ); 
+  LOG.println(__FUNCTION__); 
+  
+  
 }
 
 void send_general_configuration_values_html()
 {
-	String values ="";
-	values += "L1|" +  (String) L1 + "|input\n";
-	values += "L2|" +  (String) L2 + "|input\n";
-	values += "L3|" +  (String) L3 + "|input\n";
+  String values ="";
+  values += "L1|" +  (String) L1 + "|input\n";
+  values += "L2|" +  (String) L2 + "|input\n";
+  values += "L3|" +  (String) L3 + "|input\n";
   values += "S1|" +  (String) S1 + "|input\n";
   values += "S2|" +  (String) S2 + "|input\n";
   values += "S3|" +  (String) S3 + "|input\n";
@@ -587,20 +690,20 @@ void send_general_configuration_values_html()
   values += "S42|" +  (String) S42 + "|input\n";
   values += "S52|" +  (String) S52 + "|input\n";
   values += "S6|" +  (String) S6 + "|input\n";
-  //values += "ALARM_MODE|" +  (String) (ALARM_MODE ? "checked" : "") + "|chk\n";
   values += "L1PIR|" +  (String) L1PIR + "|input\n";
   values += "L2PIR|" +  (String) L2PIR + "|input\n";
   values += "L3PIR|" +  (String) L3PIR + "|input\n";
+  values += "cap_thresold|" +  (String) cap_thresold + "|input\n";
+  values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
+  values += "devicename|" +  (String)  DeviceName +  "|input\n";
+  values += "API|" +  (String)  API +  "|input\n";
+  values += "dht_type|" +  (String)  dht_type +  "|input\n";
+  values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
+  values += "IR_ENABLE|" +  (String) (IR_ENABLE ? "checked" : "") + "|chk\n";
+  values += "ALARM_MODE|" +  (String) (ALARM_MODE ? "checked" : "") + "|chk\n";
   values += "cap_debug|" +  (String) (cap_debug ? "checked" : "") + "|chk\n";
-	values += "cap_thresold|" +  (String) cap_thresold + "|input\n";
-	values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
-	values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
-	values += "devicename|" +  (String)  DeviceName +  "|input\n";
-	values += "API|" +  (String)  API +  "|input\n";
-	values += "Send_Emon|" +  (String) (Send_Emon ? "checked" : "") + "|chk\n";
-	values += "dht_type|" +  (String)  dht_type +  "|input\n";
-	values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
-	values += "IR_ENABLE|" +  (String) (IR_ENABLE ? "checked" : "") + "|chk\n";
+  values += "usartbridge|" +  (String) (usartbridge ? "checked" : "") + "|chk\n";
+  values += "Send_Emon|" +  (String) (Send_Emon ? "checked" : "") + "|chk\n";
   values += "DEBUG_LOG|" +  (String) (DEBUG_LOG ? "checked" : "") + "|chk\n";
   values += "DEBUG_CAPSENSE|" +  (String) (DEBUG_CAPSENSE ? "checked" : "") + "|chk\n";
   values += "DEBUG_CAPSENSE_ALL|" +  (String) (DEBUG_CAPSENSE_ALL ? "checked" : "") + "|chk\n";
@@ -613,7 +716,7 @@ void send_general_configuration_values_html()
   values += "DEBUG_IR_FULL|" +  (String) (DEBUG_IR_FULL ? "checked" : "") + "|chk\n";
   values += "DEBUG_PLC|" +  (String) (DEBUG_PLC ? "checked" : "") + "|chk\n";
 
-	server.send ( 200, "text/plain", values);
-	LOG.println(__FUNCTION__); 
+  server.send ( 200, "text/plain", values);
+  LOG.println(__FUNCTION__); 
   LOG.println(values);
 }
