@@ -419,6 +419,7 @@ void deleteEEPROM(){
       if(millis() < previous + 5000){
         LOG.print("Deleting Addresses in: ");
         LOG.println(5000 - (millis() - previous));
+        digitalWrite(13, !digitalRead(13));
         delay(500);
       }else{
         for(int i = STORE__ADDR_s; i <= STORE__PADDR_f; i++){
@@ -437,6 +438,8 @@ void deleteEEPROM(){
         }
         EEPROM.commit();
         LOG.println("Custom Data Deleted");
+        digitalWrite(13, !digitalRead(13));
+        delay(200);
         }
       }
     }

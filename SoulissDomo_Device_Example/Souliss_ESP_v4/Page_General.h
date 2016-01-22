@@ -36,25 +36,16 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
   <tr><td>L2 Output Mode:</td><td>
     <select  id="L2" name="L2" onchange="getComboL2(this)" style="width:180px">
       <option value="0">None</option>
-<<<<<<< HEAD
       <option value="1">ON-OFF Mode</option>
       <option value="2">Dimmable Mode</option>
       <option value="3">RGB Mode (GREEN)</option>
       <option value="4">PIR Mode</option>
       <option value="5">Pulse Mode</option>
-=======
-      <option value="1">ON-OFF MODE</option>
-      <option value="2">PWM MODE</option>
-      <option value="3">RGB MODE (GREEN)</option>
-      <option value="4">PIR MODE</option>
-      <option value="6">PULSE MODE</option>
->>>>>>> origin/Telnet
     </select>
     </td></tr>
   <tr><td>L3 Output Mode:</td><td>
     <select  id="L3" name="L3" onchange="getComboL3(this)"style="width:180px">
       <option value="0">None</option>
-<<<<<<< HEAD
       <option value="1">ON-OFF Mode</option>
       <option value="2">Dimmable Mode</option>
       <option value="3">RGB Mode (BLUE)</option>
@@ -85,15 +76,6 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="1">PIR Sensor 2</option>
     </select>
     </td></tr>    
-=======
-      <option value="1">ON-OFF MODE</option>
-      <option value="2">PWM MODE</option>
-      <option value="3">RGB MODE (BLUE)</option>
-      <option value="4">PIR MODE</option>
-      <option value="6">PULSE MODE</option>
-    </select>
-    </td></tr>
->>>>>>> origin/Telnet
   </table>
   
   <hr>  
@@ -137,13 +119,8 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
   
   <hr>
   <table>
-<<<<<<< HEAD
   <tr><td>(S4-1) Configuration: </td><td>
     <select  id="S41" name="S41" onchange="getComboS41(this)"style="width:220px">
-=======
-  <tr><td>(S4) Configuration: </td><td>
-    <select  id="S4" name="S4" onchange="getComboS4(this)"style="width:180px">
->>>>>>> origin/Telnet
       <option value="0">None</option>
       <option value="1">Capacitive</option>
       <option value="3">Buttons_PullUp</option>
@@ -151,20 +128,8 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="6">Garage EndStop (UP)</option>
     </select> TX
     </td></tr>
-<<<<<<< HEAD
   <tr><td>(S4-2) Configuration: </td><td>
     <select  id="S42" name="S42" onchange="getComboS42(this)"style="width:220px">
-=======
-  <tr id="Thresold">
-    <td align="left" id="cap_thresold_line"> Capacitive Thresold:</td>
-    <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td></tr>    
-    </table>
-  
-  <hr>
-  <table>
-  <tr><td>(S5) Configuration: </td><td>
-    <select  id="S5" name="S5" onchange="getComboS5(this)"style="width:180px">
->>>>>>> origin/Telnet
       <option value="0">None</option>
       <option value="1">Capacitive</option>
       <option value="2">Buttons</option>
@@ -195,7 +160,6 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="12">220V_Opto</option>
     </select>
     </td></tr>
-<<<<<<< HEAD
   <tr><td>(S5-2) Configuration: </td><td>
     <select  id="S52" name="S52" onchange="getComboS52(this)"style="width:220px">
       <option value="0">None</option>
@@ -225,13 +189,6 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <td><input type="checkbox" id="cap_debug" name="cap_debug"></td></tr> 
       </table>
 
-=======
-  <tr id="Altitude">
-    <td align="left" id="Altitude_line"> Altitude:</td>
-    <td><input type="text" id="Altitude_id" name="Altitude_id" size="2" value="20"></td></tr>
-    </table>
-
->>>>>>> origin/Telnet
   <hr>    
   <table>
     <tr><td align="left" style="width:230px">Receive IR on this Node? (S6):</td>
@@ -240,19 +197,11 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
     
   <hr>
   <table>
-<<<<<<< HEAD
     <tr id="usart"><td align="left" style="width:230px"> Node is USART Bridge?: (S4)</td>
     <td><input type="checkbox" id="usartbridge" name="usartbridge" onclick="getUSART(this)"></td>
     </tr></table>
   
   
-=======
-    <tr><td align="left" style="width:230px"> Node is USART Bridge?: (S4)</td>
-    <td><input type="checkbox" id="usartbridge" name="usartbridge" onclick="getUSART(this)"></td>
-    </tr></table>
-  
-  <hr>
->>>>>>> origin/Telnet
   <table>
     <tr><td align="left" style="width:230px"><strong>DEBUG Configuration:</strong></td>
     <td><input type="checkbox" id="DEBUG" name="DEBUG" onclick="getDebug(this)">Check to Show</td></tr></table>
@@ -303,7 +252,6 @@ function load(e,t,n){
   }
 }
 function getConfig(){
-<<<<<<< HEAD
     var L1 = document.getElementById("L1");
     var L2 = document.getElementById("L2");
     var L3 = document.getElementById("L3");
@@ -319,10 +267,6 @@ function getConfig(){
   //  ALARM
     if(L1.value == 4 || L2.value == 4 || L3.value == 4 || S41.value == 4 || S42.value == 4 || S51.value == 4 || S52.value == 4){
       document.getElementById("ALARM_TD").style.display = "block";  //none;  
-=======
-    if(document.getElementById("S2").value == 1){
-      document.getElementById("type").style.display = "block";  //none;  
->>>>>>> origin/Telnet
     }else{
       document.getElementById("ALARM_TD").style.display = "none";  //none;  
       document.getElementById("ALARM").checked = false;  
@@ -366,25 +310,15 @@ function getConfig(){
       document.getElementById("API_text").style.display = "none"; 
     } 
     
-<<<<<<< HEAD
   //  CAPACITIVE    
     if(S41.value == 1 || S42.value == 1 || S51.value == 1 || S52.value == 1) {
-=======
-    value = document.getElementById("S4");
-    if(value == 1 || value == 2) {
->>>>>>> origin/Telnet
        document.getElementById("Thresold").style.display = "block";  //none;  
     } else { 
        document.getElementById("Thresold").style.display = "none"; 
     }
    
-<<<<<<< HEAD
   //  BMP180
     if(S51.value == 9 || S52.value == 9) {
-=======
-    value = document.getElementById("S5");
-    if(value == 3) {
->>>>>>> origin/Telnet
       document.getElementById("Altitude").style.display = "block";  //none;  
     } else {
       document.getElementById("Altitude").style.display = "none";  
@@ -397,7 +331,6 @@ function getConfig(){
       document.getElementById("LOG").style.display = "none";  //none;  
     }
 }
-
 function getComboL1(sel) {
   var value = sel.value;
   if(value == 3){
@@ -446,7 +379,6 @@ function getComboL3(sel) {
 }
   
   
-<<<<<<< HEAD
 function getComboS1(sel) {
     getConfig();
 }
@@ -479,7 +411,6 @@ function getComboS41(sel) {
   }
   getConfig();
 }
-
 function getComboS42(sel) {
   if(sel.value > 0){
     document.getElementById("usartbridge").checked = false;
@@ -500,30 +431,11 @@ function getComboS51(sel) {
   var value = sel.value;
   if(value > 8 && value < 13) {
       document.getElementById("S52").value = value;
-=======
-function getComboS4(sel) {
-  var value = sel.value;
-  if(value == 1 || value == 2) {
-       document.getElementById("Thresold").style.display = "block";  //none;  
-  } else { 
-       document.getElementById("Thresold").style.display = "none"; 
-  }
-  if(value > 0){
-    document.getElementById("usartbridge").checked = false; 
-  }
-}
-
-function getComboS5(sel) {
-  var value = sel.value;  
-  if(value == 3) {
-      document.getElementById("Altitude").style.display = "block";  //none;  
->>>>>>> origin/Telnet
   } else {
     if(document.getElementById("S52").value > 8 && document.getElementById("S52").value < 13){
       document.getElementById("S52").value = 0;
     }
   }
-<<<<<<< HEAD
   if(value == 10) {  //GARAGE_DOOR
     document.getElementById("S41").value = 6;
     document.getElementById("S42").value = 6;
@@ -551,22 +463,16 @@ function getComboS52(sel) {
     document.getElementById("S42").value = 0;      
   } 
   getConfig();
-=======
->>>>>>> origin/Telnet
 }
   
 function getUSART(sel){
   if(sel.checked){
-<<<<<<< HEAD
     document.getElementById("S41").value = 0;   
     document.getElementById("S42").value = 0;
     if(document.getElementById("S51").value == 10){  //GARAGE_DOOR
       document.getElementById("S51").value = 0;
       document.getElementById("S52").value = 0;        
     }
-=======
-    document.getElementById("S4").value = 0;   
->>>>>>> origin/Telnet
   }
   getConfig();
 }
