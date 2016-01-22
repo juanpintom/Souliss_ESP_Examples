@@ -817,10 +817,16 @@ void ReadConfig_Slots()
 	LOG.println(API);
 	LOG.print(F("L1: "));
 	LOG.println(L1);
+  LOG.print(F("L1PIR: "));
+  LOG.println(L1PIR);
   LOG.print(F("L2: "));
   LOG.println(L2);
+  LOG.print(F("L2PIR: "));
+  LOG.println(L2PIR);  
   LOG.print(F("L3: "));
   LOG.println(L3);
+  LOG.print(F("L3PIR: "));
+  LOG.println(L3PIR);  
   LOG.print(F("S1: "));
   LOG.println(S1);
   LOG.print(F("S2: "));
@@ -840,7 +846,9 @@ void ReadConfig_Slots()
   LOG.print(F("OPTIONS1: "));
   LOG.println(OPTIONS1);
   LOG.print(F("OPTIONS2: "));
-  LOG.println(OPTIONS2);  
+  LOG.println(OPTIONS2); 
+  LOG.print(F("OPTIONS3: "));
+  LOG.println(OPTIONS3);  
   LOG.print(F("usartbridge: "));
   LOG.println(usartbridge);
   LOG.print(F("IR_ENABLE: "));
@@ -851,6 +859,10 @@ void ReadConfig_Slots()
   LOG.println(Send_Emon);
   LOG.print(F("Dallas_qty: "));
   LOG.println(dallas_qty);
+  LOG.print(F("cap_debug: "));
+  LOG.println(cap_debug);  
+  LOG.print(F("ALARM_MODE: "));
+  LOG.println(ALARM_MODE);
 }
 // ******************************************************************************************************************
 // *******************************************       setColor FUNCTION          *************************************
