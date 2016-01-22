@@ -615,4 +615,5 @@ void send_general_configuration_values_html()
 
 	server.send ( 200, "text/plain", values);
 	LOG.println(__FUNCTION__); 
+  LOG.println(values);
 }
