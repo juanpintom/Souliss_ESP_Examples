@@ -238,7 +238,7 @@ window.onload = function ()
  });
 }
 function load(e,t,n){
-  getConfig();
+  //getConfig();
   if("js"==t){
     var a=document.createElement("script");
     a.src=e,a.type="text/javascript",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
@@ -601,15 +601,15 @@ void send_general_html()
         if (server.argName(i) == "L3PIR") L3PIR = server.arg(i).toInt();
         if (server.argName(i) == "cap_thresold") cap_thresold = server.arg(i).toInt();
         if (server.argName(i) == "Altitude_id") ALTITUDE = server.arg(i).toInt();
-        if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
-        if (server.argName(i) == "API") API = urldecode(server.arg(i)); 
         if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
         if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt(); 
-        if (server.argName(i) == "IR_ENABLE") IR_ENABLE = server.arg(i).toInt();;
-        if (server.argName(i) == "ALARM_MODE") ALARM_MODE = server.arg(i).toInt();;
-        if (server.argName(i) == "cap_debug") cap_debug = server.arg(i).toInt();;
-        if (server.argName(i) == "usartbridge") usartbridge = server.arg(i).toInt();;
-        if (server.argName(i) == "Send_Emon") Send_Emon = server.arg(i).toInt();;         
+        if (server.argName(i) == "IR_ENABLE") IR_ENABLE = server.arg(i).toInt();
+        if (server.argName(i) == "ALARM_MODE") ALARM_MODE = server.arg(i).toInt();
+        if (server.argName(i) == "cap_debug") cap_debug = server.arg(i).toInt();
+        if (server.argName(i) == "usartbridge") usartbridge = server.arg(i).toInt();
+        if (server.argName(i) == "Send_Emon") Send_Emon = server.arg(i).toInt();
+        if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
+        if (server.argName(i) == "API") API = urldecode(server.arg(i));       
 
     }
     WriteConfig_Slots();
@@ -639,10 +639,15 @@ void send_general_configuration_values_html()
   values += "L1PIR|" +  (String) L1PIR + "|input\n";
   values += "L2PIR|" +  (String) L2PIR + "|input\n";
   values += "L3PIR|" +  (String) L3PIR + "|input\n";
+
+
+  server.send ( 200, "text/plain", values);
+  LOG.println(__FUNCTION__); 
+  LOG.println(values);
+  delay(50);
+  values ="";
   values += "cap_thresold|" +  (String) cap_thresold + "|input\n";
   values += "Altitude_id|" +  (String) ALTITUDE + "|input\n";
-  values += "devicename|" +  (String)  DeviceName +  "|input\n";
-  values += "API|" +  (String)  API +  "|input\n";
   values += "dht_type|" +  (String)  dht_type +  "|input\n";
   values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
   values += "IR_ENABLE|" +  (String)  IR_ENABLE +  "|input\n";
@@ -650,9 +655,10 @@ void send_general_configuration_values_html()
   values += "cap_debug|" +  (String)  cap_debug +  "|input\n";
   values += "usartbridge|" +  (String)  usartbridge +  "|input\n";
   values += "Send_Emon|" +  (String)  Send_Emon +  "|input\n";
+  values += "devicename|" +  (String)  DeviceName +  "|input\n";
+  values += "API|" +  (String)  API +  "|input\n";
 
 
   server.send ( 200, "text/plain", values);
-  LOG.println(__FUNCTION__); 
   LOG.println(values);
 }
