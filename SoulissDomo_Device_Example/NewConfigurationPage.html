@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Souliss Node Configuration</title>
-</head>
-<body>
-
 <a href="admin.html"  class="btn btn--s"><</a>&nbsp;&nbsp;
 <strong>Souliss Slot Settings</strong>
 <hr>
@@ -52,9 +45,16 @@
       <option value="4">PIR Mode</option>
       <option value="5">Pulse Mode</option>
     </select>
+    </td></tr></table>
+
+    
+    <table style="width:500px">
+    <tr id="ALARM_TD"><td align="left">Alarm MODE?:</td><td>
+    <select  id="ALARM_MODE" name="ALARM_MODE" style="width:50px">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
     </td></tr>
-    <tr id="ALARM_TD"><td align="left">Alarm MODE?:</td>
-      <td><input type="checkbox" id="ALARM" name="ALARM" onclick="getALARM(this)"></td></tr>
     
     <tr id="PIR1"><td>L1 PIR Sensor:</td><td>
     <select  id="L1PIR" name="L1PIR" style="width:180px">
@@ -87,9 +87,9 @@
       <option value="0">None</option>
       <option value="1">Dallas (Temperature)</option>
       <option value="2">More comming...</option>
-    </select>
+    </select></td>
     <td align="left" id="qty">Qty: <input type="text" id="dallas_qty" name="dallas_qty" size="2" value="1"></td>
-    </td></tr>
+    </tr>
     
   <tr><td>(S2) GPIO16 Configuration: </td><td>
     <select  id="S2" name="S2" onchange="getComboS2(this)"style="width:180px">
@@ -97,13 +97,13 @@
       <option value="1">DHT (Temp - Humidity)</option>
       <option value="2">Rain Sensor</option>
       <option value="3">More comming...</option>
-    </select>
+    </select></td>
     <td align="left" id="type" name="type"> Type:
      <select  id="dht_type" name="dht_type">
         <option value="0">DHT11</option>
         <option value="1">DHT22</option>
         </select></td>
-    </td></tr>
+    </tr>
   
   <tr><td>(S3) Analog Configuration: </td><td>
     <select  id="S3" name="S3" onchange="getComboS3(this)"style="width:180px">
@@ -113,9 +113,17 @@
       <option value="3">More comming...</option>
     </select>
     </td></tr>
-  <tr id="Emoncms"><td><input type="checkbox" id="Send_Emon" name="Send_Emon" onclick="getEmon(this)"> Send to EmonCMS?: </td>
-  <td id="API_text"><input type="text" id="API" name="API" value="" maxlength="32"> API Key</td></tr>
-  </table>
+    </table>
+
+    <table>
+    <tr id="Emoncms"><td align="left">Send to EmonCMS?:</td><td>
+      <select  id="Send_Emon" name="Send_Emon" style="width:50px" onclick="getEmon(this)">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select></td>
+      <td id="API_text"><input type="text" id="API" name="API" value="" maxlength="32"> API Key</td>
+      </tr>
+      </table>
   
   <hr>
   <table>
@@ -185,41 +193,28 @@
     <table id="Thresold">
       <tr><td align="left" id="cap_thresold_line"> Capacitive Thresold: </td>
       <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td></tr> 
-      <tr><td align="left">Capacitive /w Debug:</td>
-      <td><input type="checkbox" id="cap_debug" name="cap_debug"></td></tr> 
+      <tr><td align="left">Capacitive /w Debug:</td><td>
+        <select  id="cap_debug" name="cap_debug" style="width:50px">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+          </select></td></tr>
       </table>
 
   <hr>    
   <table>
-    <tr><td align="left" style="width:230px">Receive IR on this Node? (S6):</td>
-    <td><input type="checkbox" id="IR_ENABLE" name="IR_ENABLE" onclick="getChk(this)"></td>
-    </tr></table>
+    <tr><td align="left" style="width:230px">Receive IR on this Node? (S6):</td><td>
+      <select  id="IR_ENABLE" name="IR_ENABLE" style="width:50px">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select></td></tr></table>
     
   <hr>
   <table>
-    <tr id="usart"><td align="left" style="width:230px"> Node is USART Bridge?: (S4)</td>
-    <td><input type="checkbox" id="usartbridge" name="usartbridge" onclick="getUSART(this)"></td>
-    </tr></table>
-  
-  
-  <table>
-    <tr><td align="left" style="width:230px"><strong>DEBUG Configuration:</strong></td>
-    <td><input type="checkbox" id="DEBUG" name="DEBUG" onclick="getDebug(this)">Check to Show</td></tr></table>
-    
-  <table id="LOG">
-    <tr><td><input type="checkbox" id="ALL_LOG" name="ALL_LOG" onclick="getAllLog(this)"><strong>Enable All </strong></td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_LOG" name="DEBUG_LOG">Debug LOG</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_CAPSENSE" name="DEBUG_CAPSENSE">Debug CAPSENSE</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_CAPSENSE_ALL" name="DEBUG_CAPSENSE_ALL">Debug DEBUG_CAPSENSE_ALL</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_DHT" name="DEBUG_DHT">Debug DHT</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_PRESSURE" name="DEBUG_PRESSURE">Debug PRESSURE</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_GETLUX" name="DEBUG_GETLUX">Debug GETLUX</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_DALLAS" name="DEBUG_DALLAS">Debug DALLAS</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_EMONCMS" name="DEBUG_EMONCMS">Debug EMONCMS</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_IR" name="DEBUG_IR">Debug IR</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_IR_FULL" name="DEBUG_IR_FULL">Debug IR_FULL</td></tr>
-    <tr><td><input type="checkbox" id="DEBUG_PLC" name="DEBUG_PLC">Debug PLC</td></tr>
-  </table>
+    <tr id="usart"><td align="left" style="width:230px"> Node is USART Bridge?: (S4)</td><td>
+      <select  id="usartbridge" name="usartbridge" style="width:50px" onclick="getUSART(this)">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select></td></tr></table>
   
   <hr>
   <table>  
@@ -237,12 +232,11 @@ window.onload = function ()
  {
   load("microajax.js","js", function() 
   {       
-        setValues("/admin/generalvalues");    
+        setValues("/admin/generalvalues");
   });
- });
+ }); 
 }
 function load(e,t,n){
-  getConfig();
   if("js"==t){
     var a=document.createElement("script");
     a.src=e,a.type="text/javascript",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
@@ -251,6 +245,13 @@ function load(e,t,n){
     a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
   }
 }
+
+var myVar = setInterval(myTimer, 1000);
+
+function myTimer() {
+    getConfig();
+}
+
 function getConfig(){
     var L1 = document.getElementById("L1");
     var L2 = document.getElementById("L2");
@@ -269,10 +270,10 @@ function getConfig(){
       document.getElementById("ALARM_TD").style.display = "block";  //none;  
     }else{
       document.getElementById("ALARM_TD").style.display = "none";  //none;  
-      document.getElementById("ALARM").checked = false;  
+      document.getElementById("ALARM_MODE").value = 0;  
     }
     if(S41.value == 4 || S42.value == 4 || S51.value == 4 || S52.value == 4){
-      document.getElementById("ALARM").checked = true;    
+      document.getElementById("ALARM_MODE").value = 1;    
     }
   // PIR SENSORS
     if(L1.value == 4){
@@ -304,7 +305,7 @@ function getConfig(){
       document.getElementById("type").style.display = "none";  //none;  
     }
   // EMONCMS CHECK  
-    if(document.getElementById("Send_Emon").checked){
+    if(document.getElementById("Send_Emon").value == 1){
       document.getElementById("API_text").style.display = "block";  //none;  
     } else { 
       document.getElementById("API_text").style.display = "none"; 
@@ -324,14 +325,7 @@ function getConfig(){
       document.getElementById("Altitude").style.display = "none";  
     }
   
-  //  DEBUG  
-    if(document.getElementById("DEBUG").checked){
-      document.getElementById("LOG").style.display = "block";  //none;  
-    }else{
-      document.getElementById("LOG").style.display = "none";  //none;  
-    }
 }
-
 function getComboL1(sel) {
   var value = sel.value;
   if(value == 3){
@@ -399,7 +393,7 @@ function getEmon(sel) {
   
 function getComboS41(sel) {
   if(sel.value > 0){
-    document.getElementById("usartbridge").checked = false;
+    document.getElementById("usartbridge").value = 0;
   }
   if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S42").value = sel.value;
@@ -412,10 +406,9 @@ function getComboS41(sel) {
   }
   getConfig();
 }
-
 function getComboS42(sel) {
   if(sel.value > 0){
-    document.getElementById("usartbridge").checked = false;
+    document.getElementById("usartbridge").value = 0;
   }
   if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S41").value = sel.value;
@@ -468,7 +461,7 @@ function getComboS52(sel) {
 }
   
 function getUSART(sel){
-  if(sel.checked){
+  if(sel.value == 1){
     document.getElementById("S41").value = 0;   
     document.getElementById("S42").value = 0;
     if(document.getElementById("S51").value == 10){  //GARAGE_DOOR
@@ -479,43 +472,5 @@ function getUSART(sel){
   getConfig();
 }
   
-function getDebug(sel){
-  if(sel.checked){
-    document.getElementById("LOG").style.display = "block";  //none;  
-  } else {
-    document.getElementById("LOG").style.display = "none";  
-  }
-}
-  
-function getAllLog(sel){
-  if(sel.checked){
-    document.getElementById("DEBUG_LOG").checked = true;    
-    document.getElementById("DEBUG_CAPSENSE").checked = true;  
-    document.getElementById("DEBUG_CAPSENSE_ALL").checked = true;  
-    document.getElementById("DEBUG_DHT").checked = true;  
-    document.getElementById("DEBUG_PRESSURE").checked = true;  
-    document.getElementById("DEBUG_GETLUX").checked = true;  
-    document.getElementById("DEBUG_DALLAS").checked = true;  
-    document.getElementById("DEBUG_EMONCMS").checked = true;  
-    document.getElementById("DEBUG_IR").checked = true;
-    document.getElementById("DEBUG_IR_FULL").checked = true;
-    document.getElementById("DEBUG_PLC").checked = true;
-  } else {
-    document.getElementById("DEBUG_LOG").checked = false;    
-    document.getElementById("DEBUG_CAPSENSE").checked = false;  
-    document.getElementById("DEBUG_CAPSENSE_ALL").checked = false;  
-    document.getElementById("DEBUG_DHT").checked = false;  
-    document.getElementById("DEBUG_PRESSURE").checked = false;  
-    document.getElementById("DEBUG_GETLUX").checked = false;  
-    document.getElementById("DEBUG_DALLAS").checked = false;  
-    document.getElementById("DEBUG_EMONCMS").checked = false;  
-    document.getElementById("DEBUG_IR").checked = false;
-    document.getElementById("DEBUG_IR_FULL").checked = false;
-    document.getElementById("DEBUG_PLC").checked = false;
-  }
-}
-</script>
 
-    
-</body>
-</html>
+</script>
