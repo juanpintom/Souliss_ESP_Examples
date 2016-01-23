@@ -57,7 +57,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
     
     <table style="width:500px">
     <tr id="ALARM_TD"><td align="left">Alarm MODE?:</td><td>
-    <select  id="ALARM_MODE" name="ALARM_MODE" style="width:180px">
+    <select  id="ALARM_MODE" name="ALARM_MODE" style="width:50px">
       <option value="0">No</option>
       <option value="1">Yes</option>
     </select>
@@ -105,7 +105,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="2">Rain Sensor</option>
       <option value="3">More comming...</option>
     </select></td>
-    <td align="left" id="type" name="type"> Type:</td><td>
+    <td align="left" id="type" name="type"> Type:
      <select  id="dht_type" name="dht_type">
         <option value="0">DHT11</option>
         <option value="1">DHT22</option>
@@ -120,14 +120,17 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="3">More comming...</option>
     </select>
     </td></tr>
+    </table>
+
+    <table>
     <tr id="Emoncms"><td align="left">Send to EmonCMS?:</td><td>
-      <select  id="Send_Emon" name="Send_Emon" style="width:180px" onclick="getEmon(this)">
+      <select  id="Send_Emon" name="Send_Emon" style="width:50px" onclick="getEmon(this)">
         <option value="0">No</option>
         <option value="1">Yes</option>
       </select></td>
       <td id="API_text"><input type="text" id="API" name="API" value="" maxlength="32"> API Key</td>
       </tr>
-  </table>
+      </table>
   
   <hr>
   <table>
@@ -198,7 +201,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <tr><td align="left" id="cap_thresold_line"> Capacitive Thresold: </td>
       <td><input type="text" id="cap_thresold" name="cap_thresold" size="2" value="5"></td></tr> 
       <tr><td align="left">Capacitive /w Debug:</td><td>
-        <select  id="cap_debug" name="cap_debug" style="width:180px">
+        <select  id="cap_debug" name="cap_debug" style="width:50px">
           <option value="0">No</option>
           <option value="1">Yes</option>
           </select></td></tr>
@@ -207,7 +210,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
   <hr>    
   <table>
     <tr><td align="left" style="width:230px">Receive IR on this Node? (S6):</td><td>
-      <select  id="IR_ENABLE" name="IR_ENABLE" style="width:180px">
+      <select  id="IR_ENABLE" name="IR_ENABLE" style="width:50px">
         <option value="0">No</option>
         <option value="1">Yes</option>
       </select></td></tr></table>
@@ -215,7 +218,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
   <hr>
   <table>
     <tr id="usart"><td align="left" style="width:230px"> Node is USART Bridge?: (S4)</td><td>
-      <select  id="usartbridge" name="usartbridge" style="width:180px" onclick="getUSART(this)">
+      <select  id="usartbridge" name="usartbridge" style="width:50px" onclick="getUSART(this)">
         <option value="0">No</option>
         <option value="1">Yes</option>
       </select></td></tr></table>
@@ -236,12 +239,11 @@ window.onload = function ()
  {
   load("microajax.js","js", function() 
   {       
-        setValues("/admin/generalvalues");    
+        setValues("/admin/generalvalues");
   });
- });
+ }); 
 }
 function load(e,t,n){
-  //getConfig();
   if("js"==t){
     var a=document.createElement("script");
     a.src=e,a.type="text/javascript",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
@@ -250,6 +252,13 @@ function load(e,t,n){
     a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
   }
 }
+
+var myVar = setInterval(myTimer, 1000);
+
+function myTimer() {
+    getConfig();
+}
+
 function getConfig(){
     var L1 = document.getElementById("L1");
     var L2 = document.getElementById("L2");
@@ -623,7 +632,6 @@ void send_general_html()
   server.send ( 200, "text/html", PAGE_AdminGeneralSettings ); 
   LOG.println(__FUNCTION__); 
   
-  
 }
 
 void send_general_configuration_values_html()
@@ -640,12 +648,6 @@ void send_general_configuration_values_html()
   values += "API|" +  (String)  API +  "|input\n";
   values += "dht_type|" +  (String)  dht_type +  "|input\n";
   values += "dallas_qty|" +  (String)  dallas_qty +  "|input\n";
-  
-//  server.send ( 200, "text/plain", values);
-//  LOG.println(__FUNCTION__); 
-//  LOG.println(values);
-//  delay(500);
-//  values ="";
   values += "L1|" +  (String) L1 + "|input\n";
   values += "L2|" +  (String) L2 + "|input\n";
   values += "L3|" +  (String) L3 + "|input\n";
@@ -656,11 +658,12 @@ void send_general_configuration_values_html()
   values += "S51|" +  (String) S51 + "|input\n";
   values += "S42|" +  (String) S42 + "|input\n";
   values += "S52|" +  (String) S52 + "|input\n";
-  //values += "S6|" +  (String) S6 + "|input\n";
   values += "L1PIR|" +  (String) L1PIR + "|input\n";
   values += "L2PIR|" +  (String) L2PIR + "|input\n";
   values += "L3PIR|" +  (String) L3PIR + "|input\n";
 
   server.send ( 200, "text/plain", values);
-  LOG.println(values);
+  LOG.println(__FUNCTION__);
+  //DEBUG.println(values);
+  //delay(500);
 }

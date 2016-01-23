@@ -634,7 +634,7 @@ void fastGeneral(){
 //                
 //            }
            
-            if(OPTO_AND_RELAY){
+            if(S51 == OPTO_AND_RELAY){
                 //CODE MISSING get from here:
                 //https://github.com/juanpintom/Souliss_Examples/blob/master/E00_Souliss_Wall_Switch_with_PLC_Reading.ino
                 SoulissPLC_Read(OPTO, 0, BUT0P, RELAY1P);  //CHANGE PIN 0 TO OTHER PIN!!!
