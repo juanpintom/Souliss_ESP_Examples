@@ -330,7 +330,7 @@ void fastGeneral(){
 //                }
 //            }
 
-            
+       
             if(L1 == PWM_MODE || L1 == PIR_MODE || L1 == ONOFF_MODE || L1 == PULSE_MODE){
                 if(S41 == BUTTONS){
                     DigIn(BUT0P, Souliss_T1n_ToggleCmd, LED1);
@@ -449,35 +449,64 @@ void fastGeneral(){
                   break; 
             }  
                       
-            if(L1 == PIR_MODE  ||  L2 == PIR_MODE  ||  L3 == PIR_MODE){
+//            if(L1 == PIR_MODE  ||  L2 == PIR_MODE  ||  L3 == PIR_MODE){
+//              if(ALARM_MODE && mOutput(ALARM) == Souliss_T4n_Antitheft ){   //  IF Alarm is Armed
+//                  if(L1PIR == 1 || L2PIR == 1 || L3PIR == 1) 
+//                       DigIn(PIRP1,Souliss_T4n_Alarm,ALARM);     //  Handle the PIR to the Antitheft  
+//                  if(L1PIR == 2 || L2PIR == 2 || L3PIR == 2)
+//                       DigIn(PIRP2,Souliss_T4n_Alarm,ALARM);  
+//              }
+//            }
+
+            if(L1 == PIR_MODE || L2 == PIR_MODE || L3 == PIR_MODE){
               if(ALARM_MODE && mOutput(ALARM) == Souliss_T4n_Antitheft ){   //  IF Alarm is Armed
-                 if(PIRP1 != 255) DigIn(PIRP1,Souliss_T4n_Alarm,ALARM);     //  Handle the PIR to the Antitheft  
-                 if(PIRP2 != 255) DigIn(PIRP2,Souliss_T4n_Alarm,ALARM);             
-              }else {                                                       //  IF Alarm isnt Armed
-                if(L1 == PIR_MODE){                                        //  Handle the PIR to the Autolight
-                  if(L1PIR == 0){           
-                     if(PIRP1 != 255) DigIn(PIRP1,LIGHT_ON_CYCLE+1,LED1);                       
-                  }else{
-                     if(PIRP2 != 255) DigIn(PIRP2,LIGHT_ON_CYCLE+1,LED1);
+                  if(L1PIR == 1 || L2PIR == 1 || L3PIR == 1) 
+                       DigIn(PIRP1,Souliss_T4n_Alarm,ALARM);     //  Handle the PIR to the Antitheft  
+                  if(L1PIR == 2 || L2PIR == 2 || L3PIR == 2)
+                       DigIn(PIRP2,Souliss_T4n_Alarm,ALARM);  
+              } else {
+                if(L1PIR == 1 || L2PIR == 1 || L3PIR == 1){
+                  if(L1PIR == 1) {
+                    if(DigIn(PIRP1, LIGHT_ON_CYCLE, LED1)){
+                        if(L2PIR == 1) mInput(LED2) = LIGHT_ON_CYCLE;
+                        if(L3PIR == 1) mInput(LED3) = LIGHT_ON_CYCLE;  
+                    }
                   }
-                }  
-                if(L2 == PIR_MODE){                                        //  Handle the PIR to the Autolight
-                  if(L2PIR == 0){           
-                     if(PIRP1 != 255) DigIn(PIRP1,LIGHT_ON_CYCLE+1,LED2);                       
-                  }else{
-                     if(PIRP2 != 255) DigIn(PIRP2,LIGHT_ON_CYCLE+1,LED2);
+                  if(L2PIR == 1) {
+                    if(DigIn(PIRP1, LIGHT_ON_CYCLE, LED2)){
+                        if(L1PIR == 1) mInput(LED1) = LIGHT_ON_CYCLE;
+                        if(L3PIR == 1) mInput(LED3) = LIGHT_ON_CYCLE;  
+                    }
                   }
-                }  
-                if(L3 == PIR_MODE){                                        //  Handle the PIR to the Autolight
-                  if(L3PIR == 0){           
-                     if(PIRP1 != 255) DigIn(PIRP1,LIGHT_ON_CYCLE+1,LED3);                       
-                  }else{
-                     if(PIRP2 != 255) DigIn(PIRP2,LIGHT_ON_CYCLE+1,LED3);
+                  if(L3PIR == 1) {
+                    if(DigIn(PIRP1, LIGHT_ON_CYCLE, LED3)){
+                        if(L1PIR == 1) mInput(LED1) = LIGHT_ON_CYCLE;
+                        if(L2PIR == 1) mInput(LED2) = LIGHT_ON_CYCLE;  
+                    }
+                  }                             
+                }
+                if(L1PIR == 2 || L2PIR == 2 || L3PIR == 2){
+                  if(L1PIR == 2) {
+                    if(DigIn(PIRP2, LIGHT_ON_CYCLE, LED1)){
+                        if(L2PIR == 2) mInput(LED2) = LIGHT_ON_CYCLE;
+                        if(L3PIR == 2) mInput(LED3) = LIGHT_ON_CYCLE;  
+                    }
                   }
-                }  
-                  
-              }
-            }
+                  if(L2PIR == 2) {
+                    if(DigIn(PIRP2, LIGHT_ON_CYCLE, LED2)){
+                        if(L1PIR == 2) mInput(LED1) = LIGHT_ON_CYCLE;
+                        if(L3PIR == 2) mInput(LED3) = LIGHT_ON_CYCLE;  
+                    }
+                  }
+                  if(L3PIR == 2) {
+                    if(DigIn(PIRP2, LIGHT_ON_CYCLE, LED3)){
+                        if(L1PIR == 2) mInput(LED1) = LIGHT_ON_CYCLE;
+                        if(L2PIR == 2) mInput(LED2) = LIGHT_ON_CYCLE;  
+                    }
+                  }                             
+                }
+              }              
+            }            
             
 //            if(S4 == ALARM_ENDSTOP && mOutput(ALARM) == Souliss_T4n_Antitheft){
 //                LowDigIn(BUT0P, Souliss_T4n_Alarm, ALARM);                  //  Handle the Endstop to the Antitheft  

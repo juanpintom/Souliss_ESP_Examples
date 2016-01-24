@@ -81,8 +81,8 @@ void PINS_CONFIG(){
     } 
 
     if(L1 == PIR_MODE  ||  L2 == PIR_MODE  ||  L3 == PIR_MODE){
-        if(L1PIR == 0 || L2PIR == 0 || L3PIR == 0) PIRP1 = 4;      
-        if(L1PIR == 1 || L2PIR == 1 || L3PIR == 1) PIRP2 = 5;                 
+        if(L1PIR == 1 || L2PIR == 1 || L3PIR == 1) PIRP1 = 4;      
+        if(L1PIR == 2 || L2PIR == 2 || L3PIR == 2) PIRP2 = 5;                 
     }
        
 //    if(ONOFF_MODE || PULSE_MODE || PWM_MODE){

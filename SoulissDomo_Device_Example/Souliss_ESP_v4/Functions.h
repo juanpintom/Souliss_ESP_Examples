@@ -41,6 +41,9 @@ byte S6;
 byte L1PIR;
 byte L2PIR;
 byte L3PIR;
+boolean L1PIREN;
+boolean L2PIREN;
+boolean L3PIREN;
 
 //byte byte0;   //STORE SENSOR CONFIGURATION
 //byte byte1;   //STORE LIGHTS CONFIGURATION
@@ -726,11 +729,75 @@ void WriteConfig_Slots() {
   bitWrite(OPTIONS2, 6, DEBUG_PLC);
   //bitWrite(OPTIONS2, 7, DEBUG_PLC);
 
-  bitWrite(OPTIONS3, 0, L1PIR);
-  bitWrite(OPTIONS3, 1, L2PIR);
-  bitWrite(OPTIONS3, 2, L3PIR);
-  bitWrite(OPTIONS3, 3, ALARM_MODE);
-  bitWrite(OPTIONS3, 4, cap_debug);
+  if(L1PIR == 0){
+    L1PIREN = 0;
+    bitWrite(OPTIONS3, 0, L1PIREN);
+    bitWrite(OPTIONS3, 1, 0);  
+  } else if(L1PIR == 1){
+      L1PIREN = 1;
+      bitWrite(OPTIONS3, 0, L1PIREN);
+      bitWrite(OPTIONS3, 1, 0);  
+    } else if(L1PIR == 2){
+      L1PIREN = 1;
+      bitWrite(OPTIONS3, 0, L1PIREN);
+      bitWrite(OPTIONS3, 1, 1);  
+    }
+  if(L2PIR == 0){
+    L2PIREN = 0;
+    bitWrite(OPTIONS3, 2, L2PIREN);
+    bitWrite(OPTIONS3, 3, 0);  
+  } else if(L2PIR == 1){
+      L2PIREN = 1;
+      bitWrite(OPTIONS3, 2, L2PIREN);
+      bitWrite(OPTIONS3, 3, 0);  
+    } else if(L2PIR == 2){
+      L2PIREN = 1;
+      bitWrite(OPTIONS3, 2, L2PIREN);
+      bitWrite(OPTIONS3, 3, 1);  
+    }
+  if(L3PIR == 0){
+    L3PIREN == 0;
+    bitWrite(OPTIONS3, 4, L3PIREN);
+    bitWrite(OPTIONS3, 5, 0);  
+  } else if(L3PIR == 1){
+      L3PIREN = 1;
+      bitWrite(OPTIONS3, 4, L3PIREN);
+      bitWrite(OPTIONS3, 5, 0);  
+    } else if(L3PIR == 2){
+      L3PIREN = 1;
+      bitWrite(OPTIONS3, 4, L3PIREN);
+      bitWrite(OPTIONS3, 5, 1);  
+    } 
+    
+  L1PIREN =       bitRead(OPTIONS3, 0);
+  L1PIR =         bitRead(OPTIONS3, 1);
+  L2PIREN =       bitRead(OPTIONS3, 2);
+  L2PIR =         bitRead(OPTIONS3, 3);
+  L3PIREN =       bitRead(OPTIONS3, 4);
+  L3PIR =         bitRead(OPTIONS3, 5);
+  
+  DEBUG.print("PIR_Write:" );
+  DEBUG.print(L1PIREN);
+  DEBUG.print(L1PIR);
+  DEBUG.print(L2PIREN);
+  DEBUG.print(L2PIR);
+  DEBUG.print(L3PIREN);
+  DEBUG.println(L3PIR);
+//       
+//  bitWrite(OPTIONS3, 0, L1PIREN);
+//  bitWrite(OPTIONS3, 1, L1PIR);
+//  bitWrite(OPTIONS3, 2, L2PIREN);
+//  bitWrite(OPTIONS3, 3, L2PIR);
+//  bitWrite(OPTIONS3, 4, L3PIREN);
+//  bitWrite(OPTIONS3, 5, L3PIR);
+  bitWrite(OPTIONS3, 6, ALARM_MODE);
+  bitWrite(OPTIONS3, 7, cap_debug);
+      
+//  bitWrite(OPTIONS3, 0, L1PIR);
+//  bitWrite(OPTIONS3, 1, L2PIR);
+//  bitWrite(OPTIONS3, 2, L3PIR);
+//  bitWrite(OPTIONS3, 3, ALARM_MODE);
+//  bitWrite(OPTIONS3, 4, cap_debug);
 //  bitWrite(OPTIONS3, 5, DEBUG_IR_FULL);
 //  bitWrite(OPTIONS3, 6, DEBUG_PLC);
 //  bitWrite(OPTIONS3, 7, DEBUG_PLC);  
@@ -803,11 +870,41 @@ void ReadConfig_Slots()
   DEBUG_PLC =       bitRead(OPTIONS2, 6);
   //DEBUG_LOG =     bitRead(OPTIONS2, 7);
 
-  L1PIR =         bitRead(OPTIONS3, 0);
-  L2PIR =         bitRead(OPTIONS3, 1);
-  L3PIR =         bitRead(OPTIONS3, 2);
-  ALARM_MODE =    bitRead(OPTIONS3, 3);
-  cap_debug =     bitRead(OPTIONS3, 4);
+  
+  L1PIREN =       bitRead(OPTIONS3, 0);
+  L1PIR =         bitRead(OPTIONS3, 1);
+  L2PIREN =       bitRead(OPTIONS3, 2);
+  L2PIR =         bitRead(OPTIONS3, 3);
+  L3PIREN =       bitRead(OPTIONS3, 4);
+  L3PIR =         bitRead(OPTIONS3, 5);
+  ALARM_MODE =    bitRead(OPTIONS3, 6);
+  cap_debug =     bitRead(OPTIONS3, 7);
+  
+  DEBUG.print("PIR_Read:");
+  DEBUG.print(L1PIREN);
+  DEBUG.print(L1PIR);
+  DEBUG.print(L2PIREN);
+  DEBUG.print(L2PIR);
+  DEBUG.print(L3PIREN);
+  DEBUG.println(L3PIR);
+
+  if(!L1PIREN) L1PIR = 0;
+  else if(!L1PIR) L1PIR = 1;
+  else L1PIR = 2;
+
+  if(!L2PIREN) L2PIR = 0;
+  else if(!L2PIR) L2PIR = 1;
+  else L2PIR = 2;
+
+  if(!L3PIREN) L3PIR = 0;
+  else if(!L3PIR) L3PIR = 1;
+  else L3PIR = 2;
+    
+//  L1PIR =         bitRead(OPTIONS3, 0);
+//  L2PIR =         bitRead(OPTIONS3, 1);
+//  L3PIR =         bitRead(OPTIONS3, 2);
+//  ALARM_MODE =    bitRead(OPTIONS3, 3);
+//  cap_debug =     bitRead(OPTIONS3, 4);
 //  DEBUG_IR_FULL = bitRead(OPTIONS3, 5);
 //  DEBUG_PLC =     bitRead(OPTIONS3, 6);
 //  DEBUG_LOG =   bitRead(OPTIONS3, 7);

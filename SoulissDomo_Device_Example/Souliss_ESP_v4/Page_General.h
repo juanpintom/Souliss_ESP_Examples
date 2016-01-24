@@ -44,7 +44,7 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
     </select>
     </td></tr>
   <tr><td>L3 Output Mode:</td><td>
-    <select  id="L3" name="L3" onchange="getComboL3(this)"style="width:180px">
+    <select  id="L3" name="L3" onchange="getComboL3(this)" style="width:180px">
       <option value="0">None</option>
       <option value="1">ON-OFF Mode</option>
       <option value="2">Dimmable Mode</option>
@@ -64,23 +64,26 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
     </td></tr>
     
     <tr id="PIR1"><td>L1 PIR Sensor:</td><td>
-    <select  id="L1PIR" name="L1PIR" style="width:180px">
-      <option value="0">PIR Sensor 1</option>
-      <option value="1">PIR Sensor 2</option>
+    <select  id="L1PIR" name="L1PIR" style="width:180px" onchange="getPIR(this)">
+      <option value="0">None</option>
+      <option value="1">PIR Sensor 1</option>
+      <option value="2">PIR Sensor 2</option>
     </select>
     </td></tr>
     
     <tr id="PIR2"><td>L2 PIR Sensor:</td><td>
-    <select  id="L2PIR" name="L2PIR" style="width:180px">
-      <option value="0">PIR Sensor 1</option>
-      <option value="1">PIR Sensor 2</option>
+    <select  id="L2PIR" name="L2PIR" style="width:180px" onchange="getPIR(this)">
+      <option value="0">None</option>
+      <option value="1">PIR Sensor 1</option>
+      <option value="2">PIR Sensor 2</option>
     </select>
     </td></tr>
     
     <tr id="PIR3"><td>L3 PIR Sensor:</td><td>
-    <select  id="L3PIR" name="L3PIR" style="width:180px">
-      <option value="0">PIR Sensor 1</option>
-      <option value="1">PIR Sensor 2</option>
+    <select  id="L3PIR" name="L3PIR" style="width:180px" onchange="getPIR(this)">
+      <option value="0">None</option>
+      <option value="1">PIR Sensor 1</option>
+      <option value="2">PIR Sensor 2</option>
     </select>
     </td></tr>    
   </table>
@@ -252,17 +255,17 @@ function load(e,t,n){
     a.href=e,a.rel="stylesheet",a.type="text/css",a.async=!1,a.onload=function(){n()},document.getElementsByTagName("head")[0].appendChild(a)
   }
 }
-
 var myVar = setInterval(myTimer, 1000);
-
 function myTimer() {
     getConfig();
 }
-
 function getConfig(){
     var L1 = document.getElementById("L1");
     var L2 = document.getElementById("L2");
     var L3 = document.getElementById("L3");
+    var L1PIR = document.getElementById("L1PIR");
+    var L2PIR = document.getElementById("L2PIR");
+    var L3PIR = document.getElementById("L3PIR");
     var S1 = document.getElementById("S1");
     var S2 = document.getElementById("S2");
     var S3 = document.getElementById("S3");
@@ -282,21 +285,28 @@ function getConfig(){
     if(S41.value == 4 || S42.value == 4 || S51.value == 4 || S52.value == 4){
       document.getElementById("ALARM_MODE").value = 1;    
     }
+  
   // PIR SENSORS
     if(L1.value == 4){
-      document.getElementById("PIR1").style.display = "block";  //none;  
+      document.getElementById("PIR1").style.display = "block";  //none;
+      getPIR(L1PIR);
     }else{
-      document.getElementById("PIR1").style.display = "none";  //none;  
+      document.getElementById("PIR1").style.display = "none";  //none;
+      document.getElementById("L1PIR").value = 0;
     }
     if(L2.value == 4){
-      document.getElementById("PIR2").style.display = "block";  //none;  
+      document.getElementById("PIR2").style.display = "block";  //none; 
+      getPIR(L2PIR);
     }else{
-      document.getElementById("PIR2").style.display = "none";  //none;  
+      document.getElementById("PIR2").style.display = "none";  //none;
+      document.getElementById("L2PIR").value = 0;
     }
     if(L3.value == 4){
-      document.getElementById("PIR3").style.display = "block";  //none;  
+      document.getElementById("PIR3").style.display = "block";  //none;
+      getPIR(L3PIR);
     }else{
-      document.getElementById("PIR3").style.display = "none";  //none;  
+      document.getElementById("PIR3").style.display = "none";  //none; 
+      document.getElementById("L3PIR").value = 0;
     }  
   
   //  DALLAS  
@@ -333,6 +343,30 @@ function getConfig(){
     }
   
 }
+function getPIR(sel){
+   
+  var L1PIR = document.getElementById("L1PIR");
+  var L2PIR = document.getElementById("L2PIR");
+  var L3PIR = document.getElementById("L3PIR");
+  var S51   = document.getElementById("S51");
+  var S52   = document.getElementById("S52");
+  
+  if(L1PIR.value == 1 || L2PIR.value == 1 || L3PIR.value == 1) {
+    S51.value = 8;
+  } else {
+    if(S51.value >= 8){
+      S51.value = 0;
+    }
+  }
+  if(L1PIR.value == 2 || L2PIR.value == 2 || L3PIR.value == 2) {
+    S52.value = 8;
+  } else {
+    if(S52.value >= 8){
+      S52.value = 0;
+    }
+  } 
+}
+ 
 function getComboL1(sel) {
   var value = sel.value;
   if(value == 3){
@@ -479,7 +513,6 @@ function getUSART(sel){
   getConfig();
 }
   
-
 </script>
 )=====";
 
@@ -606,8 +639,7 @@ void send_general_html()
         if (server.argName(i) == "S41") S41 = server.arg(i).toInt();
         if (server.argName(i) == "S51") S51 = server.arg(i).toInt();
         if (server.argName(i) == "S42") S42 = server.arg(i).toInt();
-        if (server.argName(i) == "S52") S52 = server.arg(i).toInt();
-        //if (server.argName(i) == "S6") S6 = server.arg(i).toInt();        
+        if (server.argName(i) == "S52") S52 = server.arg(i).toInt();       
         if (server.argName(i) == "L1PIR") L1PIR = server.arg(i).toInt();
         if (server.argName(i) == "L2PIR") L2PIR = server.arg(i).toInt();
         if (server.argName(i) == "L3PIR") L3PIR = server.arg(i).toInt();
