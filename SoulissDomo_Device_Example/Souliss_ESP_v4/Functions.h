@@ -9,11 +9,11 @@ int valorPWM;
 #define AUTOCALIBRATE         1
 
 boolean DEBUG_LOG           = 1;
-boolean DEBUG_CAPSENSE      = 0;
+boolean DEBUG_CAPSENSE      = 1;
 boolean DEBUG_CAPSENSE_ALL  = 0;
 boolean DEBUG_DHT           = 0;
 boolean DEBUG_PRESSURE      = 1;
-boolean DEBUG_GETLUX        = 0;
+boolean DEBUG_GETLUX        = 1;
 boolean DEBUG_DALLAS        = 0;
 boolean DEBUG_EMONCMS       = 1;
 boolean DEBUG_IR            = 1;
@@ -715,18 +715,18 @@ void WriteConfig_Slots() {
   bitWrite(OPTIONS1, 1, IR_ENABLE);
   bitWrite(OPTIONS1, 2, dht_type);
   bitWrite(OPTIONS1, 3, Send_Emon);
-  bitWrite(OPTIONS1, 4, DEBUG_LOG);
-  bitWrite(OPTIONS1, 5, DEBUG_CAPSENSE);
-  bitWrite(OPTIONS1, 6, DEBUG_CAPSENSE_ALL);
-  bitWrite(OPTIONS1, 7, DEBUG_DHT);
-
-  bitWrite(OPTIONS2, 0, DEBUG_PRESSURE);
-  bitWrite(OPTIONS2, 1, DEBUG_GETLUX);
-  bitWrite(OPTIONS2, 2, DEBUG_DALLAS);
-  bitWrite(OPTIONS2, 3, DEBUG_EMONCMS);
-  bitWrite(OPTIONS2, 4, DEBUG_IR);
-  bitWrite(OPTIONS2, 5, DEBUG_IR_FULL);
-  bitWrite(OPTIONS2, 6, DEBUG_PLC);
+//  bitWrite(OPTIONS1, 4, DEBUG_LOG);
+//  bitWrite(OPTIONS1, 5, DEBUG_CAPSENSE);
+//  bitWrite(OPTIONS1, 6, DEBUG_CAPSENSE_ALL);
+//  bitWrite(OPTIONS1, 7, DEBUG_DHT);
+//
+//  bitWrite(OPTIONS2, 0, DEBUG_PRESSURE);
+//  bitWrite(OPTIONS2, 1, DEBUG_GETLUX);
+//  bitWrite(OPTIONS2, 2, DEBUG_DALLAS);
+//  bitWrite(OPTIONS2, 3, DEBUG_EMONCMS);
+//  bitWrite(OPTIONS2, 4, DEBUG_IR);
+//  bitWrite(OPTIONS2, 5, DEBUG_IR_FULL);
+//  bitWrite(OPTIONS2, 6, DEBUG_PLC);
   //bitWrite(OPTIONS2, 7, DEBUG_PLC);
 
   if(L1PIR == 0){
@@ -756,7 +756,7 @@ void WriteConfig_Slots() {
       bitWrite(OPTIONS3, 3, 1);  
     }
   if(L3PIR == 0){
-    L3PIREN == 0;
+    L3PIREN = 0;
     bitWrite(OPTIONS3, 4, L3PIREN);
     bitWrite(OPTIONS3, 5, 0);  
   } else if(L3PIR == 1){
@@ -856,19 +856,19 @@ void ReadConfig_Slots()
   dht_type =    bitRead(OPTIONS1, 2);
   Send_Emon =   bitRead(OPTIONS1, 3);
 
-  DEBUG_LOG =           bitRead(OPTIONS1, 4);
-  DEBUG_CAPSENSE =      bitRead(OPTIONS1, 5);
-  DEBUG_CAPSENSE_ALL =  bitRead(OPTIONS1, 6);
-  DEBUG_DHT =           bitRead(OPTIONS1, 7);
-
-  DEBUG_PRESSURE =  bitRead(OPTIONS2, 0);
-  DEBUG_GETLUX =    bitRead(OPTIONS2, 1);
-  DEBUG_DALLAS =    bitRead(OPTIONS2, 2);
-  DEBUG_EMONCMS =   bitRead(OPTIONS2, 3);
-  DEBUG_IR =        bitRead(OPTIONS2, 4);
-  DEBUG_IR_FULL =   bitRead(OPTIONS2, 5);
-  DEBUG_PLC =       bitRead(OPTIONS2, 6);
-  //DEBUG_LOG =     bitRead(OPTIONS2, 7);
+//  DEBUG_LOG =           bitRead(OPTIONS1, 4);
+//  DEBUG_CAPSENSE =      bitRead(OPTIONS1, 5);
+//  DEBUG_CAPSENSE_ALL =  bitRead(OPTIONS1, 6);
+//  DEBUG_DHT =           bitRead(OPTIONS1, 7);
+//
+//  DEBUG_PRESSURE =  bitRead(OPTIONS2, 0);
+//  DEBUG_GETLUX =    bitRead(OPTIONS2, 1);
+//  DEBUG_DALLAS =    bitRead(OPTIONS2, 2);
+//  DEBUG_EMONCMS =   bitRead(OPTIONS2, 3);
+//  DEBUG_IR =        bitRead(OPTIONS2, 4);
+//  DEBUG_IR_FULL =   bitRead(OPTIONS2, 5);
+//  DEBUG_PLC =       bitRead(OPTIONS2, 6);
+//  //DEBUG_LOG =     bitRead(OPTIONS2, 7);
 
   
   L1PIREN =       bitRead(OPTIONS3, 0);
@@ -1113,7 +1113,7 @@ uint8_t Souliss_CapSense(uint8_t slot, uint8_t value, uint8_t value_hold, uint8_
                 }
                 //return config.cap_thresold;
             }else{
-                InPin[pin] = PINACTIVE;								// Stay there till pushbutton is released
+                InPin[pin] = PINACTIVE;								
       		if (memory_map)	memory_map[MaCaco_IN_s + slot] = value_hold;
                 return value_hold;
             }
@@ -1161,9 +1161,8 @@ int Souliss_GetLux(const unsigned int* _in, const unsigned int* _out, byte size)
 	delay(10);  //TODO: TEST WITH LOWER VALUES
 
   if(DEBUG_GETLUX){
-    LOG.print(" AnalogRead: ");
-    LOG.print(val);
-    LOG.print("\r\n");
+    LOG.print("AnalogRead: ");
+    LOG.println(val);
   }
   if (val <= _in[0]) return _out[0];
 	if (val >= _in[size-1]) return _out[size-1];

@@ -384,7 +384,11 @@ void fastGeneral(){
             if(L3 == PWM_MODE && S51 == CAPACITIVE){
                     Souliss_CapSense(LED3,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, BUT2P, cap_thresold, 1500);
                     if(DEBUG_CAPSENSE_ALL) LOG.println("");
-            }  
+            } 
+            if(L3 == PWM_MODE && S52 == CAPACITIVE){
+                    Souliss_CapSense(LED3,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, BUT3P, cap_thresold, 1500);
+                    if(DEBUG_CAPSENSE_ALL) LOG.println("");
+            }             
       // **********  FALTA!!! BOTONES EN S52 ********  NO SE QUE FUNCION DARLE *********
 
                          
@@ -817,7 +821,7 @@ void fastGeneral(){
                 float ldr_read = Souliss_GetLux(in, out, SIZEOF)*10.0;  //ORIGINAL
                 if(DEBUG_GETLUX){
                     LOG.print("ldrlead: "); 
-                    LOG.print(ldr_read);
+                    LOG.println(ldr_read);
                 }
                 if (ldr_read == 0) ldr_read = 0.01;
                 Souliss_ImportAnalog(memory_map, LDR, &ldr_read);
