@@ -410,6 +410,12 @@ void fastGeneral(){
                    irButtons(ir_ONOFF);
                 }
             }
+            if(L1 == PWM_MODE || L2 == PWM_MODE || L3 == PWM_MODE){
+                if(IR_ENABLE){
+                  irButtons(ir_PWM);
+                }
+            }    
+            
             switch (L1) {
                 case 1:
                   Logic_SimpleLight(LED1);
