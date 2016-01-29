@@ -782,9 +782,9 @@ void fastGeneral(){
                         LOG.println(dallas);
                       }
                       Souliss_ImportAnalog(memory_map, DALLAS + (i*2), &dallas);
-                      String stringDallas = "Dallas_sensor_";
-                      stringDallas += i;
-                      if(Send_Emon) SendEmoncms(stringDallas, DALLAS + (i*2));
+                      //String stringDallas = "Dallas_sensor_";
+                      //stringDallas += i;
+                      //if(Send_Emon) SendEmoncms(stringDallas, DALLAS + (i*2));
 //                      if(THERMOSTAT_MODE && i==0){
 //                         Souliss_ImportAnalog(memory_map, THERMOSTAT+1, &dallas);  //IMPORTED FROM FIRST DALLAS SENSOR FOR NOW     
 //                      }
@@ -797,26 +797,28 @@ void fastGeneral(){
         {
 //            if(DHT_SENSOR){
             if(S2 == DHT_SENSOR){
-                  Logic_Temperature(TEMPERATURE);
-                  Logic_Humidity(HUMIDITY);
+                  if( Logic_Temperature(TEMPERATURE) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
+                  if( Logic_Humidity(HUMIDITY) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("DHT_Hum_Sensor", HUMIDITY);
             }
             
 //            if(LDR_SENSOR){
             if(S3 == LDR_SENSOR){
-                  Logic_T54(LDR);
+                  if( Logic_T54(LDR) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("Lux_Sensor", LDR);
             }
             
 //            if(DALLAS_SENSOR){
             if(S1 == DALLAS_SENSOR){
             	for(int i=0; i < dallas_qty; i++){
-                  Logic_Temperature(DALLAS + (i*2));
+                  String stringDallas = "Dallas_sensor_";
+                  stringDallas += i;
+                  if( Logic_Temperature(DALLAS + (i*2)) == Souliss_TRIGGED && Send_Emon ) SendEmoncms(stringDallas, DALLAS + (i*2));
             	}
             }                  
             
 //            if(BMP180){
             if(S51 == BMP180){
-                  Logic_Pressure(PRESSURE0);  
-                  Logic_Temperature(BMP180TEMP);
+                  if( Logic_Pressure(PRESSURE0) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("BMP180_Pressure", PRESSURE0); 
+                  if( Logic_Temperature(BMP180TEMP) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("BMP180_Temp", BMP180TEMP);   
             }
         } 
         
@@ -831,7 +833,7 @@ void fastGeneral(){
                 }
                 if (ldr_read == 0) ldr_read = 0.01;
                 Souliss_ImportAnalog(memory_map, LDR, &ldr_read);
-                if(Send_Emon) SendEmoncms("Lux_Sensor", LDR);
+                //if(Send_Emon) SendEmoncms("Lux_Sensor", LDR);
             }
         }
         FAST_x10ms(WINDOW_TIMER) { 
@@ -929,20 +931,20 @@ void slowGeneral(){
 //        if(DHT_SENSOR){
         if(S2 == DHT_SENSOR){
             Souliss_GetDHT(TEMPERATURE, HUMIDITY, true);  
-            if(Send_Emon) {
-              SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
-              SendEmoncms("DHT_Humi_Sensor", HUMIDITY);
-            }
+            //if(Send_Emon) {
+              //SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
+              //SendEmoncms("DHT_Humi_Sensor", HUMIDITY);
+            //}
         }
     }
     SLOW_x10s(3) {
 //        if(BMP180){
         if(S51 == BMP180){          
             Souliss_GetPressure_BMP180(PRESSURE0,BMP180TEMP);  
-            if(Send_Emon) {
-              SendEmoncms("BMP180_Pressure", PRESSURE0);
-              SendEmoncms("BMP180_Temp", BMP180TEMP);
-            }  
+            //if(Send_Emon) {
+            //  SendEmoncms("BMP180_Pressure", PRESSURE0);
+            //  SendEmoncms("BMP180_Temp", BMP180TEMP);
+            //}  
         }   
     }
 

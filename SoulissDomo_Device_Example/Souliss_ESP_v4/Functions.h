@@ -202,7 +202,7 @@ void SendEmoncms(String inputstring, byte SLOT){
       LOG.print("Emoncms: ");
       LOG.print(inputstring);
       LOG.print(": ");
-      LOG.println(valueSLOT);
+      LOG.print(valueSLOT);
     }
       // Make a HTTP request:
     client.print("POST ");
@@ -219,6 +219,7 @@ void SendEmoncms(String inputstring, byte SLOT){
     client.println(serveremon);
     client.println("Connection: close");
     client.println();
+    if(DEBUG_EMONCMS) LOG.println(" Sent");
   }
   else
   {
@@ -230,6 +231,60 @@ void SendEmoncms(String inputstring, byte SLOT){
       LOG.println("connection failed");
     }
   }
+}
+
+// ******************************************************************************************************************
+// *************************************************  Energy Meassure FUNCTION ***************************************************
+// ******************************************************************************************************************
+
+double offsetI;
+double filteredI;
+double sqI,sumI;
+int16_t sampleI;
+double Irms;
+
+double squareRoot(double fg)  
+{
+  double n = fg / 2.0;
+  double lstX = 0.0;
+  while (n != lstX)
+  {
+    lstX = n;
+    n = (n + fg / n) / 2.0;
+  }
+  return n;
+}
+
+double calcIrms(unsigned int Number_of_Samples)
+{
+  /* Be sure to update this value based on the IC and the gain settings! */
+  float multiplier = 0.125F;    /* ADS1115 @ +/- 4.096V gain (16-bit results) */
+  for (unsigned int n = 0; n < Number_of_Samples; n++)
+  {
+    //sampleI = ads.readADC_Differential_0_1();
+    sampleI = analogRead(A0);
+
+    // Digital low pass filter extracts the 2.5 V or 1.65 V dc offset, 
+  //  then subtract this - signal is now centered on 0 counts.
+    offsetI = (offsetI + (sampleI-offsetI)/1024);
+    filteredI = sampleI - offsetI;
+    //filteredI = sampleI * multiplier;
+
+    // Root-mean-square method current
+    // 1) square current values
+    sqI = filteredI * filteredI;
+    // 2) sum 
+    sumI += sqI;
+  }
+  LOG.print("A0: ");
+  LOG.print (sampleI);
+  Irms = squareRoot(sumI / Number_of_Samples)*multiplier; 
+
+  //Reset accumulators
+  sumI = 0;
+//--------------------------------------------------------------------------------------       
+ 
+  return Irms;
 }
 
 

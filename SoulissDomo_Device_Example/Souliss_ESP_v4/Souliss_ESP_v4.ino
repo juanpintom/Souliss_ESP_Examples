@@ -18,6 +18,11 @@
 
 #include <IRremoteESP8266.h>
 
+// EmonLibrary examples openenergymonitor.org, Licence GNU GPL V3
+
+//#include "EmonLib.h"                   // Include Emon Library
+//EnergyMonitor emon1;                   // Create an instance
+
 // ************************* SOULISS DEBUG LINES  ***********************************
 // Enable or disable Souliss debug
 #define MaCaco_DEBUG_INSKETCH
@@ -148,7 +153,7 @@ void setup()
     //LOG.begin(115200);
     DEBUG.begin(115200);
     
- 
+    //emon1.current(0, 10);             // Current: input pin, calibration.
     //************************************** TELNET SETUP *************************
     telnet.begin();
     telnet.setNoDelay(true);
@@ -246,6 +251,14 @@ void loop()
         UPDATEFAST();   
         FAST_x10ms(5){
             //MQTT_Loop();
+        }
+        FAST_x10ms(20){
+           double Irms = calcIrms(2048);
+          //double Irms = emon1.calcIrms(1480);  // Calculate Irms only
+          Serial.print(" ");
+          Serial.print(Irms*230.0);         // Apparent power
+          Serial.print(" ");
+          Serial.println(Irms);          // Irms 
         }
         FAST_x10ms(500){
             //MQTT_Loop_Slow();
