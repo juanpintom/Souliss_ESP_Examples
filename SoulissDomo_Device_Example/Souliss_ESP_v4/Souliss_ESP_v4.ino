@@ -46,6 +46,8 @@
 # define USART_BAUD256k       0  */
 // *************
 
+
+
 // *************************** SENSORS LIBRARIES *************************
 
 #include "DHT.h"
@@ -62,6 +64,47 @@
 #include <ESP8266HTTPUpdateServer.h>
 #include <EEPROM.h>
 #include <WiFiUdp.h>
+
+// ***************************  OLED  LIBRARY ***************************
+//#include <Wire.h>
+#include "SSD1306.h"
+#include "SSD1306Ui.h"
+#include "images.h"
+
+// Initialize the oled display for address 0x3c
+// sda-pin=14 and sdc-pin=12
+SSD1306   display(0x3c, 5, 4);
+SSD1306Ui ui     ( &display );
+
+// this array keeps function pointers to all frames
+// frames are the single views that slide from right to left
+bool (*frames[])(SSD1306 *display, SSD1306UiState* state, int x, int y) = { drawFrame1, drawFrame2, drawFrame3, drawFrame4 };
+
+// how many frames are there?
+int frameCount = 4;
+
+bool (*overlays[])(SSD1306 *display, SSD1306UiState* state)             = { msOverlay };
+int overlaysCount = 1;
+
+// ***************************  NTP  LIBRARIES ***************************
+
+#include <ntp.h>
+//#include <WiFiUdp.h>
+#include <Time.h>
+time_t getNTPtime(void);
+NTP NTPclient;
+#define CET +1
+
+
+
+//// ***************************  ESP  LIBRARIES ***************************
+//
+//#include <ESP8266WiFi.h>
+//#include <ESP8266WebServer.h>
+//#include <ESP8266mDNS.h>
+//#include <ESP8266HTTPUpdateServer.h>
+//#include <EEPROM.h>
+//#include <WiFiUdp.h>
 
 
 // ************************* TELNET DEBUG ******************************
@@ -152,6 +195,14 @@ void setup()
 {
     //LOG.begin(115200);
     DEBUG.begin(115200);
+
+    // **************************************  OLED SETUP *********************
+    if(DEBUG_LOG) I2CScanner();
+    OLEDsetup();
+    // **************************************  NTP SETUP *********************
+    NTPclient.begin("time-a.timefreq.bldrdoc.gov", CET);
+    setSyncInterval(SECS_PER_HOUR);
+    setSyncProvider(getNTPtime);
     
     //emon1.current(0, 10);             // Current: input pin, calibration.
     //************************************** TELNET SETUP *************************
@@ -175,7 +226,7 @@ void setup()
   		// Start the node as access point with a configuration WebServer
   		SetAccessPoint();
   		startWebServer();
-  
+      drawNOWIFI();
   		// We have nothing more than the WebServer for the configuration
   		// to run, once configured the node will quit this.
   		while(1)
@@ -185,6 +236,7 @@ void setup()
   		}
   
 	  }
+    drawSouliss();
     
     if (IsRuntimeGateway())
     {
@@ -203,6 +255,7 @@ void setup()
         GetAddress();
         
     }
+    
     setupGeneral();
     startWebServer();
     DEBUG.print("vNet Media : ");
@@ -242,6 +295,7 @@ uint32_t x=0;
 
 void loop()
 {  
+
     if(IR_ENABLE){
     	readIR();
     }
@@ -249,21 +303,43 @@ void loop()
         
     EXECUTEFAST() {                     
         UPDATEFAST();   
-        FAST_x10ms(5){
+        FAST_x10ms(10){
             //MQTT_Loop();
+              int remainingTimeBudget = ui.update();
+              //ReadPCF();
+       //  PFC8591 READS
+//              LOG.print("CH0 ");
+//              adc_value = getADC(PCF8591_ADC_CH0); //Channel 3 is the pot
+//              LOG.print(adc_value);
+//
+//              LOG.print("\r CH1 ");
+//              adc_value = getADC(PCF8591_ADC_CH1); //Channel 3 is the pot
+//              LOG.print(adc_value);
+//
+//              LOG.print("\r CH2 ");
+//              adc_value = getADC(PCF8591_ADC_CH2); //Channel 3 is the pot
+//              LOG.print(adc_value);
+//              
+//              LOG.print("\r CH3 ");
+//              adc_value = getADC(PCF8591_ADC_CH3); //Channel 3 is the pot
+//              LOG.println(adc_value);
         }
-        FAST_x10ms(20){
-           double Irms = calcIrms(2048);
-          //double Irms = emon1.calcIrms(1480);  // Calculate Irms only
-          Serial.print(" ");
-          Serial.print(Irms*230.0);         // Apparent power
-          Serial.print(" ");
-          Serial.println(Irms);          // Irms 
-        }
-        FAST_x10ms(500){
-            //MQTT_Loop_Slow();
-            Telnet_Loop();
-        }        
+//        FAST_x10ms(20){
+//          if(Emonlib){
+//            double Irms = calcIrms(2048);
+//            //double Irms = emon1.calcIrms(1480);  // Calculate Irms only
+//            LOG.print(" ");
+//            LOG.print(Irms*230.0);         // Apparent power
+//            LOG.print(" ");
+//            LOG.println(Irms);          // Irms 
+//          }
+//        }
+//        FAST_x10ms(500){
+//            //MQTT_Loop_Slow();
+//            //Telnet_Loop();
+//            
+//        }        
+        //Serial.println("FAST");
         fastGeneral();
          
         // Run communication as Gateway or Peer
@@ -274,7 +350,9 @@ void loop()
     }
 
     EXECUTESLOW() {
-        UPDATESLOW();
+        //Serial.println("SLOW");
+        UPDATESLOW();       
+        slowGeneral();
         /*SLOW_x10s(1) { 
             count += 1;
             if (testFeed.send(count)) {
@@ -308,13 +386,13 @@ void loop()
               Serial.print(F("Failed to receive the latest feed value!"));
             }
         } */
-        slowGeneral();
         
         // If running as Peer
         if (!IsRuntimeGateway())
             SLOW_PeerJoin();
     } 
     //OTA_Process();
+  //}
 }  
 
 boolean Telnet_Loop(){
@@ -460,5 +538,227 @@ void deleteEEPROM(){
     }
 
   
+}
+
+void OLEDsetup(){
+
+  ui.setTargetFPS(30);
+
+  ui.setActiveSymbole(activeSymbole);
+  ui.setInactiveSymbole(inactiveSymbole);
+
+  // You can change this to
+  // TOP, LEFT, BOTTOM, RIGHT
+  ui.setIndicatorPosition(BOTTOM);
+
+  // Defines where the first frame is located in the bar.
+  ui.setIndicatorDirection(LEFT_RIGHT);
+
+  // You can change the transition that is used
+  // SLIDE_LEFT, SLIDE_RIGHT, SLIDE_TOP, SLIDE_DOWN
+  ui.setFrameAnimation(SLIDE_LEFT);
+
+  // Add frames
+  ui.setFrames(frames, frameCount);
+
+  // Add overlays
+  ui.setOverlays(overlays, overlaysCount);
+
+  // Inital UI takes care of initalising the display too.
+  ui.init();
+
+  display.flipScreenVertically();
+  drawStart();
+  
+}
+
+
+bool msOverlay(SSD1306 *display, SSD1306UiState* state) {
+  display->setTextAlignment(TEXT_ALIGN_RIGHT);
+  display->setFont(ArialMT_Plain_10);
+//  display->drawString(128, 0, String(millis()));
+  String minu, segu;
+  if(minute()<10) minu = "0" + String(minute()); else minu = String(minute());
+  if(second()<10) segu = "0" + String(second()); else segu = String(second());
+  String FechaHora = String(hour())  + ":" + minu  + "." + segu + " " + String(day()) + "/" + String(month()) + "/" + String(year());
+  display->drawString(128, 0, FechaHora);
+  return true;
+}
+
+bool drawFrame1(SSD1306 *display, SSD1306UiState* state, int x, int y) {
+  // draw an xbm image.
+  // Please note that everything that should be transitioned
+  // needs to be drawn relative to x and y
+  display->setFont(ArialMT_Plain_10);
+  display->setTextAlignment(TEXT_ALIGN_LEFT);
+  display->drawString(0 + x, 11 + y, String(WiFi.SSID()));
+  // if this frame need to be refreshed at the targetFPS you need to
+  // return true
+  display->drawXbm(x + 34, y + 14, WiFi_Logo_width, WiFi_Logo_height, WiFi_Logo_bits);
+  return false;
+}
+
+bool drawFrame2(SSD1306 *display, SSD1306UiState* state, int x, int y) {
+  // Demonstrates the 3 included default sizes. The fonts come from SSD1306Fonts.h file
+  // Besides the default fonts there will be a program to convert TrueType fonts into this format
+//  display->setTextAlignment(TEXT_ALIGN_LEFT);
+//  display->setFont(ArialMT_Plain_10);
+//  display->drawString(0 + x, 10 + y, "Arial 10");
+//
+//  display->setFont(ArialMT_Plain_16);
+//  display->drawString(0 + x, 20 + y, "Arial 16");
+//
+//  display->setFont(ArialMT_Plain_24);
+//  display->drawString(0 + x, 34 + y, "Arial 24");
+//  display->drawXbm(128 - thermometer24_widthPixels, 10, thermometer24_widthPixels, thermometer24_heightPixels, thermometer24_bits);
+  display->drawXbm(x + (128 - ((humidity24_widthPixels+thermometer24_widthPixels)/2)), y + 10, thermometer24_widthPixels, thermometer24_heightPixels, thermometer24_bits);
+  display->drawXbm(x + (128 - humidity24_widthPixels), y + 34, humidity24_widthPixels, humidity24_heightPixels, humidity24_bits);
+  display->setTextAlignment(TEXT_ALIGN_CENTER);
+  display->setFont(ArialMT_Plain_10);
+  //display->drawString(64 + x, 10 + y, "Temperature - Humidity");
+
+  display->setFont(ArialMT_Plain_24);
+//  display->drawString(64 + x, 20 + y, String(mOutputAsFloat(TEMPERATURE)));
+  display->drawString(64 + x, 10 + y, String(mOutputAsFloat(TEMPERATURE))+"ºC");
+
+  display->setFont(ArialMT_Plain_24);
+  display->drawString(64 + x, 34 + y, String(mOutputAsFloat(HUMIDITY))+"%");
+  return false;
+}
+
+bool drawFrame3(SSD1306 *display, SSD1306UiState* state, int x, int y) {
+//  // Text alignment demo
+//  display->setFont(ArialMT_Plain_10);
+//
+//  // The coordinates define the left starting point of the text
+//  display->setTextAlignment(TEXT_ALIGN_LEFT);
+//  display->drawString(0 + x, 11 + y, "Left aligned (0,10)");
+//
+//  // The coordinates define the center of the text
+//  display->setTextAlignment(TEXT_ALIGN_CENTER);
+//  //display->drawString(64 + x, 22, "Center aligned (64,22)");  
+//  display->drawString(64 + x, 22, String(mOutputAsFloat(DALLAS)));
+//  // The coordinates define the right end of the text
+//  display->setTextAlignment(TEXT_ALIGN_RIGHT);
+//  display->drawString(128 + x, 33, "Right aligned (128,33)");
+
+  display->drawXbm(x + (128 - thermometer24_widthPixels), y + 22, thermometer24_widthPixels, thermometer24_heightPixels, thermometer24_bits);
+  display->setTextAlignment(TEXT_ALIGN_CENTER);
+  display->setFont(ArialMT_Plain_16);
+  display->drawString(64 + x, 11, "Temperature");
+  // The coordinates define the center of the text
+  display->setFont(ArialMT_Plain_24); 
+  display->drawString(64 + x, 22, String(mOutputAsFloat(DALLAS)));
+  
+
+  return false;
+}
+
+bool drawFrame4(SSD1306 *display, SSD1306UiState* state, int x, int y) {
+  // Demo for drawStringMaxWidth:
+  // with the third parameter you can define the width after which words will be wrapped.
+  // Currently only spaces and "-" are allowed for wrapping
+//  display->setTextAlignment(TEXT_ALIGN_LEFT);
+//  display->setFont(ArialMT_Plain_10);
+//  display->drawStringMaxWidth(0 + x, 10 + y, 128, "Lorem ");
+  display->drawXbm(x + (128 - lux24_widthPixels), y + 22, lux24_widthPixels, lux24_heightPixels, lux24_bits);
+  display->setTextAlignment(TEXT_ALIGN_CENTER);
+  display->setFont(ArialMT_Plain_16);
+  display->drawString(64 + x, 11, "Luminosity");
+  // The coordinates define the center of the text
+  display->setFont(ArialMT_Plain_24); 
+  display->drawString(64 + x, 22, String(mOutputAsFloat(LDR)));
+  
+  return false;
+}
+
+bool drawStart() {
+  // draw an xbm image.
+  // Please note that everything that should be transitioned
+  // needs to be drawn relative to x and y
+  Serial.println("DrawStart");
+  display.displayOn();
+  display.clear();
+  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.drawString(0, 0, "Connecting to WiFi...");
+  // if this frame need to be refreshed at the targetFPS you need to
+  // return true
+  display.drawXbm(34, 14, WiFi_Logo_width, WiFi_Logo_height, WiFi_Logo_bits);
+  //display.drawXbm((128-souliss_logo_widthPixels)/2, 14, souliss_logo_widthPixels, souliss_logo_heightPixels, souliss_logo_bits);
+  display.display();
+  return false;
+}
+
+bool drawNOWIFI() {
+  // draw an xbm image.
+  // Please note that everything that should be transitioned
+  // needs to be drawn relative to x and y
+  LOG.println("DrawNOWIFI");
+  display.displayOn();
+  display.clear();
+  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  //display.drawString(0, 11, "NO WIFI CONFIGURED, Enter to 192.168.4.1");
+  display.drawStringMaxWidth(0, 0, 128, "NO WIFI CONFIGURED, Enter to 192.168.4.1");
+  // if this frame need to be refreshed at the targetFPS you need to
+  // return true
+  //display.drawXbm(34, 14, WiFi_Logo_width, WiFi_Logo_height, WiFi_Logo_bits);
+  display.display();
+  return false;
+}
+
+bool drawSouliss() {
+  // draw an xbm image.
+  // Please note that everything that should be transitioned
+  // needs to be drawn relative to x and y
+  LOG.println("DrawSouliss");
+  display.displayOn();
+  display.clear();
+  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.drawString(0, 0, "Starting Souliss...");
+  // if this frame need to be refreshed at the targetFPS you need to
+  // return true
+  display.drawXbm((128-souliss_logo_widthPixels)/2, 14, souliss_logo_widthPixels, souliss_logo_heightPixels, souliss_logo_bits);
+  display.display();
+  return false;
+}
+
+void I2CScanner(){
+
+  Wire.begin(5,4);
+  LOG.println ();
+  LOG.println ("I2C scanner. Scanning ...");
+  byte count = 0;
+  for (byte i = 1; i < 120; i++)
+  {
+    Wire.beginTransmission (i);
+    if (Wire.endTransmission () == 0)
+      {
+      LOG.print ("Found address: ");
+      LOG.print (i, DEC);
+      LOG.print (" (0x");
+      LOG.print (i, HEX);
+      LOG.println (")");
+      count++;
+      delay (1);  // maybe unneeded?
+      } // end of good response
+  } // end of for loop
+  LOG.println ("Done.");
+  LOG.print ("Found ");
+  LOG.print (count, DEC);
+  LOG.println (" device(s).");
+  delay(1000);
+}
+
+
+// ******************************************************************************************************************
+// *************************************************  CLOCK FUNCTION ***************************************************
+// ******************************************************************************************************************
+
+time_t getNTPtime(void)
+{
+  return NTPclient.getNtpTime();
 }
 

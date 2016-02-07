@@ -77,57 +77,26 @@ void setupGeneral(){
     } 
     if(ALARM_MODE) Set_Antitheft_Main(ALARM);
       
-//    if(ONOFF_MODE){
-//        Set_SimpleLight(LEDPWM0);
-//        Set_SimpleLight(LEDPWM1);
-//        Set_SimpleLight(LEDPWM2);
-//    }
-//    if(PULSE_MODE){
-//        Set_PulseOutput(LEDPWM0);
-//        Set_PulseOutput(LEDPWM1);
-//        Set_PulseOutput(LEDPWM2);
-//    }
-//    if(PWM_MODE || PIR_MODE){
-//        Set_DimmableLight(LEDPWM0);
-//        Set_DimmableLight(LEDPWM1);  
-//    }
-//    
-//    if(PWM_MODE){
-//        //pinMode(0, INPUT);
-//        Set_DimmableLight(LEDPWM2);
-//    }
-//    
-//    if(PIR_MODE){
-//        Set_AutoLight(LED);
-//    }
-//    if(ALARM_MODE || ALARM_ENDSTOP){
-//        Set_Antitheft_Main(ALARM);
-//    }
-//    if(RGB_MODE){
     if(L1 == RGB_MODE && L2 == RGB_MODE && L3 == RGB_MODE){
         Set_LED_Strip(LEDRGB);
-    }        
-//    if(RELAY){    
+    }          
     if(S51 == RELAY){
         Set_SimpleLight(RELAY0);
     }
     if(S52 == RELAY){
         Set_SimpleLight(RELAY1);
     }    
-
-//    if(LDR_SENSOR){    
+  
     if(S3 == LDR_SENSOR){
         Set_T54(LDR);
     }
     
-//    if(DALLAS_SENSOR){
     if(S1 == DALLAS_SENSOR){
     	for(int i=0; i < dallas_qty; i++){
         	Set_Temperature(DALLAS + (i*2));
     	}	
     }        
 
-//    if(BMP180){
     if(S51 == BMP180){
         //Set_T51(PRESSURE0);
         Set_Pressure(PRESSURE0);
@@ -795,10 +764,15 @@ void fastGeneral(){
         }
         FAST_2110ms()
         {
+            
 //            if(DHT_SENSOR){
             if(S2 == DHT_SENSOR){
                   if( Logic_Temperature(TEMPERATURE) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
                   if( Logic_Humidity(HUMIDITY) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("DHT_Hum_Sensor", HUMIDITY);
+                  //if((Logic_Temperature(TEMPERATURE) == Souliss_TRIGGED || Logic_Humidity(HUMIDITY) == Souliss_TRIGGED) && Send_Emon ){
+                    //SendThingspeak(TEMPERATURE, HUMIDITY);  
+                  //}
+                  
             }
             
 //            if(LDR_SENSOR){
@@ -850,38 +824,13 @@ void fastGeneral(){
 void slowGeneral(){
   
     SLOW_10s() {  // Read temperature and humidity from DHT every 110 seconds  
-//        if(RELAY){
+        
         if(S51 == RELAY){
             Timer_SimpleLight(RELAY0);
         }
         if(S52 == RELAY){
             Timer_SimpleLight(RELAY1);
         }
-//        if(ONOFF_MODE){
-//            Timer_SimpleLight(LEDPWM0);
-//            Timer_SimpleLight(LEDPWM1);
-//            Timer_SimpleLight(LEDPWM2);
-//        }
-//        if(PIR_MODE || PWM_MODE){
-//            Timer_DimmableLight(LEDPWM0);              
-//            Timer_DimmableLight(LEDPWM1);              
-//        }
-//        
-//        if(PIR_MODE){
-//            Timer_AutoLight(LED);
-//        }
-//        
-//        if(ALARM_MODE){
-//            Timer_Antitheft_Main(ALARM);
-//        }
-//        
-//        if(PWM_MODE){
-//            Timer_DimmableLight(LEDPWM2);                          
-//        }
-//        
-//        if(RGB_MODE){
-//            Timer_LED_Strip(LEDRGB);
-//        }
         switch (L1) {
           case 1:
             Timer_SimpleLight(LED1);
@@ -921,30 +870,19 @@ void slowGeneral(){
         if(L1 == RGB_MODE && L2 == RGB_MODE && L3 == RGB_MODE){
             Timer_LED_Strip(LEDRGB);
         }     
-//        if(GARAGE_DOOR){
         if(S51 == GARAGE_DOOR){
             Timer_GarageDoor(T2X);
         }
     }            
-    SLOW_x10s(2) {
 
-//        if(DHT_SENSOR){
-        if(S2 == DHT_SENSOR){
-            Souliss_GetDHT(TEMPERATURE, HUMIDITY, true);  
-            //if(Send_Emon) {
-              //SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
-              //SendEmoncms("DHT_Humi_Sensor", HUMIDITY);
-            //}
-        }
-    }
     SLOW_x10s(3) {
-//        if(BMP180){
+        
+        //SendThingspeakAll();
         if(S51 == BMP180){          
-            Souliss_GetPressure_BMP180(PRESSURE0,BMP180TEMP);  
-            //if(Send_Emon) {
-            //  SendEmoncms("BMP180_Pressure", PRESSURE0);
-            //  SendEmoncms("BMP180_Temp", BMP180TEMP);
-            //}  
+            Souliss_GetPressure_BMP180(PRESSURE0,BMP180TEMP); 
+        }
+        if(S2 == DHT_SENSOR){
+            Souliss_GetDHT(TEMPERATURE, HUMIDITY, true);
         }   
     }
 

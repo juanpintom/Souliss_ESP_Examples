@@ -3,6 +3,8 @@
 
 int valorPWM;
 
+boolean Emonlib = 0;
+
 #define STORE_CUSTOM 430
 
 //Autocalibrate Capacitive Sensors ON
@@ -11,7 +13,7 @@ int valorPWM;
 boolean DEBUG_LOG           = 1;
 boolean DEBUG_CAPSENSE      = 1;
 boolean DEBUG_CAPSENSE_ALL  = 0;
-boolean DEBUG_DHT           = 0;
+boolean DEBUG_DHT           = 1;
 boolean DEBUG_PRESSURE      = 1;
 boolean DEBUG_GETLUX        = 1;
 boolean DEBUG_DALLAS        = 0;
@@ -195,6 +197,7 @@ void SendEmoncms(String inputstring, byte SLOT){
   
   float valueSLOT = mOutputAsFloat(SLOT);
   //LOG.println(valueSLOT);
+  float timetosend = millis();
   
   if (client.connect(serveremon, port))
   {
@@ -219,7 +222,10 @@ void SendEmoncms(String inputstring, byte SLOT){
     client.println(serveremon);
     client.println("Connection: close");
     client.println();
-    if(DEBUG_EMONCMS) LOG.println(" Sent");
+    if(DEBUG_EMONCMS) { 
+      LOG.print(" Sent takes: "); 
+      LOG.println(millis()-timetosend); 
+    }
   }
   else
   {
@@ -231,6 +237,183 @@ void SendEmoncms(String inputstring, byte SLOT){
       LOG.println("connection failed");
     }
   }
+}
+
+String apiKey = "***************";
+
+// ThingSpeak API
+const char* serverTS = "api.thingspeak.com";
+
+void SendThingspeak(byte SLOT1, byte SLOT2){
+  
+  float valueSLOT1 = mOutputAsFloat(SLOT1);
+  float valueSLOT2 = mOutputAsFloat(SLOT2);
+  float timetosend = millis();
+  
+  if (client.connect(serverTS,80)) {  //   "184.106.153.149" or api.thingspeak.com
+    String postStr = apiKey;
+           postStr +="&field1=";
+           postStr += String(valueSLOT1);
+           postStr +="&field2=";
+           postStr += String(valueSLOT2);
+           postStr += "\r\n\r\n";
+ 
+     client.print("POST /update HTTP/1.1\n"); 
+     client.print("Host: api.thingspeak.com\n"); 
+     client.print("Connection: close\n"); 
+     client.print("X-THINGSPEAKAPIKEY: "+apiKey+"\n"); 
+     client.print("Content-Type: application/x-www-form-urlencoded\n"); 
+     client.print("Content-Length: "); 
+     client.print(postStr.length()); 
+     client.print("\n\n"); 
+     client.print(postStr);
+           
+ 
+     LOG.print("Temperature: ");
+     LOG.print(valueSLOT1);
+     LOG.print(" degrees Celcius Humidity: "); 
+     LOG.print(valueSLOT2);
+     LOG.print("% send to Thingspeak takes: ");
+     LOG.println(millis()-timetosend);    
+  }
+  client.stop();
+  
+}
+
+void SendThingspeakAll(){
+
+  float field1 = mOutputAsFloat(TEMPERATURE);
+  float field2 = mOutputAsFloat(HUMIDITY);
+  float field3 = mOutputAsFloat(DALLAS);
+  float field4 = mOutputAsFloat(LDR);
+  float field5 = mOutputAsFloat(PRESSURE0);
+  float field6 = mOutputAsFloat(BMP180TEMP);
+  float timetosend = millis();
+  
+  if (client.connect(serverTS,80)) {  //   "184.106.153.149" or api.thingspeak.com
+    String postStr = apiKey;
+        if(S2 == DHT_SENSOR){
+           postStr +="&field1=";
+           postStr += String(field1);
+           postStr +="&field2=";
+           postStr += String(field2);
+           LOG.print("Temperature: ");  LOG.print(field1); LOG.print("C | ");
+           LOG.print("Humidity: ");     LOG.print(field2); LOG.print("% | ");
+        }
+        if(S1 == DALLAS_SENSOR){
+           postStr +="&field3=";
+           postStr += String(field3);
+           LOG.print("Dallas: ");       LOG.print(field3); LOG.print("C | "); 
+        }
+        if(S3 == LDR_SENSOR){
+           postStr +="&field4=";
+           postStr += String(field4);
+           LOG.print("LDR: ");          LOG.print(field4); LOG.print("lux | ");
+        } 
+        if(S51 == BMP180){
+           postStr +="&field5=";
+           postStr += String(field5);
+           postStr +="&field6=";
+           postStr += String(field6);
+           LOG.print("Pressure: ");     LOG.print(field5); LOG.print("mb | ");
+           LOG.print("BMP180TEMP: ");   LOG.print(field6); LOG.print("C ");
+        }                 
+           postStr += "\r\n\r\n";
+ 
+     client.print("POST /update HTTP/1.1\n"); 
+     client.print("Host: api.thingspeak.com\n"); 
+     client.print("Connection: close\n"); 
+     client.print("X-THINGSPEAKAPIKEY: "+apiKey+"\n"); 
+     client.print("Content-Type: application/x-www-form-urlencoded\n"); 
+     client.print("Content-Length: "); 
+     client.print(postStr.length()); 
+     client.print("\n\n"); 
+     client.print(postStr);
+     
+     LOG.print("-> send to Thingspeak takes: ");
+     LOG.println(millis()-timetosend); 
+  }
+  client.stop();
+  
+}
+
+
+   // ******      PCF8591 Module Analog to Digital test program. *********
+   //Essentially, this tests the I2C communications to the chip.
+   //The chip address is 0x90.
+   //
+   //#include <Wire.h>
+   #define PCF8591 (0x90 >> 1)      // Device address = 0       
+   #define PCF8591_DAC_ENABLE 0x40
+   #define PCF8591_ADC_CH0 0x40
+   #define PCF8591_ADC_CH1 0x41
+   #define PCF8591_ADC_CH2 0x42
+   #define PCF8591_ADC_CH3 0x43
+   byte adc_value;
+   
+   byte getADC(byte config)
+   {
+     Wire.beginTransmission(PCF8591);
+     Wire.write(config);
+     Wire.endTransmission();
+     Wire.requestFrom((int) PCF8591,2);
+     while (Wire.available()) 
+     {
+       adc_value = Wire.read(); //This needs two reads to get the value.
+       adc_value = Wire.read();
+     }
+     return adc_value;
+   }
+//   void setup()
+//   {
+//     Serial.begin(115200);
+//     Wire.begin();
+//     Serial.println("ADC Test");
+//   }
+//   void loop()
+//   {
+//     adc_value = getADC(PCF8591_ADC_CH3); //Channel 3 is the pot
+//     Serial.print(adc_value);
+//     delay(200);
+//   }
+
+#define ADC0 0x00 // control bytes for reading individual ADCs
+#define ADC1 0x01
+#define ADC2 0x02
+#define ADC3 0x03
+byte value0, value1, value2, value3;
+
+void ReadPCF()
+{
+ Wire.beginTransmission(PCF8591); // wake up PCF8591
+ Wire.write(ADC0); // control byte - read ADC0
+ Wire.endTransmission(); // end tranmission
+ Wire.requestFrom(PCF8591, 2);
+ value0=Wire.read();
+ value0=Wire.read();
+ Wire.beginTransmission(PCF8591); // wake up PCF8591
+ Wire.write(ADC1); // control byte - read ADC1
+ Wire.endTransmission(); // end tranmission
+ Wire.requestFrom(PCF8591, 2);
+ value1=Wire.read();
+ value1=Wire.read();
+ Wire.beginTransmission(PCF8591); // wake up PCF8591
+ Wire.write(ADC2); // control byte - read ADC2
+ Wire.endTransmission(); // end tranmission
+ Wire.requestFrom(PCF8591, 2);
+ value2=Wire.read();
+ value2=Wire.read();
+ Wire.beginTransmission(PCF8591); // wake up PCF8591
+ Wire.write(ADC3); // control byte - read ADC3
+ Wire.endTransmission(); // end tranmission
+ Wire.requestFrom(PCF8591, 2);
+ value3=Wire.read();
+ value3=Wire.read();
+ LOG.print(value0); LOG.print(" ");
+ LOG.print(value1); LOG.print(" ");
+ LOG.print(value2); LOG.print(" ");
+ LOG.print(value3); LOG.print(" ");
+ LOG.println();
 }
 
 // ******************************************************************************************************************
