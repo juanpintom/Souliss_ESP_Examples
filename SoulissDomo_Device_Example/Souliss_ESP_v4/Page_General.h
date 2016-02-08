@@ -171,11 +171,13 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="5">Buttons 2 State</option>      
       <option value="6">Relay</option>
       <option value="7">Pulse Output</option>
-      <option value="8">PIR Sensor 1</option>
-      <option value="9">Pressure Sensor</option>
-      <option value="10">Garage Door (UP)</option>
-      <option value="11">Window Curtain (OPEN) </option>
-      <option value="12">220V_Opto</option>
+      <option value="8">Triac</option>
+      <option value="9">PIR Sensor 1</option>
+      <option value="10">Pressure Sensor</option>
+      <option value="11">Garage Door (UP)</option>
+      <option value="12">Window Curtain (OPEN) </option>
+      <option value="13">220V_Opto</option>
+      <option value="14">Oled Display</option>
     </select>
     </td></tr>
   <tr><td>(S5-2) Configuration: </td><td>
@@ -188,11 +190,13 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="5">Buttons 2 State</option>      
       <option value="6">Relay</option>
       <option value="7">Pulse Output</option>
-      <option value="8">PIR Sensor 2</option>
-      <option value="9">Pressure Sensor</option>
-      <option value="10">Garage Door (DOWN)</option>
-      <option value="11">Window Curtain (CLOSE) </option>
-      <option value="12">220V_Relay</option>
+      <option value="8">Triac</option>
+      <option value="9">PIR Sensor 2</option>
+      <option value="10">Pressure Sensor</option>
+      <option value="11">Garage Door (DOWN)</option>
+      <option value="12">Window Curtain (CLOSE) </option>
+      <option value="13">220V_Relay</option>
+      <option value="14">Oled Display</option>
     </select>
     </td></tr>
 
@@ -336,7 +340,7 @@ function getConfig(){
     }
    
   //  BMP180
-    if(S51.value == 9 || S52.value == 9) {
+    if(S51.value == 10 || S52.value == 10) {
       document.getElementById("Altitude").style.display = "block";  //none;  
     } else {
       document.getElementById("Altitude").style.display = "none";  
@@ -352,16 +356,16 @@ function getPIR(sel){
   var S52   = document.getElementById("S52");
   
   if(L1PIR.value == 1 || L2PIR.value == 1 || L3PIR.value == 1) {
-    S51.value = 8;
+    S51.value = 9;
   } else {
-    if(S51.value >= 8){
+    if(S51.value >= 9){
       S51.value = 0;
     }
   }
   if(L1PIR.value == 2 || L2PIR.value == 2 || L3PIR.value == 2) {
-    S52.value = 8;
+    S52.value = 9;
   } else {
-    if(S52.value >= 8){
+    if(S52.value >= 9){
       S52.value = 0;
     }
   } 
@@ -438,8 +442,8 @@ function getComboS41(sel) {
   }
   if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S42").value = sel.value;
-    document.getElementById("S51").value = 10;
-    document.getElementById("S52").value = 10;
+    document.getElementById("S51").value = 11;
+    document.getElementById("S52").value = 11;
   }else if(document.getElementById("S42").value == 6){
     document.getElementById("S42").value = 0;
     document.getElementById("S51").value = 0;
@@ -453,8 +457,8 @@ function getComboS42(sel) {
   }
   if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S41").value = sel.value;
-    document.getElementById("S51").value = 10;
-    document.getElementById("S52").value = 10;
+    document.getElementById("S51").value = 11;
+    document.getElementById("S52").value = 11;
   }else if(document.getElementById("S41").value == 6){
     document.getElementById("S41").value = 0; 
     document.getElementById("S51").value = 0;
@@ -465,14 +469,14 @@ function getComboS42(sel) {
   
 function getComboS51(sel) {
   var value = sel.value;
-  if(value > 8 && value < 13) {
+  if(value > 9 && value < 15) {
       document.getElementById("S52").value = value;
   } else {
-    if(document.getElementById("S52").value > 8 && document.getElementById("S52").value < 13){
+    if(document.getElementById("S52").value > 9 && document.getElementById("S52").value < 15){
       document.getElementById("S52").value = 0;
     }
   }
-  if(value == 10) {  //GARAGE_DOOR
+  if(value == 11) {  //GARAGE_DOOR
     document.getElementById("S41").value = 6;
     document.getElementById("S42").value = 6;
   } else if(document.getElementById("S41").value == 6){
@@ -484,14 +488,14 @@ function getComboS51(sel) {
   
 function getComboS52(sel) {
   var value = sel.value;  
-  if(value > 8 && value < 13) {
+  if(value > 9 && value < 15) {
       document.getElementById("S51").value = value;
   } else {
-    if(document.getElementById("S51").value > 8 && document.getElementById("S51").value < 13){  
+    if(document.getElementById("S51").value > 9 && document.getElementById("S51").value < 15){  
       document.getElementById("S51").value = 0;
     } 
   }
-  if(value == 10) {
+  if(value == 11) {
     document.getElementById("S41").value = 6;
     document.getElementById("S42").value = 6;
   } else if(document.getElementById("S41").value == 6){
@@ -505,7 +509,7 @@ function getUSART(sel){
   if(sel.value == 1){
     document.getElementById("S41").value = 0;   
     document.getElementById("S42").value = 0;
-    if(document.getElementById("S51").value == 10){  //GARAGE_DOOR
+    if(document.getElementById("S51").value == 11){  //GARAGE_DOOR
       document.getElementById("S51").value = 0;
       document.getElementById("S52").value = 0;        
     }

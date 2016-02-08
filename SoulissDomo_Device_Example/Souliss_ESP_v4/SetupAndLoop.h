@@ -79,13 +79,7 @@ void setupGeneral(){
       
     if(L1 == RGB_MODE && L2 == RGB_MODE && L3 == RGB_MODE){
         Set_LED_Strip(LEDRGB);
-    }          
-    if(S51 == RELAY){
-        Set_SimpleLight(RELAY0);
-    }
-    if(S52 == RELAY){
-        Set_SimpleLight(RELAY1);
-    }    
+    }           
   
     if(S3 == LDR_SENSOR){
         Set_T54(LDR);
@@ -111,13 +105,27 @@ void setupGeneral(){
         if(S52 == CAPACITIVE) Set_T51(CAP3);
         if(S41 == CAPACITIVE  || S42 == CAPACITIVE  || S51 == CAPACITIVE  || S52 == CAPACITIVE) Set_T51(THRE);
     }
+    
+    if(S51 == RELAY){
+        Set_SimpleLight(RELAY0);
+    }
+    if(S52 == RELAY){
+        Set_SimpleLight(RELAY1);
+    }   
 //    if(PULSE_OUTPUT){
     if(S51 == PULSE_OUTPUT){
         Set_PulseOutput(PULSE0);  
     }
     if(S52 == PULSE_OUTPUT){
         Set_PulseOutput(PULSE1);  
-    }    
+    }
+    
+    if(S51 == TRIAC){
+        Set_DimmableLight(RELAY0);
+    }
+    if(S52 == TRIAC){
+        Set_DimmableLight(RELAY1);
+    }       
 //    if(GARAGE_DOOR){
     if(S51 == GARAGE_DOOR){
         Set_GarageDoor(T2X);
@@ -131,11 +139,11 @@ void setupGeneral(){
         Set_SimpleLight(OPTO);
     }
 //    if(RELAY || PULSE_OUTPUT || GARAGE_DOOR || WINDOW_CURTAIN){    
-    if(S51 == RELAY || S51 == PULSE_OUTPUT || S51 == GARAGE_DOOR || S51 == WINDOW_CURTAIN){
+    if(S51 == RELAY || S51 == PULSE_OUTPUT || S51 == TRIAC || S51 == GARAGE_DOOR || S51 == WINDOW_CURTAIN){
         digitalWrite(RELAY0P,LOW);
         pinMode(RELAY0P, OUTPUT);
     }
-    if(S52 == RELAY || S52 == PULSE_OUTPUT || S52 == GARAGE_DOOR || S52 == WINDOW_CURTAIN){
+    if(S52 == RELAY || S52 == PULSE_OUTPUT || S52 == TRIAC || S52 == GARAGE_DOOR || S52 == WINDOW_CURTAIN){
         digitalWrite(RELAY1P,LOW);                 
         pinMode(RELAY1P, OUTPUT);
     }
@@ -282,6 +290,16 @@ void fastGeneral(){
                 Logic_SimpleLight(RELAY1);
                 DigOut(RELAY1P, Souliss_T1n_Coil,RELAY1);
             }
+
+            if(S51 == TRIAC){
+                Logic_DimmableLight(RELAY0);
+                analogWrite(RELAY0P, mOutput(RELAY0+1));
+            }
+            if(S52 == TRIAC){
+                Logic_DimmableLight(RELAY1);
+                analogWrite(RELAY1P, mOutput(RELAY1+1));
+            }   
+   
             
 //            if(PWM_MODE || PIR_MODE || ONOFF_MODE || PIR_MODE){
 //                if(button0 && !OPTO_AND_RELAY) LowDigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
@@ -831,6 +849,14 @@ void slowGeneral(){
         if(S52 == RELAY){
             Timer_SimpleLight(RELAY1);
         }
+
+        if(S51 == TRIAC){
+            Timer_DimmableLight(RELAY0);
+        }
+        if(S52 == TRIAC){
+            Timer_DimmableLight(RELAY1);
+        }
+        
         switch (L1) {
           case 1:
             Timer_SimpleLight(LED1);

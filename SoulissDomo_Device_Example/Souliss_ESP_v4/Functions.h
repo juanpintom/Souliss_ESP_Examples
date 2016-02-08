@@ -120,11 +120,13 @@ byte dallas_qty = 1;
 
 #define RELAY             6         
 #define PULSE_OUTPUT      7
-#define PIR               8
-#define BMP180            9
-#define GARAGE_DOOR       10
-#define WINDOW_CURTAIN    11 
-#define OPTO_AND_RELAY    12
+#define TRIAC             8
+#define PIR               9
+#define BMP180            10
+#define GARAGE_DOOR       11
+#define WINDOW_CURTAIN    12 
+#define OPTO_AND_RELAY    13
+#define OLED              14
  
 // Define the hold time of the outputs, by default the timer hold the relays for 16 times, so:
 // 221x10x16ms that is about 35 seconds. Change the parameter inside FAST_x10ms() to change this time.
@@ -239,7 +241,7 @@ void SendEmoncms(String inputstring, byte SLOT){
   }
 }
 
-String apiKey = "***************";
+String apiKey = "xxxxxxxxxxx";
 
 // ThingSpeak API
 const char* serverTS = "api.thingspeak.com";
@@ -342,28 +344,28 @@ void SendThingspeakAll(){
    //Essentially, this tests the I2C communications to the chip.
    //The chip address is 0x90.
    //
-   //#include <Wire.h>
-   #define PCF8591 (0x90 >> 1)      // Device address = 0       
-   #define PCF8591_DAC_ENABLE 0x40
-   #define PCF8591_ADC_CH0 0x40
-   #define PCF8591_ADC_CH1 0x41
-   #define PCF8591_ADC_CH2 0x42
-   #define PCF8591_ADC_CH3 0x43
-   byte adc_value;
-   
-   byte getADC(byte config)
-   {
-     Wire.beginTransmission(PCF8591);
-     Wire.write(config);
-     Wire.endTransmission();
-     Wire.requestFrom((int) PCF8591,2);
-     while (Wire.available()) 
-     {
-       adc_value = Wire.read(); //This needs two reads to get the value.
-       adc_value = Wire.read();
-     }
-     return adc_value;
-   }
+//#include <Wire.h>
+#define PCF8591 (0x90 >> 1)      // Device address = 0       
+#define PCF8591_DAC_ENABLE 0x40
+#define PCF8591_ADC_CH0 0x40
+#define PCF8591_ADC_CH1 0x41
+#define PCF8591_ADC_CH2 0x42
+#define PCF8591_ADC_CH3 0x43
+byte adc_value;
+
+byte getADC(byte config)
+{
+   Wire.beginTransmission(PCF8591);
+   Wire.write(config);
+   Wire.endTransmission();
+   Wire.requestFrom((int) PCF8591,2);
+   while (Wire.available()) 
+ {
+   adc_value = Wire.read(); //This needs two reads to get the value.
+   adc_value = Wire.read();
+ }
+ return adc_value;
+}
 //   void setup()
 //   {
 //     Serial.begin(115200);
@@ -385,35 +387,35 @@ byte value0, value1, value2, value3;
 
 void ReadPCF()
 {
- Wire.beginTransmission(PCF8591); // wake up PCF8591
- Wire.write(ADC0); // control byte - read ADC0
- Wire.endTransmission(); // end tranmission
- Wire.requestFrom(PCF8591, 2);
- value0=Wire.read();
- value0=Wire.read();
- Wire.beginTransmission(PCF8591); // wake up PCF8591
- Wire.write(ADC1); // control byte - read ADC1
- Wire.endTransmission(); // end tranmission
- Wire.requestFrom(PCF8591, 2);
- value1=Wire.read();
- value1=Wire.read();
- Wire.beginTransmission(PCF8591); // wake up PCF8591
- Wire.write(ADC2); // control byte - read ADC2
- Wire.endTransmission(); // end tranmission
- Wire.requestFrom(PCF8591, 2);
- value2=Wire.read();
- value2=Wire.read();
- Wire.beginTransmission(PCF8591); // wake up PCF8591
- Wire.write(ADC3); // control byte - read ADC3
- Wire.endTransmission(); // end tranmission
- Wire.requestFrom(PCF8591, 2);
- value3=Wire.read();
- value3=Wire.read();
- LOG.print(value0); LOG.print(" ");
- LOG.print(value1); LOG.print(" ");
- LOG.print(value2); LOG.print(" ");
- LOG.print(value3); LOG.print(" ");
- LOG.println();
+   Wire.beginTransmission(PCF8591); // wake up PCF8591
+   Wire.write(ADC0); // control byte - read ADC0
+   Wire.endTransmission(); // end tranmission
+   Wire.requestFrom(PCF8591, 2);
+   value0=Wire.read();
+   value0=Wire.read();
+   Wire.beginTransmission(PCF8591); // wake up PCF8591
+   Wire.write(ADC1); // control byte - read ADC1
+   Wire.endTransmission(); // end tranmission
+   Wire.requestFrom(PCF8591, 2);
+   value1=Wire.read();
+   value1=Wire.read();
+   Wire.beginTransmission(PCF8591); // wake up PCF8591
+   Wire.write(ADC2); // control byte - read ADC2
+   Wire.endTransmission(); // end tranmission
+   Wire.requestFrom(PCF8591, 2);
+   value2=Wire.read();
+   value2=Wire.read();
+   Wire.beginTransmission(PCF8591); // wake up PCF8591
+   Wire.write(ADC3); // control byte - read ADC3
+   Wire.endTransmission(); // end tranmission
+   Wire.requestFrom(PCF8591, 2);
+   value3=Wire.read();
+   value3=Wire.read();
+   LOG.print(value0); LOG.print(" ");
+   LOG.print(value1); LOG.print(" ");
+   LOG.print(value2); LOG.print(" ");
+   LOG.print(value3); LOG.print(" ");
+   LOG.println();
 }
 
 // ******************************************************************************************************************
@@ -701,6 +703,16 @@ void SLOT_CONFIG(){
     PULSE1 = NEXTSLOT;
     NEXTSLOT = PULSE1 + 1;
     LOG.print("PULSE1: ");  LOG.println(PULSE1);  
+  }
+  if(S51 == TRIAC){
+    RELAY0 = NEXTSLOT;
+    NEXTSLOT = RELAY0 + 2;
+    LOG.print("TRIAC0: ");  LOG.println(RELAY0);
+  }
+  if(S52 == TRIAC){
+    RELAY1 = NEXTSLOT;
+    NEXTSLOT = RELAY1 + 2;
+    LOG.print("TRIAC1: ");  LOG.println(RELAY1);  
   }
 //  switch (S51) {  
 //        case 6:
@@ -1068,6 +1080,7 @@ void WriteConfig_Slots() {
 void ReadConfig_Slots()
 {
 
+	EEPROM.begin(512);
 	LOG.println(F("Reading Configuration"));
 	cap_thresold = EEPROM.read(STORE_CUSTOM);
 	L1 =        EEPROM.read(STORE_CUSTOM+1);

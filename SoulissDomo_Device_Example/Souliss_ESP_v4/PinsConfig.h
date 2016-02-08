@@ -133,10 +133,10 @@ void PINS_CONFIG(){
 //        CAP0P = 4;//12;
 //        CAP1P = 5;//14;
 //    }
-    if(S51 == RELAY || S51 == PULSE_OUTPUT){
+    if(S51 == RELAY || S51 == PULSE_OUTPUT || S51 == TRIAC){
         RELAY0P = 4;
     }
-    if(S52 == RELAY || S52 == PULSE_OUTPUT){
+    if(S52 == RELAY || S52 == PULSE_OUTPUT || S52 == TRIAC){
         RELAY1P = 5;
     }
     if(S51 == GARAGE_DOOR || S51 == WINDOW_CURTAIN){

@@ -195,10 +195,10 @@ void setup()
 {
     //LOG.begin(115200);
     DEBUG.begin(115200);
-
+    ReadConfig_Slots();
     // **************************************  OLED SETUP *********************
     if(DEBUG_LOG) I2CScanner();
-    OLEDsetup();
+    if(S51 == OLED) OLEDsetup();
     // **************************************  NTP SETUP *********************
     NTPclient.begin("time-a.timefreq.bldrdoc.gov", CET);
     setSyncInterval(SECS_PER_HOUR);
@@ -218,7 +218,8 @@ void setup()
     server.on ( "/general.html", send_general_html  );
     server.on ( "/admin/generalvalues", send_general_configuration_values_html);
 
-    ReadConfig_Slots();
+    //ReadConfig_Slots();
+    EEPROM.begin(512);
     // Read the IP configuration from the EEPROM, if not available start
     // the node as access point
     if(!ReadIPConfiguration()) 
@@ -226,7 +227,7 @@ void setup()
   		// Start the node as access point with a configuration WebServer
   		SetAccessPoint();
   		startWebServer();
-      drawNOWIFI();
+      if(S51 == OLED) drawNOWIFI();
   		// We have nothing more than the WebServer for the configuration
   		// to run, once configured the node will quit this.
   		while(1)
@@ -236,7 +237,7 @@ void setup()
   		}
   
 	  }
-    drawSouliss();
+    if(S51 == OLED) drawSouliss();
     
     if (IsRuntimeGateway())
     {
@@ -305,7 +306,7 @@ void loop()
         UPDATEFAST();   
         FAST_x10ms(10){
             //MQTT_Loop();
-              int remainingTimeBudget = ui.update();
+              if(S51 == OLED) int remainingTimeBudget = ui.update();
               //ReadPCF();
        //  PFC8591 READS
 //              LOG.print("CH0 ");
