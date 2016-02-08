@@ -47,9 +47,6 @@ boolean L1PIREN;
 boolean L2PIREN;
 boolean L3PIREN;
 
-//byte byte0;   //STORE SENSOR CONFIGURATION
-//byte byte1;   //STORE LIGHTS CONFIGURATION
-//byte byte2;   //STORE OTHERS CONFIGURATION
 byte OPTIONS1;   //STORE BOOLEAN OPTIONS
 // BOOLEAN OPTIONS
 boolean usartbridge = false;
@@ -65,30 +62,14 @@ byte cap_thresold;
 int ALTITUDE = 20;
 byte dallas_qty = 1;
 
-
 //S1 DEFINE
 #define DALLAS_SENSOR 1 
-//boolean DALLAS_SENSOR;  
 
 //S2
 #define DHT_SENSOR    1
-//boolean DHT_SENSOR;
 
 //S3
 #define LDR_SENSOR    1
-//boolean LDR_SENSOR;
-
-
-
-
-//LIGHT MODES
-//boolean ONOFF_MODE;
-//boolean PULSE_MODE;
-//boolean PWM_MODE;           
-//boolean PIR_MODE;
-//boolean RGB_MODE;
-//boolean ALARM_MODE;
-//boolean THERMOSTAT_MODE;
 
 #define ONOFF_MODE    1
 #define PWM_MODE      2    
@@ -97,20 +78,6 @@ byte dallas_qty = 1;
 #define PULSE_MODE    5
 
 #define LIGHT_ON_CYCLE 10    		// Light ON for 10 cycles if triggered by a PIR sensor
-
-//Enable this to use PINS 4, 5 for CAPACITIVE BUTTONS, RELAY1 and RELAY2 or on BMP180 pressure sensor (I2C)
-//boolean CAPACITIVE;     
-//boolean BUTTONS;
-//boolean BUTTONS_PULLUP;
-//boolean ALARM_ENDSTOP;
-//boolean BUTTONS_2_STATE;
-//
-//boolean RELAY;          
-//boolean BMP180;
-//boolean PULSE_OUTPUT;
-//boolean GARAGE_DOOR;
-//boolean WINDOW_CURTAIN;
-//boolean OPTO_AND_RELAY; 
 
 #define CAPACITIVE        1     
 #define BUTTONS           2
@@ -241,7 +208,11 @@ void SendEmoncms(String inputstring, byte SLOT){
   }
 }
 
-String apiKey = "xxxxxxxxxxx";
+// ******************************************************************************************************************
+// *************************************************  THINGSPEAK FUNCTION ***************************************************
+// ******************************************************************************************************************
+
+String apiKey = "XXXXXXXXXXXX";
 
 // ThingSpeak API
 const char* serverTS = "api.thingspeak.com";
@@ -366,18 +337,7 @@ byte getADC(byte config)
  }
  return adc_value;
 }
-//   void setup()
-//   {
-//     Serial.begin(115200);
-//     Wire.begin();
-//     Serial.println("ADC Test");
-//   }
-//   void loop()
-//   {
-//     adc_value = getADC(PCF8591_ADC_CH3); //Channel 3 is the pot
-//     Serial.print(adc_value);
-//     delay(200);
-//   }
+
 
 #define ADC0 0x00 // control bytes for reading individual ADCs
 #define ADC1 0x01
@@ -486,12 +446,6 @@ void SLOT_CONFIG(){
       LOG.print("ALARM: "); LOG.println(ALARM);
   }
   
-//  if(ALARM_MODE || ALARM_ENDSTOP){
-//      ALARM = NEXTSLOT;
-//      NEXTSLOT = ALARM + 1;
-//      LOG.print("ALARM: "); LOG.println(ALARM);
-//  }
-  
   switch (S2) {  
         case 0:
             //NONE
@@ -505,14 +459,6 @@ void SLOT_CONFIG(){
             break;
   }
         
-  /*if(DHT_SENSOR){
-      TEMPERATURE = NEXTSLOT;
-      HUMIDITY = NEXTSLOT + 2;
-      NEXTSLOT = HUMIDITY + 2;
-      LOG.print("TEMP: "); LOG.println(TEMPERATURE);  
-      LOG.print("HUMI: "); LOG.println(HUMIDITY);      
-  }*/
-
   if(L1 == ONOFF_MODE || L1 == PIR_MODE || L1 == PULSE_MODE){
         LED1 = NEXTSLOT;
         NEXTSLOT = LED1 + 1;
@@ -549,51 +495,6 @@ void SLOT_CONFIG(){
         DEBUG.print("LEDRGB: "); DEBUG.println(LEDRGB);  
   }
 
-  /*
-  if(ONOFF_MODE){
-      LEDPWM0 = NEXTSLOT;
-      LEDPWM1 = NEXTSLOT + 1;
-      LEDPWM2 = NEXTSLOT + 2;
-      NEXTSLOT = LEDPWM2 + 1;
-      LOG.print("LEDONOFF0: "); LOG.println(LEDPWM0);  
-      LOG.print("LEDONOFF1: "); LOG.println(LEDPWM1);  
-      LOG.print("LEDONOFF2: "); LOG.println(LEDPWM2);       
-  }
-  if(PULSE_MODE){
-      LEDPWM0 = NEXTSLOT;
-      LEDPWM1 = NEXTSLOT + 1;
-      LEDPWM2 = NEXTSLOT + 2;
-      NEXTSLOT = LEDPWM2 + 1;
-      LOG.print("LEDPULSE0: "); LOG.println(LEDPWM0);  
-      LOG.print("LEDPULSE1: "); LOG.println(LEDPWM1);  
-      LOG.print("LEDPULSE2: "); LOG.println(LEDPWM2);       
-  }
-  if(PWM_MODE || PIR_MODE){
-      LEDPWM0 = NEXTSLOT;
-      LEDPWM1 = NEXTSLOT + 2;
-      NEXTSLOT = LEDPWM1 + 2;
-      LOG.print("LEDPWM0: "); LOG.println(LEDPWM0);  
-      LOG.print("LEDPWM1: "); LOG.println(LEDPWM1);  
-  }
-  if(PWM_MODE){
-      LEDPWM2 = NEXTSLOT;
-      NEXTSLOT = LEDPWM2 + 2;
-      LOG.print("LEDPWM2: "); LOG.println(LEDPWM2);     
-  }
-  
-  if(PIR_MODE){
-      LED = NEXTSLOT;
-      NEXTSLOT = LED + 1;
-      LOG.print("LED: "); LOG.println(LED);       
-  }
-  
-  if(RGB_MODE){
-      LEDRGB = NEXTSLOT;
-      NEXTSLOT = LEDRGB + 4;
-      LOG.print("LEDRGB: "); LOG.println(LEDRGB);        
-  }
-  */
-
   switch (S3) {  
         case 0:
             //NONE
@@ -604,12 +505,6 @@ void SLOT_CONFIG(){
             LOG.print("LDR: "); LOG.println(LDR);  
             break;
   }
-  
-  /*if(LDR_SENSOR){
-      LDR = NEXTSLOT;
-      NEXTSLOT = LDR + 2;
-      LOG.print("LDR: "); LOG.println(LDR);        
-  }*/
 
   switch (S1) {  
         case 0:
@@ -621,13 +516,6 @@ void SLOT_CONFIG(){
             LOG.print("DALLAS: "); LOG.println(DALLAS);  
             break;
   }
-  /*
-  if(DALLAS_SENSOR){
-      DALLAS = NEXTSLOT;
-      NEXTSLOT = DALLAS + (2 * dallas_qty);
-      LOG.print("DALLAS: "); LOG.println(DALLAS);
-            
-  }*/
   
   //GPIO 4-5 SLOT DEFINITIONS
 
@@ -658,32 +546,7 @@ void SLOT_CONFIG(){
         LOG.print("THRE: "); LOG.println(THRE);
       }  
   }
-//  switch (S4) {  
-//        case 0:
-//            //NONE
-//            break;
-//        case 1:
-//            
-//            break;
-//        case 2:
-//            CAP0 = NEXTSLOT; 
-//            CAP1 = NEXTSLOT + 2;
-//            THRE = NEXTSLOT + 4;
-//            NEXTSLOT = THRE + 2;
-//            LOG.print("CAP0: "); LOG.println(CAP0);   
-//            LOG.print("CAP1: "); LOG.println(CAP1);             
-//            LOG.print("THRE: "); LOG.println(THRE);                   
-//            break;            
-//  }
-  /*if(CAPACITIVE && DEBUG_CAPSENSE){
-      CAP0 = NEXTSLOT; 
-      CAP1 = NEXTSLOT + 2;
-      THRE = NEXTSLOT + 4;
-      NEXTSLOT = THRE + 2;
-      LOG.print("CAP0: "); LOG.println(CAP0);   
-      LOG.print("CAP1: "); LOG.println(CAP1);             
-      LOG.print("THRE: "); LOG.println(THRE);                   
-  }*/
+
   if(S51 == RELAY){
     RELAY0 = NEXTSLOT;
     NEXTSLOT = RELAY0 + 1;
@@ -714,23 +577,7 @@ void SLOT_CONFIG(){
     NEXTSLOT = RELAY1 + 2;
     LOG.print("TRIAC1: ");  LOG.println(RELAY1);  
   }
-//  switch (S51) {  
-//        case 6:
-//            RELAY0 = NEXTSLOT;
-//            RELAY1 = NEXTSLOT + 1;
-//            NEXTSLOT = RELAY1 + 1;
-//            LOG.print("RELAY0: "); LOG.println(RELAY0);   
-//            LOG.print("RELAY1: "); LOG.println(RELAY1);       
-//            break;
-//        case 7:
-//            PULSE0 = NEXTSLOT;
-//            PULSE1 = PULSE0 + 1;
-//            NEXTSLOT = PULSE1 + 1;
-//            LOG.print("PULSE0: ");  LOG.println(PULSE0); 
-//            LOG.print("PULSE1: ");  LOG.println(PULSE1);                   
-//            break;            
-//                     
-//  }
+
   switch (S52) {       
         case 9:
             PRESSURE0 = NEXTSLOT;  
@@ -756,208 +603,10 @@ void SLOT_CONFIG(){
             break;                       
   }
 
-
-  
-  /*
-  if(RELAY){
-      RELAY0 = NEXTSLOT;
-      RELAY1 = NEXTSLOT + 1;
-      NEXTSLOT = RELAY1 + 1;
-      LOG.print("RELAY0: "); LOG.println(RELAY0);   
-      LOG.print("RELAY1: "); LOG.println(RELAY1);         
-  }
-  
-  if(BMP180){
-      PRESSURE0 = NEXTSLOT;  
-      BMP180TEMP = NEXTSLOT + 2;
-      NEXTSLOT = BMP180TEMP + 2;
-      LOG.print("PRESSURE0: ");  LOG.println(PRESSURE0);   
-      LOG.print("BMP180TEMP: "); LOG.println(BMP180TEMP);       
-  } 
-  if(PULSE_OUTPUT){
-      PULSE0 = NEXTSLOT;
-      PULSE1 = PULSE0 + 1;
-      NEXTSLOT = PULSE1 + 1;
-      LOG.print("PULSE0: ");  LOG.println(PULSE0); 
-      LOG.print("PULSE1: ");  LOG.println(PULSE1); 
-  }
-  if(GARAGE_DOOR || WINDOW_CURTAIN){
-      T2X = NEXTSLOT;
-      NEXTSLOT = T2X + 1;
-      LOG.print("T2X: ");  LOG.println(T2X); 
-  }
-  if(OPTO_AND_RELAY){
-      OPTO = NEXTSLOT;
-      NEXTSLOT = OPTO + 1;
-      LOG.print("OPTO: ");  LOG.println(OPTO); 
-  }*/
-  
 // ************************************** END OF SLOT_CONFIG() **************************
 }
 
-// ******************************************************************************************************************
-// ***********************************************  EEPROM CONFIG ***************************************************
-// ******************************************************************************************************************
-//
-//bool EEPROM_CONFIG(){
-//    
-//    //EEPROM CONFIGURATION READ.
-//    DHT_SENSOR = false;
-//    LDR_SENSOR = false;
-//    DALLAS_SENSOR = false;
-//    // DHT LDR DALLAS OPTIONS:
-//    switch (byte0) {  
-//        case 0:
-//            //NONE
-//            break;
-//        case 1:
-//            DHT_SENSOR = true;
-//            break;
-//        case 2:
-//            LDR_SENSOR = true;
-//            break;
-//        case 3:
-//            DALLAS_SENSOR = true;  
-//            break;
-//        case 4:
-//            DHT_SENSOR = true;
-//            LDR_SENSOR = true;
-//            break;
-//        case 5:
-//            DHT_SENSOR = true;
-//            DALLAS_SENSOR = true;  
-//            break;
-//        case 6:
-//            LDR_SENSOR = true;
-//            DALLAS_SENSOR = true;  
-//            break;
-//        case 7:
-//            DHT_SENSOR = true;
-//            LDR_SENSOR = true;
-//            DALLAS_SENSOR = true;  
-//            break;            
-//    }
-//    
-//    LOG.print(DHT_SENSOR);
-//    LOG.print(LDR_SENSOR);
-//    LOG.print(DALLAS_SENSOR);
-//    LOG.print(" DLD (DHT-LDR-DALLAS)");
-//    LOG.print("\r\n");
-//    
-//    // PWM PIR RGB OPTIONS:
-//    //switch (configuration[EEPROM_START+1]) {
-//    ONOFF_MODE = false;
-//    PULSE_MODE = false;
-//    PWM_MODE = false;
-//    PIR_MODE = false;
-//    RGB_MODE = false;
-//    ALARM_MODE = false;  
-//    switch (byte1) {
-//        case 0:
-//            //NONE
-//            break;
-//		    case 1:
-//            ONOFF_MODE = true;
-//            break;
-//        case 2:
-//            PULSE_MODE = true;
-//            break;	
-//        case 3:
-//            PWM_MODE = true;
-//            break;
-//        case 4:
-//            PIR_MODE = true;
-//            break;
-//        case 5:
-//            RGB_MODE = true;
-//            break;
-//        case 6:
-//            PIR_MODE = true;
-//            ALARM_MODE = true;
-//            break;   
-//    }
-//	LOG.print(ONOFF_MODE);
-//    LOG.print(PWM_MODE);
-//    LOG.print(PIR_MODE);
-//    LOG.print(RGB_MODE);
-//    LOG.print(ALARM_MODE);
-//    LOG.print(THERMOSTAT_MODE);
-//    LOG.print(" OPPRAT (ONOFF-PWM-PIR-RGB-ALARM-THERMOSTAT)");
-//    LOG.print("\r\n");
-//    
-//    // CAPACITIVE RELAY BMP180 OPTIONS
-//    //switch (configuration[EEPROM_START+2]) {
-//    CAPACITIVE = false;
-//    RELAY = false;
-//    BMP180 = false;
-//    DEBUG_CAPSENSE = false;
-//    BUTTONS = false;
-//    BUTTONS_PULLUP = false;
-//    ALARM_ENDSTOP = false;
-//    BUTTONS_2_STATE = false;
-//    PULSE_OUTPUT = false;
-//    GARAGE_DOOR = false;
-//    WINDOW_CURTAIN = false;
-//    OPTO_AND_RELAY = false;
-//    LOG.print("BYTE2: ");   
-//    switch (byte2) { 
-//        case 0:
-//            DEBUG.print("NONE"); //NONE
-//            break;
-//        case 1:
-//            CAPACITIVE = true;
-//            DEBUG.print("CAPACITIVE");
-//            break;
-//        case 2:
-//            RELAY = true;
-//            DEBUG.print("RELAY");
-//            break;
-//        case 3:
-//	    	    BMP180 = true;
-//            DEBUG.print("BMP180");
-//            break;
-//        case 4:
-//            CAPACITIVE = true;
-//            DEBUG_CAPSENSE = true;
-//            DEBUG.print("CAPACITIVE /W DEBUG");
-//            break;    
-//        case 5:
-//            BUTTONS = true;
-//            DEBUG.print("BUTTONS");
-//            break; 
-//        case 6:
-//            BUTTONS_PULLUP = true;
-//            DEBUG.print("BUTTONS_PULLUP");
-//            break; 
-//        case 7:
-//            ALARM_ENDSTOP = true;
-//            DEBUG.print("ALARM_ENDSTOP");
-//            break; 
-//        case 8:
-//            BUTTONS_2_STATE = true;
-//            DEBUG.print("BUTTONS_2_STATE");
-//            break;
-//        case 9:
-//            PULSE_OUTPUT = true;
-//            DEBUG.print("PULSE_OUTPUT");
-//            break;
-//        case 10:            
-//            GARAGE_DOOR = true;
-//            DEBUG.print("GARAGE_DOOR");
-//            break;
-//        case 11:            
-//            WINDOW_CURTAIN = true;
-//            DEBUG.print("WINDOW_CURTAIN");
-//            break;
-//        case 12:            
-//            OPTO_AND_RELAY = true;
-//            DEBUG.print("220V_OPTO_AND_RELAY");    
-//            break;   
-//    }
-//    LOG.println("");
-//    return 1;
-//
-//}
+
 
 void WriteConfig_Slots() {
   LOG.println("Writing Config");

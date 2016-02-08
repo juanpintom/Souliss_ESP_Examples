@@ -28,7 +28,6 @@ void setupGeneral(){
     }
     
 //**************************** SETUP SLOTS *****************************
-//    if(DHT_SENSOR){
     if(S2 == DHT_SENSOR){
         Set_Temperature(TEMPERATURE);
         Set_Humidity(HUMIDITY);
@@ -97,7 +96,6 @@ void setupGeneral(){
         Set_Temperature(BMP180TEMP);
     }
     
-//    if(CAPACITIVE && DEBUG_CAPSENSE){
     if(cap_debug){
         if(S41 == CAPACITIVE) Set_T51(CAP0);
         if(S42 == CAPACITIVE) Set_T51(CAP1);
@@ -112,7 +110,7 @@ void setupGeneral(){
     if(S52 == RELAY){
         Set_SimpleLight(RELAY1);
     }   
-//    if(PULSE_OUTPUT){
+    
     if(S51 == PULSE_OUTPUT){
         Set_PulseOutput(PULSE0);  
     }
@@ -126,19 +124,19 @@ void setupGeneral(){
     if(S52 == TRIAC){
         Set_DimmableLight(RELAY1);
     }       
-//    if(GARAGE_DOOR){
+
     if(S51 == GARAGE_DOOR){
         Set_GarageDoor(T2X);
     }
-//    if(WINDOW_CURTAIN){
+
     if(S51 == WINDOW_CURTAIN){
         Set_Windows(T2X);
     }
-//    if(OPTO_AND_RELAY){
+
     if(S51 == OPTO_AND_RELAY){
         Set_SimpleLight(OPTO);
     }
-//    if(RELAY || PULSE_OUTPUT || GARAGE_DOOR || WINDOW_CURTAIN){    
+   
     if(S51 == RELAY || S51 == PULSE_OUTPUT || S51 == TRIAC || S51 == GARAGE_DOOR || S51 == WINDOW_CURTAIN){
         digitalWrite(RELAY0P,LOW);
         pinMode(RELAY0P, OUTPUT);
@@ -147,20 +145,6 @@ void setupGeneral(){
         digitalWrite(RELAY1P,LOW);                 
         pinMode(RELAY1P, OUTPUT);
     }
-         
-//    if(ONOFF_MODE || PULSE_MODE){
-//        pinMode(LEDPWMP0, OUTPUT);
-//        pinMode(LEDPWMP1, OUTPUT);        
-//        pinMode(LEDPWMP2, OUTPUT);        
-//    }
-//    if(PWM_MODE || PIR_MODE){
-//        pinMode(LEDPWMP0, OUTPUT);
-//        pinMode(LEDPWMP1, OUTPUT);        
-//    }
-//    
-//    if(PWM_MODE){
-//        pinMode(LEDPWMP2, OUTPUT);
-//    }
 
     if(L1 == ONOFF_MODE || L1 == PWM_MODE || L1 == RGB_MODE || L1 == PIR_MODE || L1 == PULSE_MODE ){
         pinMode(LEDPWMP0, OUTPUT);
@@ -171,16 +155,6 @@ void setupGeneral(){
     if(L3 == ONOFF_MODE || L3 == PWM_MODE || L3 == RGB_MODE || L3 == PIR_MODE || L3 == PULSE_MODE ){        
         pinMode(LEDPWMP2, OUTPUT);
     }  
-             
-//    if(PIR_MODE){
-//        pinMode(LEDP, OUTPUT);
-//        digitalWrite(LEDP,LOW);
-        
-        //AutoMode Enabled at Start
-//        SetInput(LED, Souliss_T1n_AutoCmd);
-//        Logic_AutoLight(LED);
-//        nDigOut(LEDP, Souliss_T1n_Coil, LED);        
-//    }
 
     if(L1 == PIR_MODE){
         if(L1PIR == 0)  pinMode(PIRP1, INPUT);
@@ -207,14 +181,12 @@ void setupGeneral(){
         nDigOut(LEDPWMP2, Souliss_T1n_Coil, LED3);        
     }
     
-//    if(RGB_MODE){
     if(L1 == RGB_MODE && L2 == RGB_MODE && L3 == RGB_MODE){
         pinMode(LEDRP, OUTPUT);
         pinMode(LEDGP, OUTPUT);
         pinMode(LEDBP, OUTPUT);
     }
 
-//    if(BUTTONS || BUTTONS_2_STATE){
     if(S41 == BUTTONS || S41 == BUTTONS_2_STATE){
         pinMode(BUT0P, INPUT);
     }
@@ -227,7 +199,7 @@ void setupGeneral(){
     if(S52 == BUTTONS || S52 == BUTTONS_2_STATE){
         pinMode(BUT3P, INPUT);
     }       
-//    if(BUTTONS_PULLUP || ALARM_ENDSTOP){
+
     if(S41 == BUTTONS_PULLUP || S41 == ALARM_ENDSTOP){
         pinMode(BUT0P, INPUT_PULLUP);
     }
@@ -240,14 +212,13 @@ void setupGeneral(){
     if(S52 == BUTTONS_PULLUP || S52 == ALARM_ENDSTOP){
         pinMode(BUT3P, INPUT_PULLUP);
     }
-//    if(OPTO_AND_RELAY){
+
     if(S51 == OPTO_AND_RELAY){
         pinMode(BUT0P, INPUT);
         digitalWrite(RELAY1P,LOW);                 
         pinMode(RELAY1P, OUTPUT);
     }
     
-//    if(BMP180){
     if(S51 == BMP180){
         //Wire.begin(SDAP,SCLP);
         Wire.begin(5,4);
@@ -264,7 +235,6 @@ void setupGeneral(){
     
     button0 = true;
     //pinMode(0, INPUT);
-    //RoutingTable(0xAB04, 0xCE00, 0);
 
 }
 
@@ -281,7 +251,6 @@ void fastGeneral(){
       
       FAST_50ms() {   // We process the logic and relevant input and output every 50 milliseconds
 
-//            if(RELAY){
             if(S51 == RELAY){
                 Logic_SimpleLight(RELAY0);
                 DigOut(RELAY0P, Souliss_T1n_Coil,RELAY0);
@@ -299,25 +268,7 @@ void fastGeneral(){
                 Logic_DimmableLight(RELAY1);
                 analogWrite(RELAY1P, mOutput(RELAY1+1));
             }   
-   
-            
-//            if(PWM_MODE || PIR_MODE || ONOFF_MODE || PIR_MODE){
-//                if(button0 && !OPTO_AND_RELAY) LowDigIn(0, Souliss_T1n_ToggleCmd, LEDPWM2);
-//                if(BUTTONS){
-//                    DigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDPWM0);
-//                    DigIn(BUT1P, Souliss_T1n_ToggleCmd, LEDPWM1);
-//                }
-//                if(BUTTONS_PULLUP){
-//                    LowDigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDPWM0);
-//                    LowDigIn(BUT1P, Souliss_T1n_ToggleCmd, LEDPWM1);
-//                }
-//                if(BUTTONS_2_STATE){
-//                    DigIn2State(BUT0P, Souliss_T1n_OnCmd, Souliss_T1n_OffCmd, LEDPWM0);
-//                    DigIn2State(BUT1P, Souliss_T1n_OnCmd, Souliss_T1n_OffCmd, LEDPWM1);
-//                }
-//            }
 
-       
             if(L1 == PWM_MODE || L1 == PIR_MODE || L1 == ONOFF_MODE || L1 == PULSE_MODE){
                 if(S41 == BUTTONS){
                     DigIn(BUT0P, Souliss_T1n_ToggleCmd, LED1);
@@ -378,20 +329,6 @@ void fastGeneral(){
             }             
       // **********  FALTA!!! BOTONES EN S52 ********  NO SE QUE FUNCION DARLE *********
 
-                         
-//			      if(ONOFF_MODE){
-//                if(IR_ENABLE){
-//                   irButtons(ir_ONOFF);
-//                }
-//                
-//                Logic_SimpleLight(LEDPWM0);
-//                Logic_SimpleLight(LEDPWM1);
-//                Logic_SimpleLight(LEDPWM2);
-//                
-//                DigOut(LEDPWMP0, Souliss_T1n_Coil,LEDPWM0);
-//                DigOut(LEDPWMP1, Souliss_T1n_Coil,LEDPWM1);
-//                DigOut(LEDPWMP2, Souliss_T1n_Coil,LEDPWM2);
-//            }
             if(L1 == ONOFF_MODE || L2 == ONOFF_MODE || L3 == ONOFF_MODE){
                 if(IR_ENABLE){
                    irButtons(ir_ONOFF);
@@ -445,15 +382,6 @@ void fastGeneral(){
                   nDigOut(LEDPWMP2, Souliss_T1n_Coil,LED3);
                   break; 
             }  
-                      
-//            if(L1 == PIR_MODE  ||  L2 == PIR_MODE  ||  L3 == PIR_MODE){
-//              if(ALARM_MODE && mOutput(ALARM) == Souliss_T4n_Antitheft ){   //  IF Alarm is Armed
-//                  if(L1PIR == 1 || L2PIR == 1 || L3PIR == 1) 
-//                       DigIn(PIRP1,Souliss_T4n_Alarm,ALARM);     //  Handle the PIR to the Antitheft  
-//                  if(L1PIR == 2 || L2PIR == 2 || L3PIR == 2)
-//                       DigIn(PIRP2,Souliss_T4n_Alarm,ALARM);  
-//              }
-//            }
 
             if(L1 == PIR_MODE || L2 == PIR_MODE || L3 == PIR_MODE){
               if(ALARM_MODE && mOutput(ALARM) == Souliss_T4n_Antitheft ){   //  IF Alarm is Armed
@@ -505,10 +433,6 @@ void fastGeneral(){
               }              
             }            
             
-//            if(S4 == ALARM_ENDSTOP && mOutput(ALARM) == Souliss_T4n_Antitheft){
-//                LowDigIn(BUT0P, Souliss_T4n_Alarm, ALARM);                  //  Handle the Endstop to the Antitheft  
-//                LowDigIn(BUT1P, Souliss_T4n_Alarm, ALARM);                  //  Handle the Endstop to the Antitheft
-//            }
             if(ALARM_MODE || S41 == ALARM_ENDSTOP || S42 == ALARM_ENDSTOP || S51 == ALARM_ENDSTOP || S52 == ALARM_ENDSTOP) {
                 if(mOutput(ALARM) == Souliss_T4n_Antitheft){
                   if(S41 == ALARM_ENDSTOP) {
@@ -526,75 +450,6 @@ void fastGeneral(){
                 }
                 Logic_Antitheft_Main(ALARM);
             }
-
-
-//            if(PWM_MODE || PIR_MODE){
-//                if(CAPACITIVE){
-//                    Souliss_CapSense(LEDPWM0,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, CAP0P, cap_thresold, 1500);
-//                    Souliss_CapSense(LEDPWM1,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, CAP1P, cap_thresold, 1500);
-//                    if(DEBUG_CAPSENSE_ALL) LOG.println("");
-//                }  
-//                
-//                Logic_DimmableLight(LEDPWM0);
-//                analogWrite(LEDPWMP0, mOutput(LEDPWM0+1));                
-//                
-//                Logic_DimmableLight(LEDPWM1); 
-//                analogWrite(LEDPWMP1, mOutput(LEDPWM1+1));
-//            }
-            
-//            if( ALARM_ENDSTOP && mOutput(ALARM) == Souliss_T4n_Antitheft ){   //  IF Alarm is Armed
-//                LowDigIn(BUT0P, Souliss_T4n_Alarm, ALARM);                  //  Handle the Endstop to the Antitheft  
-//                LowDigIn(BUT1P, Souliss_T4n_Alarm, ALARM);                  //  Handle the Endstop to the Antitheft
-//            }
-//            
-//            if(PIR_MODE){
-//                if( ALARM_MODE && mOutput(ALARM) == Souliss_T4n_Antitheft ){   //  IF Alarm is Armed
-//                   DigIn(PIRP,Souliss_T4n_Alarm,ALARM);                        //  Handle the PIR to the Antitheft               
-//                }else {                                                        //  IF Alarm isnt Armed
-//                   DigIn(PIRP,LIGHT_ON_CYCLE+1,LED);                           //  Handle the PIR to the Autolight    
-//                }
-//                
-//                if(ALARM_MODE || ALARM_ENDSTOP) {
-//                  Logic_Antitheft_Main(ALARM);
-//                }
-//               
-//                Logic_AutoLight(LED);
-//                
-//                nDigOut(LEDP, Souliss_T1n_Coil,LED);
-//            }
-//            
-//            if(PWM_MODE){
-//
-//                if(IR_ENABLE){
-//                  irButtons(ir_PWM);
-//                }
-//                Logic_DimmableLight(LEDPWM2);                        
-//                analogWrite(LEDPWMP2, mOutput(LEDPWM2+1));
-//            }
-            
-//            if(RGB_MODE){
-//                if(button0 && !OPTO_AND_RELAY) LowDigIn(0, Souliss_T1n_ToggleCmd, LEDRGB);
-//                if(CAPACITIVE){
-//                    Souliss_CapSense(LEDRGB,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch,CAP0P, cap_thresold, 1500);
-//                    Souliss_CapSense(LEDRGB,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch,CAP1P, cap_thresold, 1500);
-//                } 
-//                if(BUTTONS){
-//                    DigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDRGB);
-//                    DigIn(BUT1P, Souliss_T1n_BrightSwitch, LEDRGB);
-//                }
-//                if(BUTTONS_PULLUP){
-//                    LowDigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDRGB);
-//                    LowDigIn(BUT1P, Souliss_T1n_BrightSwitch, LEDRGB);
-//                }
-//                if(IR_ENABLE){
-//                    irButtons(ir_RGB);
-//                }
-//                Logic_LED_Strip(LEDRGB);
-//
-//                analogWrite(LEDRP, mOutput(LEDRGB+1));
-//                analogWrite(LEDGP, mOutput(LEDRGB+2));
-//                analogWrite(LEDBP, mOutput(LEDRGB+3));
-//            }
             
             if(L1 == RGB_MODE && L2 == RGB_MODE && L3 == RGB_MODE){
                 if(button0) LowDigIn(0, Souliss_T1n_ToggleCmd, LEDRGB);
@@ -648,17 +503,6 @@ void fastGeneral(){
                 analogWrite(LEDGP, mOutput(LEDRGB+2));
                 analogWrite(LEDBP, mOutput(LEDRGB+3));       
             } 
-//            if(THERMOSTAT_MODE){
-//                Logic_Thermostat(THERMOSTAT);
-//            
-//                // Start the heater and the fans
-//                nDigOut(THERM_HEATERP, Souliss_T3n_HeatingOn, THERMOSTAT);   // Heater
-//                nDigOut(THERM_FAN1P, Souliss_T3n_FanOn1   , THERMOSTAT);   // Fan1
-//                nDigOut(THERM_FAN2P, Souliss_T3n_FanOn2   , THERMOSTAT);   // Fan2
-//                nDigOut(THERM_FAN3P, Souliss_T3n_FanOn3   , THERMOSTAT);   // Fan3
-//                
-//                
-//            }
            
             if(S51 == OPTO_AND_RELAY){
                 //CODE MISSING get from here:
@@ -671,7 +515,6 @@ void fastGeneral(){
         
         FAST_110ms(){
                     
-//          if(CAPACITIVE && DEBUG_CAPSENSE){
           if(cap_debug){
             if(S41 == CAPACITIVE){
               temp = readCapacitivePin(BUT0P);
@@ -696,8 +539,7 @@ void fastGeneral(){
           }          
         }
 
-        FAST_510ms(){
-//           if(CAPACITIVE && DEBUG_CAPSENSE){  
+        FAST_510ms(){ 
            if(cap_debug){          
               if(S41 == CAPACITIVE) Read_T51(CAP0);
               if(S42 == CAPACITIVE) Read_T51(CAP1);
@@ -706,7 +548,6 @@ void fastGeneral(){
               if(S41 == CAPACITIVE || S42 == CAPACITIVE || S51 == CAPACITIVE || S52 == CAPACITIVE) Read_T51(THRE);
            }
            
-//           if(GARAGE_DOOR){
            if(S51 == GARAGE_DOOR){
                 //*** ENDSTOPS TEST MISSING ***
                 LowDigIn(BUT0P, Souliss_T2n_LimSwitch_Open,  T2X);
@@ -715,7 +556,7 @@ void fastGeneral(){
                 DigOut(RELAY0P, Souliss_T2n_Coil_Open,  T2X);    
                 DigOut(RELAY1P, Souliss_T2n_Coil_Close, T2X);                
             }
-//            if(WINDOW_CURTAIN){
+
             if(S51 == WINDOW_CURTAIN){
                 Logic_Windows(T2X);
                 DigOut(RELAY0P, Souliss_T2n_Coil_Open,  T2X);    
@@ -724,15 +565,6 @@ void fastGeneral(){
         }
         FAST_x10ms(PULSE_TIMER/10){
             
-//            if(PULSE_MODE){
-//                Logic_PulseOutput(LEDPWM0);
-//                Logic_PulseOutput(LEDPWM1);
-//                Logic_PulseOutput(LEDPWM2);
-//                
-//                DigOut(LEDPWMP0, Souliss_T1n_Coil,LEDPWM0);
-//                DigOut(LEDPWMP1, Souliss_T1n_Coil,LEDPWM1);
-//                DigOut(LEDPWMP2, Souliss_T1n_Coil,LEDPWM2);                          
-//            }
             if(L1 == PULSE_MODE){
                 Logic_PulseOutput(LED1);
                 DigOut(LEDPWMP0, Souliss_T1n_Coil,LED1);            
@@ -746,8 +578,6 @@ void fastGeneral(){
                 DigOut(LEDPWMP2, Souliss_T1n_Coil,LED3);              
             }                        
 
-            
-//            if(PULSE_OUTPUT){
             if(S51 == PULSE_OUTPUT){
                 Logic_PulseOutput(PULSE0);
                 DigOut(RELAY0P, Souliss_T1n_Coil,PULSE0);     
@@ -758,7 +588,7 @@ void fastGeneral(){
             }
         }
         FAST_9110ms()    {
-//            if(DALLAS){ 
+
             if(S1 == DALLAS_SENSOR){ 
                   // Acquire temperature from the microcontroller ADC
                   sensors.requestTemperatures(); //Prepara el sensor para la lectura
@@ -772,9 +602,6 @@ void fastGeneral(){
                       //String stringDallas = "Dallas_sensor_";
                       //stringDallas += i;
                       //if(Send_Emon) SendEmoncms(stringDallas, DALLAS + (i*2));
-//                      if(THERMOSTAT_MODE && i==0){
-//                         Souliss_ImportAnalog(memory_map, THERMOSTAT+1, &dallas);  //IMPORTED FROM FIRST DALLAS SENSOR FOR NOW     
-//                      }
                   }
                   
             } 
@@ -782,8 +609,6 @@ void fastGeneral(){
         }
         FAST_2110ms()
         {
-            
-//            if(DHT_SENSOR){
             if(S2 == DHT_SENSOR){
                   if( Logic_Temperature(TEMPERATURE) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
                   if( Logic_Humidity(HUMIDITY) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("DHT_Hum_Sensor", HUMIDITY);
@@ -793,12 +618,10 @@ void fastGeneral(){
                   
             }
             
-//            if(LDR_SENSOR){
             if(S3 == LDR_SENSOR){
                   if( Logic_T54(LDR) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("Lux_Sensor", LDR);
             }
             
-//            if(DALLAS_SENSOR){
             if(S1 == DALLAS_SENSOR){
             	for(int i=0; i < dallas_qty; i++){
                   String stringDallas = "Dallas_sensor_";
@@ -807,7 +630,6 @@ void fastGeneral(){
             	}
             }                  
             
-//            if(BMP180){
             if(S51 == BMP180){
                   if( Logic_Pressure(PRESSURE0) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("BMP180_Pressure", PRESSURE0); 
                   if( Logic_Temperature(BMP180TEMP) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("BMP180_Temp", BMP180TEMP);   
@@ -816,7 +638,6 @@ void fastGeneral(){
         
         FAST_x10ms(999)
         { 
-//            if(LDR_SENSOR){
             if(S3 == LDR_SENSOR){
                 float ldr_read = Souliss_GetLux(in, out, SIZEOF)*10.0;  //ORIGINAL
                 if(DEBUG_GETLUX){
@@ -829,14 +650,11 @@ void fastGeneral(){
             }
         }
         FAST_x10ms(WINDOW_TIMER) { 
-//            if(WINDOW_CURTAIN){
             if(S51 == WINDOW_CURTAIN){
                 Timer_Windows(T2X);               
             }
         }
-        
-
-
+    
 }
 
 void slowGeneral(){

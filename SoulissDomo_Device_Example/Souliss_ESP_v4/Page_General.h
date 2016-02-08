@@ -263,6 +263,28 @@ var myVar = setInterval(myTimer, 1000);
 function myTimer() {
     getConfig();
 }
+  
+    var ONOFF_MODE   = 1;
+    var PWM_MODE     = 2;    
+    var RGB_MODE     = 3;
+    var PIR_MODE     = 4;
+    var PULSE_MODE   = 5;
+
+    var CAPACITIVE       = 1;     
+    var BUTTONS          = 2;
+    var BUTTONS_PULLUP   = 3;
+    var ALARM_ENDSTOP    = 4;
+    var BUTTONS_2_STATE  = 5;  
+    var RELAY            = 6;         
+    var PULSE_OUTPUT     = 7;
+    var TRIAC            = 8;
+    var PIR              = 9;
+    var BMP180           = 10;
+    var GARAGE_DOOR      = 11;
+    var WINDOW_CURTAIN   = 12;
+    var OPTO_AND_RELAY   = 13;
+    var OLED             = 14;
+  
 function getConfig(){
     var L1 = document.getElementById("L1");
     var L2 = document.getElementById("L2");
@@ -280,32 +302,32 @@ function getConfig(){
     
     document.getElementById("usart").style.display = "none";
   //  ALARM
-    if(L1.value == 4 || L2.value == 4 || L3.value == 4 || S41.value == 4 || S42.value == 4 || S51.value == 4 || S52.value == 4){
+    if(L1.value == PIR_MODE || L2.value == PIR_MODE || L3.value == PIR_MODE || S41.value == ALARM_ENDSTOP || S42.value == ALARM_ENDSTOP || S51.value == ALARM_ENDSTOP || S52.value == ALARM_ENDSTOP){
       document.getElementById("ALARM_TD").style.display = "block";  //none;  
     }else{
       document.getElementById("ALARM_TD").style.display = "none";  //none;  
       document.getElementById("ALARM_MODE").value = 0;  
     }
-    if(S41.value == 4 || S42.value == 4 || S51.value == 4 || S52.value == 4){
+    if(S41.value == ALARM_ENDSTOP || S42.value == ALARM_ENDSTOP || S51.value == ALARM_ENDSTOP || S52.value == ALARM_ENDSTOP){
       document.getElementById("ALARM_MODE").value = 1;    
     }
   
   // PIR SENSORS
-    if(L1.value == 4){
+    if(L1.value == PIR_MODE){
       document.getElementById("PIR1").style.display = "block";  //none;
       getPIR(L1PIR);
     }else{
       document.getElementById("PIR1").style.display = "none";  //none;
       document.getElementById("L1PIR").value = 0;
     }
-    if(L2.value == 4){
+    if(L2.value == PIR_MODE){
       document.getElementById("PIR2").style.display = "block";  //none; 
       getPIR(L2PIR);
     }else{
       document.getElementById("PIR2").style.display = "none";  //none;
       document.getElementById("L2PIR").value = 0;
     }
-    if(L3.value == 4){
+    if(L3.value == PIR_MODE){
       document.getElementById("PIR3").style.display = "block";  //none;
       getPIR(L3PIR);
     }else{
@@ -333,14 +355,14 @@ function getConfig(){
     } 
     
   //  CAPACITIVE    
-    if(S41.value == 1 || S42.value == 1 || S51.value == 1 || S52.value == 1) {
+    if(S41.value == CAPACITIVE || S42.value == CAPACITIVE || S51.value == CAPACITIVE || S52.value == CAPACITIVE) {
        document.getElementById("Thresold").style.display = "block";  //none;  
     } else { 
        document.getElementById("Thresold").style.display = "none"; 
     }
    
   //  BMP180
-    if(S51.value == 10 || S52.value == 10) {
+    if(S51.value == BMP180 || S52.value == BMP180) {
       document.getElementById("Altitude").style.display = "block";  //none;  
     } else {
       document.getElementById("Altitude").style.display = "none";  
@@ -356,16 +378,16 @@ function getPIR(sel){
   var S52   = document.getElementById("S52");
   
   if(L1PIR.value == 1 || L2PIR.value == 1 || L3PIR.value == 1) {
-    S51.value = 9;
+    S51.value = PIR;
   } else {
-    if(S51.value >= 9){
+    if(S51.value >= PIR){
       S51.value = 0;
     }
   }
   if(L1PIR.value == 2 || L2PIR.value == 2 || L3PIR.value == 2) {
-    S52.value = 9;
+    S52.value = PIR;
   } else {
-    if(S52.value >= 9){
+    if(S52.value >= PIR){
       S52.value = 0;
     }
   } 
@@ -373,14 +395,14 @@ function getPIR(sel){
  
 function getComboL1(sel) {
   var value = sel.value;
-  if(value == 3){
-     document.getElementById("L2").value = 3;
-     document.getElementById("L3").value = 3;
+  if(value == RGB_MODE){
+     document.getElementById("L2").value = RGB_MODE;
+     document.getElementById("L3").value = RGB_MODE;
   } else {
-    if(document.getElementById("L2").value == 3){
+    if(document.getElementById("L2").value == RGB_MODE){
        document.getElementById("L2").value = 0;
     }
-    if(document.getElementById("L3").value == 3){
+    if(document.getElementById("L3").value == RGB_MODE){
        document.getElementById("L3").value = 0;
     } 
   } 
@@ -389,14 +411,14 @@ function getComboL1(sel) {
   
 function getComboL2(sel) {
   var value = sel.value;
-  if(value == 3){
-     document.getElementById("L1").value = 3;
-     document.getElementById("L3").value = 3;
+  if(value == RGB_MODE){
+     document.getElementById("L1").value = RGB_MODE;
+     document.getElementById("L3").value = RGB_MODE;
   } else {
-    if(document.getElementById("L1").value == 3){
+    if(document.getElementById("L1").value == RGB_MODE){
        document.getElementById("L1").value = 0;
     }
-    if(document.getElementById("L3").value == 3){
+    if(document.getElementById("L3").value == RGB_MODE){
        document.getElementById("L3").value = 0;
     } 
   } 
@@ -404,14 +426,14 @@ function getComboL2(sel) {
 }
 function getComboL3(sel) {
   var value = sel.value;
-  if(value == 3){
-     document.getElementById("L1").value = 3;
-     document.getElementById("L2").value = 3;
+  if(value == RGB_MODE){
+     document.getElementById("L1").value = RGB_MODE;
+     document.getElementById("L2").value = RGB_MODE;
   } else {
-    if(document.getElementById("L1").value == 3){
+    if(document.getElementById("L1").value == RGB_MODE){
        document.getElementById("L1").value = 0;
     }
-    if(document.getElementById("L2").value == 3){
+    if(document.getElementById("L2").value == RGB_MODE){
        document.getElementById("L2").value = 0;
     } 
   }
@@ -442,8 +464,8 @@ function getComboS41(sel) {
   }
   if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S42").value = sel.value;
-    document.getElementById("S51").value = 11;
-    document.getElementById("S52").value = 11;
+    document.getElementById("S51").value = GARAGE_DOOR;
+    document.getElementById("S52").value = GARAGE_DOOR;
   }else if(document.getElementById("S42").value == 6){
     document.getElementById("S42").value = 0;
     document.getElementById("S51").value = 0;
@@ -457,8 +479,8 @@ function getComboS42(sel) {
   }
   if(sel.value == 6){    //GARAGE_ENDSTOP
     document.getElementById("S41").value = sel.value;
-    document.getElementById("S51").value = 11;
-    document.getElementById("S52").value = 11;
+    document.getElementById("S51").value = GARAGE_DOOR;
+    document.getElementById("S52").value = GARAGE_DOOR;
   }else if(document.getElementById("S41").value == 6){
     document.getElementById("S41").value = 0; 
     document.getElementById("S51").value = 0;
@@ -469,14 +491,14 @@ function getComboS42(sel) {
   
 function getComboS51(sel) {
   var value = sel.value;
-  if(value > 9 && value < 15) {
+  if(value > PIR && value <= OLED) {
       document.getElementById("S52").value = value;
   } else {
-    if(document.getElementById("S52").value > 9 && document.getElementById("S52").value < 15){
+    if(document.getElementById("S52").value > PIR && document.getElementById("S52").value <= OLED){
       document.getElementById("S52").value = 0;
     }
   }
-  if(value == 11) {  //GARAGE_DOOR
+  if(value == GARAGE_DOOR) {  //GARAGE_DOOR
     document.getElementById("S41").value = 6;
     document.getElementById("S42").value = 6;
   } else if(document.getElementById("S41").value == 6){
@@ -488,14 +510,14 @@ function getComboS51(sel) {
   
 function getComboS52(sel) {
   var value = sel.value;  
-  if(value > 9 && value < 15) {
+  if(value > 9 && value <= OLED) {
       document.getElementById("S51").value = value;
   } else {
-    if(document.getElementById("S51").value > 9 && document.getElementById("S51").value < 15){  
+    if(document.getElementById("S51").value > PIR && document.getElementById("S51").value <= OLED){  
       document.getElementById("S51").value = 0;
     } 
   }
-  if(value == 11) {
+  if(value == GARAGE_DOOR) {
     document.getElementById("S41").value = 6;
     document.getElementById("S42").value = 6;
   } else if(document.getElementById("S41").value == 6){
@@ -509,7 +531,7 @@ function getUSART(sel){
   if(sel.value == 1){
     document.getElementById("S41").value = 0;   
     document.getElementById("S42").value = 0;
-    if(document.getElementById("S51").value == 11){  //GARAGE_DOOR
+    if(document.getElementById("S51").value == GARAGE_DOOR){  //GARAGE_DOOR
       document.getElementById("S51").value = 0;
       document.getElementById("S52").value = 0;        
     }
