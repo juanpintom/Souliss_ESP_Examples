@@ -1,4 +1,4 @@
-#ifndef PinsConfig_h
+  #ifndef PinsConfig_h
 #define PinsConfig_h
 
 //#define PCB

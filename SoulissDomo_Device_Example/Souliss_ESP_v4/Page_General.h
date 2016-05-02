@@ -229,6 +229,13 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
         <option value="0">No</option>
         <option value="1">Yes</option>
       </select></td></tr></table>
+
+  <table>
+    <tr><td align="left" style="width:230px"> Enable Debug?: (S4)</td><td>
+      <select  id="debug" name="debug" style="width:50px" onclick="getDEBUG(this)">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select></td></tr></table>
   
   <hr>
   <table>  
@@ -510,7 +517,7 @@ function getComboS51(sel) {
   
 function getComboS52(sel) {
   var value = sel.value;  
-  if(value > 9 && value <= OLED) {
+  if(value > PIR && value <= OLED) {
       document.getElementById("S51").value = value;
   } else {
     if(document.getElementById("S51").value > PIR && document.getElementById("S51").value <= OLED){  
@@ -528,6 +535,18 @@ function getComboS52(sel) {
 }
   
 function getUSART(sel){
+  if(sel.value == 1){
+    document.getElementById("S41").value = 0;   
+    document.getElementById("S42").value = 0;
+    if(document.getElementById("S51").value == GARAGE_DOOR){  //GARAGE_DOOR
+      document.getElementById("S51").value = 0;
+      document.getElementById("S52").value = 0;        
+    }
+  }
+  getConfig();
+}
+
+function getDEBUG(sel){
   if(sel.value == 1){
     document.getElementById("S41").value = 0;   
     document.getElementById("S42").value = 0;
@@ -679,7 +698,8 @@ void send_general_html()
         if (server.argName(i) == "devicename") DeviceName = urldecode(server.arg(i)); 
         if (server.argName(i) == "API") API = urldecode(server.arg(i));
         if (server.argName(i) == "dht_type") dht_type = server.arg(i).toInt(); 
-        if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt();   
+        if (server.argName(i) == "dallas_qty") dallas_qty = server.arg(i).toInt();
+        if (server.argName(i) == "debug") DEBUG_LOG = server.arg(i).toInt();   
             
 
     }
@@ -701,6 +721,7 @@ void send_general_configuration_values_html()
   values += "ALARM_MODE|" +  (String)  ALARM_MODE +  "|input\n";
   values += "cap_debug|" +  (String)  cap_debug +  "|input\n";
   values += "usartbridge|" +  (String)  usartbridge +  "|input\n";
+  values += "debug|" +  (String)  DEBUG_LOG +  "|input\n";
   values += "Send_Emon|" +  (String)  Send_Emon +  "|input\n";
   values += "devicename|" +  (String)  DeviceName +  "|input\n";
   values += "API|" +  (String)  API +  "|input\n";

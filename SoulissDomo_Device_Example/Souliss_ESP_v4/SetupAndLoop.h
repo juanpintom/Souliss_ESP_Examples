@@ -136,6 +136,8 @@ void setupGeneral(){
     if(S51 == OPTO_AND_RELAY){
         Set_SimpleLight(OPTO);
     }
+
+    ReadSTATE();
    
     if(S51 == RELAY || S51 == PULSE_OUTPUT || S51 == TRIAC || S51 == GARAGE_DOOR || S51 == WINDOW_CURTAIN){
         digitalWrite(RELAY0P,LOW);
@@ -252,11 +254,11 @@ void fastGeneral(){
       FAST_50ms() {   // We process the logic and relevant input and output every 50 milliseconds
 
             if(S51 == RELAY){
-                Logic_SimpleLight(RELAY0);
+                if(Logic_SimpleLight(RELAY0) == Souliss_TRIGGED) StoreSTATE();
                 DigOut(RELAY0P, Souliss_T1n_Coil,RELAY0);
             }
             if(S52 == RELAY){
-                Logic_SimpleLight(RELAY1);
+                if( Logic_SimpleLight(RELAY1) == Souliss_TRIGGED) StoreSTATE();
                 DigOut(RELAY1P, Souliss_T1n_Coil,RELAY1);
             }
 
@@ -342,7 +344,7 @@ void fastGeneral(){
             
             switch (L1) {
                 case 1:
-                  Logic_SimpleLight(LED1);
+                  if (Logic_SimpleLight(LED1) == Souliss_TRIGGED) StoreSTATE();
                   DigOut(LEDPWMP0, Souliss_T1n_Coil,LED1);
                   break;
                 case 2:
@@ -356,7 +358,7 @@ void fastGeneral(){
             }
             switch (L2) {
                 case 1:
-                  Logic_SimpleLight(LED2);
+                  if (Logic_SimpleLight(LED2) == Souliss_TRIGGED) StoreSTATE();
                   DigOut(LEDPWMP1, Souliss_T1n_Coil,LED2);
                   break;
                 case 2:
@@ -370,7 +372,7 @@ void fastGeneral(){
             }
             switch (L3) {
                 case 1:
-                  Logic_SimpleLight(LED3);
+                  if (Logic_SimpleLight(LED3) == Souliss_TRIGGED) StoreSTATE();
                   DigOut(LEDPWMP2, Souliss_T1n_Coil,LED3);
                   break;
                 case 2:
@@ -636,7 +638,7 @@ void fastGeneral(){
             }
         } 
         
-        FAST_x10ms(999)
+        FAST_x10ms(50)
         { 
             if(S3 == LDR_SENSOR){
                 float ldr_read = Souliss_GetLux(in, out, SIZEOF)*10.0;  //ORIGINAL

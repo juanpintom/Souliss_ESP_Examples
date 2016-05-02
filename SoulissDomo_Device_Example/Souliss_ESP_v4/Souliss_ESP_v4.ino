@@ -65,8 +65,8 @@
 #include <EEPROM.h>
 #include <WiFiUdp.h>
 
-// ***************************  OLED  LIBRARY ***************************
-//#include <Wire.h>
+////// ***************************  OLED  LIBRARY ***************************
+////#include <Wire.h>
 #include "SSD1306.h"
 #include "SSD1306Ui.h"
 #include "images.h"
@@ -126,6 +126,8 @@ WiFiClient serverClients[MAX_SRV_CLIENTS];
 
 #include "Souliss.h"
 #include "Functions.h"
+#include "FunctionsEEPROM.h"
+#include "FunctionsSENSORS.h"
 #include "irReceiver.h"
 #include "irButtons.h"
 #include "SetupAndLoop.h"
@@ -136,9 +138,6 @@ WiFiClient serverClients[MAX_SRV_CLIENTS];
 ESP8266HTTPUpdateServer httpUpdater;
 
 
-
-
- 
 /*#include "Adafruit_IO_Client.h"
 //#define AIO_KEY    "...your Adafruit IO key value ..."
 #define AIO_KEY    "65b1e1717e6d08e3f58768c1de502d5363d6a64e"
@@ -194,16 +193,19 @@ void MQTT_connect();
 void setup()
 {
     //LOG.begin(115200);
-    DEBUG.begin(115200);
+    EEPROM.begin(512);   //TENGO COMENTADO EL EEPROM.begin DE SOULISS EN STORE.CPP
     ReadConfig_Slots();
-    // **************************************  OLED SETUP *********************
-    if(DEBUG_LOG) I2CScanner();
-    if(S51 == OLED) OLEDsetup();
-    // **************************************  NTP SETUP *********************
-    NTPclient.begin("time-a.timefreq.bldrdoc.gov", CET);
-    setSyncInterval(SECS_PER_HOUR);
-    setSyncProvider(getNTPtime);
+    DEBUG.begin(115200);
+    DEBUG.println(""); DEBUG.println("Node Started V.1");
+    showConfig();
+    //ReadConfig_Slots();
+
     
+    
+    // **************************************  OLED SETUP *********************
+    if(DEBUG_LOG && (S51 == OLED || S51 == BMP180)) I2CScanner();
+    if(S51 == OLED) OLEDsetup();
+  
     //emon1.current(0, 10);             // Current: input pin, calibration.
     //************************************** TELNET SETUP *************************
     telnet.begin();
@@ -218,6 +220,9 @@ void setup()
     server.on ( "/general.html", send_general_html  );
     server.on ( "/admin/generalvalues", send_general_configuration_values_html);
 
+    httpUpdater.setup(&server);
+    MDNS.addService("http", "tcp", 80);
+    
     //ReadConfig_Slots();
     EEPROM.begin(512);
     // Read the IP configuration from the EEPROM, if not available start
@@ -228,6 +233,8 @@ void setup()
   		SetAccessPoint();
   		startWebServer();
       if(S51 == OLED) drawNOWIFI();
+      DEBUG.print("defaultValues: ");
+      DEBUG.println(defaultValues());
   		// We have nothing more than the WebServer for the configuration
   		// to run, once configured the node will quit this.
   		while(1)
@@ -245,6 +252,13 @@ void setup()
         DEBUG.println("Gateway Mode");        
         SetAsGateway(myvNet_dhcp);       // Set this node as gateway for SoulissApp  
         SetAddressingServer();
+   //NODOS PREDEFINIDOS PARA MI!!
+        //SetAsPeerNode(0x00C7, 1);    // NODO 644 HABITACION OCIO IP199
+        //SetAsPeerNode(0x00C9, 2);   // NODO ENTRADA IP201
+       //NO USADOS
+        //SetAsPeerNode(0x00CA, 3);    // NODO DORMIR IP202
+        //SetAsPeerNode(0x00CB, 4);    // NODO SALON IP203
+        //SetAsPeerNode(0x00CC, 5);    // NODO ESCALERA IP204
         
     }
     else 
@@ -278,18 +292,36 @@ void setup()
     DEBUG.println(STORE__SIZE);
     //OTA_Init(); 
     
-    httpUpdater.setup(&server);
-    MDNS.addService("http", "tcp", 80);
+//    httpUpdater.setup(&server);
+//    MDNS.addService("http", "tcp", 80);
 
 
 
     //aio.begin();
     //mqtt.subscribe(&onoffbutton);
-    
+// **************************************  NTP SETUP *********************
+    NTPclient.begin("time-a.timefreq.bldrdoc.gov", CET);
+    setSyncInterval(SECS_PER_HOUR);
+    setSyncProvider(getNTPtime);
+// **************************************  IR SETUP *********************
     if(IR_ENABLE){
       DEBUG.println("IR_START");
       irrecv.enableIRIn();  // Start the receiver
     }
+//    pinMode(LEDPWMP0,OUTPUT);
+//    pinMode(LEDPWMP1,OUTPUT);
+//    pinMode(LEDPWMP2,OUTPUT);
+//    digitalWrite(LEDPWMP0,HIGH);
+//    delay(200);
+//    digitalWrite(LEDPWMP1,HIGH);
+//    delay(200);
+//    digitalWrite(LEDPWMP2,HIGH);
+//    delay(1000);   
+//    digitalWrite(LEDPWMP0,LOW);
+//    delay(200);   
+//    digitalWrite(LEDPWMP1,LOW);
+//    delay(200);   
+//    digitalWrite(LEDPWMP2,LOW);
 }
 
 uint32_t x=0;
@@ -499,47 +531,10 @@ void MQTT_connect() {
   LOG.println("MQTT Connected!");
 }*/
 
-void deleteEEPROM(){
-  // **** FUNCTION TO DELETE JUST ADDRESSES (MORE THAN 5sec) or ALL THE EEPROM DATA (MORE THAN 10sec) *** 
-//  STILL DISABLED, TESTING
-    EEPROM.begin(512);
-    LOG.println("");
-    LOG.println("Time to Reset");
-    delay(1000);
-    long previous = millis();
-    pinMode(0, INPUT);
-    if(!digitalRead(0)) LOG.println("GPIO0 PRESSED!");
-    while(!digitalRead(0)){
-      if(millis() < previous + 5000){
-        LOG.print("Deleting Addresses in: ");
-        LOG.println(5000 - (millis() - previous));
-        digitalWrite(13, !digitalRead(13));
-        delay(500);
-      }else{
-        for(int i = STORE__ADDR_s; i <= STORE__PADDR_f; i++){
-          //EEPROM.write(i,0);
-        }
-        //EEPROM.commit();
-        LOG.println("Address Deleted");
-        // DELETE EEPROM IF GPIO STILL PRESSED
-        if(millis() < previous + 10000){
-          LOG.print("Deleting Custom Data in: ");
-          LOG.println(10000 - (millis() - previous));
-          delay(500);
-        }else{
-          for(int i = STORE_CUSTOM; i <= 512; i++){
-            EEPROM.write(i,255);
-        }
-        EEPROM.commit();
-        LOG.println("Custom Data Deleted");
-        digitalWrite(13, !digitalRead(13));
-        delay(200);
-        }
-      }
-    }
+// ******************************************************************************************************************
+// **********************************************  OLED FUNCTIONS ***************************************************
+// ******************************************************************************************************************
 
-  
-}
 
 void OLEDsetup(){
 
@@ -695,7 +690,7 @@ bool drawNOWIFI() {
   // draw an xbm image.
   // Please note that everything that should be transitioned
   // needs to be drawn relative to x and y
-  LOG.println("DrawNOWIFI");
+  DEBUG.println("DrawNOWIFI");
   display.displayOn();
   display.clear();
   display.setFont(ArialMT_Plain_10);
@@ -713,7 +708,7 @@ bool drawSouliss() {
   // draw an xbm image.
   // Please note that everything that should be transitioned
   // needs to be drawn relative to x and y
-  LOG.println("DrawSouliss");
+  DEBUG.println("DrawSouliss");
   display.displayOn();
   display.clear();
   display.setFont(ArialMT_Plain_10);
@@ -729,27 +724,27 @@ bool drawSouliss() {
 void I2CScanner(){
 
   Wire.begin(5,4);
-  LOG.println ();
-  LOG.println ("I2C scanner. Scanning ...");
+  DEBUG.println ();
+  DEBUG.println ("I2C scanner. Scanning ...");
   byte count = 0;
   for (byte i = 1; i < 120; i++)
   {
     Wire.beginTransmission (i);
     if (Wire.endTransmission () == 0)
       {
-      LOG.print ("Found address: ");
-      LOG.print (i, DEC);
-      LOG.print (" (0x");
-      LOG.print (i, HEX);
-      LOG.println (")");
+      DEBUG.print ("Found address: ");
+      DEBUG.print (i, DEC);
+      DEBUG.print (" (0x");
+      DEBUG.print (i, HEX);
+      DEBUG.println (")");
       count++;
       delay (1);  // maybe unneeded?
       } // end of good response
   } // end of for loop
-  LOG.println ("Done.");
-  LOG.print ("Found ");
-  LOG.print (count, DEC);
-  LOG.println (" device(s).");
+  DEBUG.println ("Done.");
+  DEBUG.print ("Found ");
+  DEBUG.print (count, DEC);
+  DEBUG.println (" device(s).");
   delay(1000);
 }
 
