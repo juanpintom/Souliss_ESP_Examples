@@ -170,14 +170,15 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="4">Alarm EndStop</option>
       <option value="5">Buttons 2 State</option>      
       <option value="6">Relay</option>
-      <option value="7">Pulse Output</option>
-      <option value="8">Triac</option>
-      <option value="9">PIR Sensor 1</option>
-      <option value="10">Pressure Sensor</option>
-      <option value="11">Garage Door (UP)</option>
-      <option value="12">Window Curtain (OPEN) </option>
-      <option value="13">220V_Opto</option>
-      <option value="14">Oled Display</option>
+      <option value="7">Inverted Relay</option>
+      <option value="8">Pulse Output</option>
+      <option value="9">Triac</option>
+      <option value="10">PIR Sensor 1</option>
+      <option value="11">Pressure Sensor</option>
+      <option value="12">Garage Door (UP)</option>
+      <option value="13">Window Curtain (OPEN) </option>
+      <option value="14">220V_Opto</option>
+      <option value="15">Oled Display</option>
     </select>
     </td></tr>
   <tr><td>(S5-2) Configuration: </td><td>
@@ -189,14 +190,15 @@ const char PAGE_AdminGeneralSettings[] PROGMEM =  R"=====(
       <option value="4">Alarm EndStop</option>
       <option value="5">Buttons 2 State</option>      
       <option value="6">Relay</option>
-      <option value="7">Pulse Output</option>
-      <option value="8">Triac</option>
-      <option value="9">PIR Sensor 2</option>
-      <option value="10">Pressure Sensor</option>
-      <option value="11">Garage Door (DOWN)</option>
-      <option value="12">Window Curtain (CLOSE) </option>
-      <option value="13">220V_Relay</option>
-      <option value="14">Oled Display</option>
+      <option value="7">Inverted Relay</option>
+      <option value="8">Pulse Output</option>
+      <option value="9">Triac</option>
+      <option value="10">PIR Sensor 2</option>
+      <option value="11">Pressure Sensor</option>
+      <option value="12">Garage Door (DOWN)</option>
+      <option value="13">Window Curtain (CLOSE) </option>
+      <option value="14">220V_Relay</option>
+      <option value="15">Oled Display</option>
     </select>
     </td></tr>
 
@@ -282,15 +284,16 @@ function myTimer() {
     var BUTTONS_PULLUP   = 3;
     var ALARM_ENDSTOP    = 4;
     var BUTTONS_2_STATE  = 5;  
-    var RELAY            = 6;         
-    var PULSE_OUTPUT     = 7;
-    var TRIAC            = 8;
-    var PIR              = 9;
-    var BMP180           = 10;
-    var GARAGE_DOOR      = 11;
-    var WINDOW_CURTAIN   = 12;
-    var OPTO_AND_RELAY   = 13;
-    var OLED             = 14;
+    var RELAY            = 6; 
+    var INVRELAY         = 7;         
+    var PULSE_OUTPUT     = 8;
+    var TRIAC            = 9;
+    var PIR              = 10;
+    var BMP180           = 11;
+    var GARAGE_DOOR      = 12;
+    var WINDOW_CURTAIN   = 13;
+    var OPTO_AND_RELAY   = 14;
+    var OLED             = 15;
   
 function getConfig(){
     var L1 = document.getElementById("L1");

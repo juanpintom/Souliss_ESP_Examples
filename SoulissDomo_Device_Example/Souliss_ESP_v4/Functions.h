@@ -85,15 +85,16 @@ byte dallas_qty = 1;
 #define ALARM_ENDSTOP     4
 #define BUTTONS_2_STATE   5
 
-#define RELAY             6         
-#define PULSE_OUTPUT      7
-#define TRIAC             8
-#define PIR               9
-#define BMP180            10
-#define GARAGE_DOOR       11
-#define WINDOW_CURTAIN    12 
-#define OPTO_AND_RELAY    13
-#define OLED              14
+#define RELAY             6
+#define INVRELAY          7         
+#define PULSE_OUTPUT      8
+#define TRIAC             9
+#define PIR               10
+#define BMP180            11
+#define GARAGE_DOOR       12
+#define WINDOW_CURTAIN    13 
+#define OPTO_AND_RELAY    14
+#define OLED              15
  
 // Define the hold time of the outputs, by default the timer hold the relays for 16 times, so:
 // 221x10x16ms that is about 35 seconds. Change the parameter inside FAST_x10ms() to change this time.
@@ -425,12 +426,12 @@ void SLOT_CONFIG(){
       }  
   }
 
-  if(S51 == RELAY){
+  if(S51 == RELAY || S51 == INVRELAY){
     RELAY0 = NEXTSLOT;
     NEXTSLOT = RELAY0 + 1;
     DEBUG.print("RELAY0: "); DEBUG.println(RELAY0);
   }
-  if(S52 == RELAY){
+  if(S52 == RELAY || S51 == INVRELAY){
     RELAY1 = NEXTSLOT;
     NEXTSLOT = RELAY1 + 1;
     DEBUG.print("RELAY1: "); DEBUG.println(RELAY1);

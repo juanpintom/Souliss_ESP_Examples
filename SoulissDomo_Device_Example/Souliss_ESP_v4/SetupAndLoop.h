@@ -104,10 +104,10 @@ void setupGeneral(){
         if(S41 == CAPACITIVE  || S42 == CAPACITIVE  || S51 == CAPACITIVE  || S52 == CAPACITIVE) Set_T51(THRE);
     }
     
-    if(S51 == RELAY){
+    if(S51 == RELAY || S51 == INVRELAY){
         Set_SimpleLight(RELAY0);
     }
-    if(S52 == RELAY){
+    if(S52 == RELAY || S52 == INVRELAY){
         Set_SimpleLight(RELAY1);
     }   
     
@@ -145,6 +145,15 @@ void setupGeneral(){
     }
     if(S52 == RELAY || S52 == PULSE_OUTPUT || S52 == TRIAC || S52 == GARAGE_DOOR || S52 == WINDOW_CURTAIN){
         digitalWrite(RELAY1P,LOW);                 
+        pinMode(RELAY1P, OUTPUT);
+    }
+
+    if(S51 == INVRELAY){
+        digitalWrite(RELAY0P,HIGH);
+        pinMode(RELAY0P, OUTPUT);
+    }
+    if(S52 == INVRELAY){
+        digitalWrite(RELAY1P,HIGH);                 
         pinMode(RELAY1P, OUTPUT);
     }
 
@@ -260,6 +269,15 @@ void fastGeneral(){
             if(S52 == RELAY){
                 if( Logic_SimpleLight(RELAY1) == Souliss_TRIGGED) StoreSTATE();
                 DigOut(RELAY1P, Souliss_T1n_Coil,RELAY1);
+            }
+
+            if(S51 == INVRELAY){
+                if(Logic_SimpleLight(RELAY0) == Souliss_TRIGGED) StoreSTATE();
+                LowDigOut(RELAY0P, Souliss_T1n_Coil,RELAY0);
+            }
+            if(S52 == INVRELAY){
+                if( Logic_SimpleLight(RELAY1) == Souliss_TRIGGED) StoreSTATE();
+                LowDigOut(RELAY1P, Souliss_T1n_Coil,RELAY1);
             }
 
             if(S51 == TRIAC){
@@ -663,10 +681,10 @@ void slowGeneral(){
   
     SLOW_10s() {  // Read temperature and humidity from DHT every 110 seconds  
         
-        if(S51 == RELAY){
+        if(S51 == RELAY || S51 == INVRELAY){
             Timer_SimpleLight(RELAY0);
         }
-        if(S52 == RELAY){
+        if(S52 == RELAY || S52 == INVRELAY){
             Timer_SimpleLight(RELAY1);
         }
 
