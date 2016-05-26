@@ -6,10 +6,6 @@ DHT dht22(DHTPIN, DHT22, 15);
 
 // Light calibration data
 // out[] holds the values wanted in lux/10
-//#define SIZEOF 10
-//static const unsigned int out[] = { 1, 7, 30, 45, 65, 150, 300, 450, 2100, 13000};  // x10  //ULTIMO VALOR REFERENCIA
-//static const unsigned int in[]  = { 1, 100, 350, 430, 500, 680, 780, 950, 1005, 1024 };  // 0 - 1024
-
 #define SIZEOF 30
 static const unsigned int out[] =   { 0,   1,  2,   5,    7,   10,   15,   20,   30,   40,   50,   60,   70,   80,  100,  150,  200,  250,  350,  450,  600,   800, 1200, 1600, 2000, 2500, 3000, 4000, 5000, 6350};  // x10  
 static const unsigned int in[]  =   { 1,  30, 80, 200,  275,  350,  430,  490,  590,  650,  720,  750,  775,  790,  800,  825,  880,  890,  940,  955,  970,  1000, 1003, 1006, 1010, 1013, 1015, 1018, 1021, 1024};

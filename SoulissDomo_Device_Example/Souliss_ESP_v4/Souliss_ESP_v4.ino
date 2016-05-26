@@ -95,26 +95,12 @@ time_t getNTPtime(void);
 NTP NTPclient;
 #define CET +1
 
-
-
-//// ***************************  ESP  LIBRARIES ***************************
-//
-//#include <ESP8266WiFi.h>
-//#include <ESP8266WebServer.h>
-//#include <ESP8266mDNS.h>
-//#include <ESP8266HTTPUpdateServer.h>
-//#include <EEPROM.h>
-//#include <WiFiUdp.h>
-
-
-// ************************* TELNET DEBUG ******************************
-#define MAX_SRV_CLIENTS 1
-WiFiServer telnet(23);
-WiFiClient serverClients[MAX_SRV_CLIENTS];
+// ***************************  DEBUG OPTIONS   ***************************
 
 #define SERIALPORT_INSKETCH
 //#define LOG serverClients[0]
 #define LOG Serial
+
 // ***************************  SOULISS  LIBRARIES ***************************
 // Configure the Souliss framework
 #include "bconf/MCU_ESP8266.h"              // Load the code directly on the ESP8266
@@ -133,10 +119,8 @@ WiFiClient serverClients[MAX_SRV_CLIENTS];
 #include "SetupAndLoop.h"
 
 #include "Page_General.h"
-
-//OTA_Setup();  
+ 
 ESP8266HTTPUpdateServer httpUpdater;
-
 
 /*#include "Adafruit_IO_Client.h"
 //#define AIO_KEY    "...your Adafruit IO key value ..."
@@ -218,11 +202,6 @@ void setup()
     if(S51 == OLED) OLEDsetup();
   
     //emon1.current(0, 10);             // Current: input pin, calibration.
-    //************************************** TELNET SETUP *************************
-    telnet.begin();
-    telnet.setNoDelay(true);
-    DEBUG.print("Start: "); DEBUG.println(millis());
-    //while(Telnet_Loop() || millis() > 10000){ Serial.println(10000 - millis()); }
 
     Initialize();
     deleteEEPROM();
@@ -366,7 +345,6 @@ void loop()
 //        }
 //        FAST_x10ms(500){
 //            //MQTT_Loop_Slow();
-//            //Telnet_Loop();
 //            
 //        }        
         //Serial.println("FAST");
@@ -424,62 +402,12 @@ void loop()
         if (!IsRuntimeGateway())
             SLOW_PeerJoin();
     } 
-    //OTA_Process();
   //}
 }  
 
-
-boolean Telnet_Loop(){
-  uint8_t i;
-  //check if there are any new clients
-  if (telnet.hasClient()){
-    for(i = 0; i < MAX_SRV_CLIENTS; i++){
-      //find free/disconnected spot
-      if (!serverClients[i] || !serverClients[i].connected()){
-        if(serverClients[i]) serverClients[i].stop();
-        serverClients[i] = telnet.available();
-        //Serial1.print("New client: "); Serial1.print(i);
-        return 1;
-        continue;
-      }
-    }
-    //no free/disconnected spot so reject
-    WiFiClient serverClient = telnet.available();
-    serverClient.stop();
-  }
-  return 0;
-  //check clients for data
-  /*for(i = 0; i < MAX_SRV_CLIENTS; i++){
-  //  if (serverClients[i] && serverClients[i].connected()){
-  //    if(serverClients[i].available()){
-  //      //get data from the telnet client and push it to the UART
-  //      while(serverClients[i].available()) Serial.write(serverClients[i].read());
-  //    }
-  //  }
-  //}
-  //check UART for data
-  if(Serial.available()){
-    size_t len = Serial.available();
-    uint8_t sbuf[len];
-    Serial.readBytes(sbuf, len);
-    //push UART data to all connected telnet clients
-    for(i = 0; i < MAX_SRV_CLIENTS; i++){
-      if (serverClients[i] && serverClients[i].connected()){
-        serverClients[i].write(sbuf, len);
-        delay(1);
-      }
-    }
-  }*/
-  
-  /*for(i = 0; i < MAX_SRV_CLIENTS; i++){
-      if (serverClients[i] && serverClients[i].connected()){
-        serverClients[i].println(millis());
-        delay(1);
-      }
-  }*/
-  
-  
-}  
+// ******************************************************************************************************************
+// **********************************************  MQTT FUNCTIONS ***************************************************
+// ******************************************************************************************************************
 /*
 void MQTT_Loop(){
   MQTT_connect();
