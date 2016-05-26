@@ -304,16 +304,16 @@ void showConfig(){
 boolean defaultValues(){
   if(L1 == 255 && dallas_qty == 255){
     cap_thresold = 5;
-    L1 = 1;
-    L2 = 1;
-    L3 = 1;
-    S1 = 1;
-    S2 = 1;
-    S3 = 1;
+    L1 = 2;
+    L2 = 2;
+    L3 = 2;
+    S1 = 0;
+    S2 = 0;
+    S3 = 0;
     S41 = 0;
     S42 = 0;
-    S51 = OLED;
-    S52 = OLED;
+    S51 = 0;
+    S52 = 0;
     S6 = 0;
     
     ALTITUDE = 1;

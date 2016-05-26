@@ -186,17 +186,28 @@ Adafruit_MQTT_Subscribe onoffbutton = Adafruit_MQTT_Subscribe(&mqtt, ONOFF_FEED)
 void MQTT_connect();
 */
 
+WiFiUDP Udp;
+IPAddress remote_ip(192, 168, 1, 12); // you PC network address
+#define UDP_PORT 1111
+  
+#define DEBUG_UDP(msg) Udp.beginPacket(remote_ip, UDP_PORT);\
+  Udp.write(msg);\
+  Udp.write("\r\n");\
+  Udp.endPacket();
+
 //****************************************************************************
 //************************** SETUP FUNCTION **********************************
 //****************************************************************************
 
 void setup()
 {
+    Udp.begin(UDP_PORT);
+    
     //LOG.begin(115200);
     EEPROM.begin(512);   //TENGO COMENTADO EL EEPROM.begin DE SOULISS EN STORE.CPP
     ReadConfig_Slots();
     DEBUG.begin(115200);
-    DEBUG.println(""); DEBUG.println("Node Started V.1");
+    DEBUG.println(""); DEBUG.println("Node Started V.1.0.2");
     showConfig();
     //ReadConfig_Slots();
 
@@ -308,20 +319,6 @@ void setup()
       DEBUG.println("IR_START");
       irrecv.enableIRIn();  // Start the receiver
     }
-//    pinMode(LEDPWMP0,OUTPUT);
-//    pinMode(LEDPWMP1,OUTPUT);
-//    pinMode(LEDPWMP2,OUTPUT);
-//    digitalWrite(LEDPWMP0,HIGH);
-//    delay(200);
-//    digitalWrite(LEDPWMP1,HIGH);
-//    delay(200);
-//    digitalWrite(LEDPWMP2,HIGH);
-//    delay(1000);   
-//    digitalWrite(LEDPWMP0,LOW);
-//    delay(200);   
-//    digitalWrite(LEDPWMP1,LOW);
-//    delay(200);   
-//    digitalWrite(LEDPWMP2,LOW);
 }
 
 uint32_t x=0;
@@ -373,6 +370,9 @@ void loop()
 //            
 //        }        
         //Serial.println("FAST");
+          FAST_x10ms(100){
+              DEBUG_UDP("Test"); 
+          }
         fastGeneral();
          
         // Run communication as Gateway or Peer
@@ -427,6 +427,7 @@ void loop()
     //OTA_Process();
   //}
 }  
+
 
 boolean Telnet_Loop(){
   uint8_t i;
