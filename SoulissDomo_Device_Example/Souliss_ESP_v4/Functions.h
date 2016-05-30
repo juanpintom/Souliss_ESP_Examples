@@ -518,5 +518,78 @@ void setBrightColor(uint8_t slot, uint8_t color, uint8_t value_state)  //color: 
   
 }
 
+static unsigned long souliss_upTime;
+static unsigned long souliss_time;
+static unsigned long souliss_lastTime;
+static unsigned long souliss_lastUpTime;
+
+
+/*!
+  Link an hardware pin to the shared memory map, active on rising edge
+        or on long press hold.
+  Identify three actions: press, hold and double press. Each action can
+        perform an command for separate slot.
+*/
+/**************************************************************************/
+{   
+    int reading = dRead(pin);
+    
+    // measure time on button DOWN
+    if(reading && (InPin[pin]==PINRESET))
+    {
+        InPin[pin] = PINSET;
+        souliss_time = millis();
+    souliss_lastTime = souliss_time;
+        
+        return MaCaco_NODATACHANGED;
+    }
+    // measure time on button UP
+    else if (!reading && InPin[pin]==PINSET)
+    {
+        souliss_lastUpTime = souliss_upTime;
+        souliss_upTime = millis();
+    } 
+    // reset time - third press will be single click again
+    else if (!reading && InPin[pin]==PINRELEASED)
+    {
+        InPin[pin] = PINACTIVE;
+        souliss_time = souliss_upTime = 0;
+    } 
+    // reset pin
+    else if (!reading && InPin[pin]==PINACTIVE) 
+    {
+        InPin[pin] = PINRESET;
+    }
+    
+    // HANDLING of BUTTON ACTIONS
+    // single or double click
+    if (!reading && InPin[pin]==PINSET) 
+    {
+        // double click
+        if (abs(souliss_time - souliss_lastTime) < doublePressTime && 
+            abs(souliss_upTime - souliss_lastUpTime) < doublePressTime)
+        {
+            InPin[pin] = PINRELEASED;
+            if(memory_map)  memory_map[MaCaco_IN_s + slot_double] = value_double;
+            return value_double;
+
+        // single click
+        } else {
+            InPin[pin] = PINACTIVE;
+        }
+    }
+    // long click
+    else if (reading && InPin[pin]==PINSET){
+        if (abs(millis() - souliss_time) > holdTime) 
+        {
+            InPin[pin] = PINACTIVE;
+            if(memory_map)  memory_map[MaCaco_IN_s + slot_long] = value_long;
+            return value_long;
+        }
+    }
+    
+    return MaCaco_NODATACHANGED;
+}
+
 
 #endif
