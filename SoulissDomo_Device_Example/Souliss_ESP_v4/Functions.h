@@ -531,6 +531,7 @@ static unsigned long souliss_lastUpTime;
         perform an command for separate slot.
 */
 /**************************************************************************/
+U8 Souliss_DigIn3Action(U8 pin, U8 value_single, U8 value_long, U8 value_double, U8 *memory_map, U8 slot_single, U8 slot_long, U8 slot_double, U16 holdTime=1000, U16 doublePressTime=500)
 {   
     int reading = dRead(pin);
     
@@ -576,6 +577,8 @@ static unsigned long souliss_lastUpTime;
         // single click
         } else {
             InPin[pin] = PINACTIVE;
+            if(memory_map)  memory_map[MaCaco_IN_s + slot_single] = value_single;
+            return value_single;
         }
     }
     // long click
