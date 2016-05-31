@@ -407,10 +407,27 @@ void fastGeneral(){
 
  
 
-      // **********  FALTA!!! BOTONES EN S52 ********  NO SE QUE FUNCION DARLE *********
-                        
-            if(L3 == PWM_MODE || L3 == PIR_MODE || L3 == ONOFF_MODE){
-              if(button0) LowDigIn(0, Souliss_T1n_ToggleCmd, LED3); 
+ // *************************************************************************
+ // ------------------------------ GPIO0 BUTTON -----------------------------                        
+ // ***************** !!!! CHANGE THIS TO DigIn3State !!!! ******************
+ // ***************** !!!!         IN PROGRESS        !!!! ******************
+ // *************************************************************************
+
+ //INFO: Souliss_DigIn3Action(U8 pin, U8 value_single, U8 value_long, U8 value_double, U8 *memory_map, U8 slot_single, U8 slot_long, U8 slot_double, U16 holdTime=1000, U16 doublePressTime=500)    
+ //INFO: DigInHold(0, U8 value, U8 value_hold, U8 *memory_map, U8 slot, U16 holdtime=1500)  
+ //INFO: Souliss_DigInHoldSteps(U8 pin, U8 *memory_map, U8 firstSlot, U8 lastSlot, U16 step_duration)
+
+            //if(L3 == PWM_MODE || L3 == PIR_MODE || L3 == ONOFF_MODE){
+            //  if(button0) LowDigIn(0, Souliss_T1n_ToggleCmd, LED3); 
+            //}
+            
+            if(S51 == WINDOW_CURTAIN && S52 == WINDOW_CURTAIN){
+                Souliss_DigIn3Action(0, Souliss_T2n_StopCmd, Souliss_T2n_OpenCmd, Souliss_T2n_CloseCmd, memory_map, T2X, T2X, T2X, 1000, 500);
+            } else if(S51 == OPTO_AND_RELAY && S52 == OPTO_AND_RELAY){
+                  //Do Nothing
+            } else {
+                //Souliss_DigInHoldSteps(0, memory_map, LED1, LED3, 1000)
+                Souliss_DigIn3Action(0, Souliss_T1n_ToggleCmd, Souliss_T1n_ToggleCmd, Souliss_T1n_ToggleCmd, memory_map, LED1, LED2, LED3, 1000, 500);
             }
  
 
