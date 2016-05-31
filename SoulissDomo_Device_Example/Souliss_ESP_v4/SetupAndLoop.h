@@ -2,7 +2,11 @@
 #define SetupAndLoop_h
 
 // ***************************************************************************
-// *                         setupGeneral FUNCTION                           *
+// ***************************************************************************
+// ***************************************************************************
+// ************************* setupGeneral FUNCTION ***************************
+// ***************************************************************************
+// ***************************************************************************
 // ***************************************************************************
 void setupGeneral(){
   
@@ -11,27 +15,36 @@ void setupGeneral(){
     PINS_CONFIG();
     analogWriteFreq(250);
     analogWriteRange(255);
-	  //if(usartbridge) 
-	  //SetAddress(0xCE01, 0xFF00, 0x0000);
- 
-//**************************** SENSORS INITIALIZE *****************************
-//    if(DHT_SENSOR){
+    //if(usartbridge) 
+    //SetAddress(0xCE01, 0xFF00, 0x0000);
+
+// *************************************************************************** 
+// *************************** SENSORS INITIALIZE ****************************
+// ***************************************************************************
+
+// ---------------------------- DHT BEGIN ------------------------------------
     if(S2 == DHT_SENSOR){
         if(!dht_type)
           dht11.begin();
         else
           dht22.begin();
     }
-//    if(DALLAS_SENSOR){
+// ---------------------------- DALLAS BEGIN ---------------------------------
     if(S1 == DALLAS_SENSOR){
         sensors.begin(); //Se inician los sensores DS18B20
     }
-    
-//**************************** SETUP SLOTS *****************************
+
+// ***************************************************************************    
+// ****************************** SETUP SLOTS ********************************
+// ***************************************************************************
+
+// ------------------------------ DHT SLOTS ----------------------------------
     if(S2 == DHT_SENSOR){
         Set_Temperature(TEMPERATURE);
         Set_Humidity(HUMIDITY);
     }
+
+// --------------------------- L1-L2-L3 SLOTS --------------------------------
     switch (L1) {  
         case 1:
           Set_SimpleLight(LED1);
@@ -73,29 +86,38 @@ void setupGeneral(){
         case 5:
           Set_PulseOutput(LED3);
           break;          
-    } 
+    }
+
+// ---------------------------- ALARM SLOTS --------------------------------
     if(ALARM_MODE) Set_Antitheft_Main(ALARM);
-      
+
+
+// ----------------------------- RGB SLOT ----------------------------------      
     if(L1 == RGB_MODE && L2 == RGB_MODE && L3 == RGB_MODE){
         Set_LED_Strip(LEDRGB);
-    }           
-  
+    }          
+
+
+// ---------------------------- LDR SLOT -----------------------------------  
     if(S3 == LDR_SENSOR){
         Set_T54(LDR);
     }
-    
-    if(S1 == DALLAS_SENSOR){
-    	for(int i=0; i < dallas_qty; i++){
-        	Set_Temperature(DALLAS + (i*2));
-    	}	
-    }        
 
+// -------------------------- DALLAS SLOT ----------------------------------
+    if(S1 == DALLAS_SENSOR){
+     for(int i=0; i < dallas_qty; i++){
+         Set_Temperature(DALLAS + (i*2));
+     } 
+    }       
+
+// --------------------- BMP180 PRESSURE SLOT ------------------------------
     if(S51 == BMP180){
         //Set_T51(PRESSURE0);
         Set_Pressure(PRESSURE0);
         Set_Temperature(BMP180TEMP);
     }
-    
+
+// -------------------- CAPACITIVE DEBUG SLOTS -----------------------------
     if(cap_debug){
         if(S41 == CAPACITIVE) Set_T51(CAP0);
         if(S42 == CAPACITIVE) Set_T51(CAP1);
@@ -103,7 +125,9 @@ void setupGeneral(){
         if(S52 == CAPACITIVE) Set_T51(CAP3);
         if(S41 == CAPACITIVE  || S42 == CAPACITIVE  || S51 == CAPACITIVE  || S52 == CAPACITIVE) Set_T51(THRE);
     }
-    
+
+
+// ----------------- S51 S52 RELAY RELATED SLOTS ---------------------------
     if(S51 == RELAY || S51 == INVRELAY){
         Set_SimpleLight(RELAY0);
     }
@@ -123,7 +147,7 @@ void setupGeneral(){
     }
     if(S52 == TRIAC){
         Set_DimmableLight(RELAY1);
-    }       
+    }      
 
     if(S51 == GARAGE_DOOR){
         Set_GarageDoor(T2X);
@@ -137,8 +161,18 @@ void setupGeneral(){
         Set_SimpleLight(OPTO);
     }
 
+
+// -------------------------- READSTATE SLOTS ----------------------------------
+// ----            Read from EEPROM previous State of SLOTS                 ----
     ReadSTATE();
-   
+// -----------------------------------------------------------------------------
+
+
+// ***************************************************************************    
+// **************************** SETUP PIN MODES ******************************
+// ***************************************************************************
+
+// ----------------------- S51 S52 RELAY PIN MODES ---------------------------   
     if(S51 == RELAY || S51 == PULSE_OUTPUT || S51 == TRIAC || S51 == GARAGE_DOOR || S51 == WINDOW_CURTAIN){
         digitalWrite(RELAY0P,LOW);
         pinMode(RELAY0P, OUTPUT);
@@ -148,6 +182,7 @@ void setupGeneral(){
         pinMode(RELAY1P, OUTPUT);
     }
 
+// ----------------- S51 S52 INVERTED RELAY PIN MODES ------------------------
     if(S51 == INVRELAY){
         digitalWrite(RELAY0P,HIGH);
         pinMode(RELAY0P, OUTPUT);
@@ -157,6 +192,8 @@ void setupGeneral(){
         pinMode(RELAY1P, OUTPUT);
     }
 
+
+// -------------------------- L1 L2 L3 PIN MODES -----------------------------
     if(L1 == ONOFF_MODE || L1 == PWM_MODE || L1 == RGB_MODE || L1 == PIR_MODE || L1 == PULSE_MODE ){
         pinMode(LEDPWMP0, OUTPUT);
     }
@@ -165,8 +202,9 @@ void setupGeneral(){
     }
     if(L3 == ONOFF_MODE || L3 == PWM_MODE || L3 == RGB_MODE || L3 == PIR_MODE || L3 == PULSE_MODE ){        
         pinMode(LEDPWMP2, OUTPUT);
-    }  
+    } 
 
+// -------------------------- L1 L2 L3 PIR MODES -----------------------------
     if(L1 == PIR_MODE){
         if(L1PIR == 0)  pinMode(PIRP1, INPUT);
         else            pinMode(PIRP2, INPUT);
@@ -192,12 +230,19 @@ void setupGeneral(){
         nDigOut(LEDPWMP2, Souliss_T1n_Coil, LED3);        
     }
     
+// -------------------------- L1 L2 L3 RGB MODE ------------------------------
     if(L1 == RGB_MODE && L2 == RGB_MODE && L3 == RGB_MODE){
         pinMode(LEDRP, OUTPUT);
         pinMode(LEDGP, OUTPUT);
         pinMode(LEDBP, OUTPUT);
     }
 
+
+// ***************************************************************************    
+// *************************** BUTTONS PIN MODES *****************************
+// ***************************************************************************
+
+// -------------------------- INPUT BUTTONS ----------------------------------
     if(S41 == BUTTONS || S41 == BUTTONS_2_STATE){
         pinMode(BUT0P, INPUT);
     }
@@ -209,8 +254,9 @@ void setupGeneral(){
     }
     if(S52 == BUTTONS || S52 == BUTTONS_2_STATE){
         pinMode(BUT3P, INPUT);
-    }       
+    }      
 
+// ---------------------- INPUT_PULLUP BUTTONS -------------------------------
     if(S41 == BUTTONS_PULLUP || S41 == ALARM_ENDSTOP){
         pinMode(BUT0P, INPUT_PULLUP);
     }
@@ -224,12 +270,16 @@ void setupGeneral(){
         pinMode(BUT3P, INPUT_PULLUP);
     }
 
+
+// ----------------- OPTO AND RELAY PIN MODE SETUP ---------------------------
     if(S51 == OPTO_AND_RELAY){
         pinMode(BUT0P, INPUT);
         digitalWrite(RELAY1P,LOW);                 
         pinMode(RELAY1P, OUTPUT);
     }
-    
+
+
+// ---------------- BMP180 PRESSURE PINMODE SETUP ----------------------------    
     if(S51 == BMP180){
         //Wire.begin(SDAP,SCLP);
         Wire.begin(5,4);
@@ -243,25 +293,40 @@ void setupGeneral(){
             if(DEBUG_PRESSURE) LOG.print(F("BMP180 init fail\r\n"));
         }
     }
-    
+
+
+// ---------------------- BUTTON GPIO0 SETUP  -------------------------------    
     button0 = true;
-    //pinMode(0, INPUT);
+    //if (button0) pinMode(0, INPUT);
 
 }
+
+
+// *********************************************************************************
+// *********************************************************************************
+// *********************************************************************************
+// ************************** fastGeneral FUNCTION *********************************
+// *********************************************************************************
+// *********************************************************************************
+// *********************************************************************************
+
 
 void fastGeneral(){
     yield();
       
-    //if (!button0) {
-      //	if(millis()>60000) {
-      		//button0 = true;
-          //pinMode(0, INPUT);
-          //LOG.println(F("Button GPIO ENABLED"));
-    	//  }
-	  //}
+ //     if (button0) {
+ //       if(millis()>60000) {
+ //          button0 = true;
+ //          pinMode(0, INPUT);
+ //          LOG.println(F("Button GPIO ENABLED"));
+ //       }
+ //     }
       
-      FAST_50ms() {   // We process the logic and relevant input and output every 50 milliseconds
-
+      FAST_50ms() { 
+        // ************************************************************************
+        // ***************************** RELAYS LOGIC *****************************
+        // ************************************************************************  
+        // ----------------------------- S51 S52 RELAYS ---------------------------
             if(S51 == RELAY){
                 if(Logic_SimpleLight(RELAY0) == Souliss_TRIGGED) StoreSTATE();
                 DigOut(RELAY0P, Souliss_T1n_Coil,RELAY0);
@@ -271,6 +336,8 @@ void fastGeneral(){
                 DigOut(RELAY1P, Souliss_T1n_Coil,RELAY1);
             }
 
+
+        // ------------------------- S51 S52 INVERTED RELAYS ----------------------
             if(S51 == INVRELAY){
                 if(Logic_SimpleLight(RELAY0) == Souliss_TRIGGED) StoreSTATE();
                 LowDigOut(RELAY0P, Souliss_T1n_Coil,RELAY0);
@@ -280,6 +347,7 @@ void fastGeneral(){
                 LowDigOut(RELAY1P, Souliss_T1n_Coil,RELAY1);
             }
 
+        // ---------------------------- S51 S52 TRIAC ----------------------------
             if(S51 == TRIAC){
                 Logic_DimmableLight(RELAY0);
                 analogWrite(RELAY0P, mOutput(RELAY0+1));
@@ -287,7 +355,13 @@ void fastGeneral(){
             if(S52 == TRIAC){
                 Logic_DimmableLight(RELAY1);
                 analogWrite(RELAY1P, mOutput(RELAY1+1));
-            }   
+            }  
+
+        // ************************************************************************
+        // ***************************** BUTTONS LOGIC ****************************
+        // ************************************************************************ 
+
+        // ------------------------------ S41 BUTTONS -----------------------------
 
             if(L1 == PWM_MODE || L1 == PIR_MODE || L1 == ONOFF_MODE || L1 == PULSE_MODE){
                 if(S41 == BUTTONS){
@@ -300,6 +374,8 @@ void fastGeneral(){
                     DigIn2State(BUT0P, Souliss_T1n_OnCmd, Souliss_T1n_OffCmd, LED1);
                 }
             }
+
+        // ------------------------------ S42 BUTTONS -----------------------------
             if(L2 == PWM_MODE || L2 == PIR_MODE || L2 == ONOFF_MODE || L2 == PULSE_MODE){
                 if(S42 == BUTTONS){
                     DigIn(BUT1P, Souliss_T1n_ToggleCmd, LED2);
@@ -311,6 +387,8 @@ void fastGeneral(){
                     DigIn2State(BUT1P, Souliss_T1n_OnCmd, Souliss_T1n_OffCmd, LED2);
                 }
             }
+
+        // ------------------------------ S51 BUTTONS -----------------------------
             if(L3 == PWM_MODE || L3 == PIR_MODE || L3 == ONOFF_MODE || L3 == PULSE_MODE){
                 if(S51 == BUTTONS){
                     DigIn(BUT2P, Souliss_T1n_ToggleCmd, LED3);
@@ -321,18 +399,30 @@ void fastGeneral(){
                 if(S51 == BUTTONS_2_STATE){
                     DigIn2State(BUT2P, Souliss_T1n_OnCmd, Souliss_T1n_OffCmd, LED3);
                 }
-            } 
+            }
+
+         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         // **********  FALTA!!! BOTONES EN S52 ********  NO SE QUE FUNCION DARLE *********
+         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ 
 
       // **********  FALTA!!! BOTONES EN S52 ********  NO SE QUE FUNCION DARLE *********
                         
             if(L3 == PWM_MODE || L3 == PIR_MODE || L3 == ONOFF_MODE){
               if(button0) LowDigIn(0, Souliss_T1n_ToggleCmd, LED3); 
             }
+ 
+
+
+      // ************************************************************************
+      // ********************** CAPACITIVE BUTTONS LOGIC ************************
+      // ************************************************************************
 
             if(L1 == PWM_MODE && S41 == CAPACITIVE){
                     Souliss_CapSense(LED1,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, BUT0P, cap_thresold, 1500);
                     if(DEBUG_CAPSENSE_ALL) LOG.println("");
-            }  
+            } 
 
             if(L2 == PWM_MODE && S42 == CAPACITIVE){
                     Souliss_CapSense(LED2,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, BUT1P, cap_thresold, 1500);
@@ -342,12 +432,21 @@ void fastGeneral(){
             if(L3 == PWM_MODE && S51 == CAPACITIVE){
                     Souliss_CapSense(LED3,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, BUT2P, cap_thresold, 1500);
                     if(DEBUG_CAPSENSE_ALL) LOG.println("");
-            } 
+            }
+
+ // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ // **********  FALTA!!! BOTONES EN S52 ********  NO SE QUE FUNCION DARLE *********
+ // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
             if(L3 == PWM_MODE && S52 == CAPACITIVE){
                     Souliss_CapSense(LED3,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch, BUT3P, cap_thresold, 1500);
                     if(DEBUG_CAPSENSE_ALL) LOG.println("");
             }             
-      // **********  FALTA!!! BOTONES EN S52 ********  NO SE QUE FUNCION DARLE *********
+     
+
+      // ************************************************************************
+      // ********************* IR INFRARED BUTTONS LOGIC ************************
+      // ************************************************************************
 
             if(L1 == ONOFF_MODE || L2 == ONOFF_MODE || L3 == ONOFF_MODE){
                 if(IR_ENABLE){
@@ -359,7 +458,11 @@ void fastGeneral(){
                   irButtons(ir_PWM);
                 }
             }    
-            
+           
+
+      // ************************************************************************
+      // ************************** L1 L2 L3 LOGICS  ****************************
+      // ************************************************************************
             switch (L1) {
                 case 1:
                   if (Logic_SimpleLight(LED1) == Souliss_TRIGGED) StoreSTATE();
@@ -401,7 +504,12 @@ void fastGeneral(){
                   Logic_AutoLight(LED3);
                   nDigOut(LEDPWMP2, Souliss_T1n_Coil,LED3);
                   break; 
-            }  
+            } 
+
+
+      // ************************************************************************
+      // ********************** PIR L1 L2 L3 LOGICS  ****************************
+      // ************************************************************************
 
             if(L1 == PIR_MODE || L2 == PIR_MODE || L3 == PIR_MODE){
               if(ALARM_MODE && mOutput(ALARM) == Souliss_T4n_Antitheft ){   //  IF Alarm is Armed
@@ -452,7 +560,12 @@ void fastGeneral(){
                 }
               }              
             }            
-            
+ 
+
+      // ************************************************************************
+      // ***************************** ALARM LOGICS  ****************************
+      // ************************************************************************
+           
             if(ALARM_MODE || S41 == ALARM_ENDSTOP || S42 == ALARM_ENDSTOP || S51 == ALARM_ENDSTOP || S52 == ALARM_ENDSTOP) {
                 if(mOutput(ALARM) == Souliss_T4n_Antitheft){
                   if(S41 == ALARM_ENDSTOP) {
@@ -470,7 +583,13 @@ void fastGeneral(){
                 }
                 Logic_Antitheft_Main(ALARM);
             }
-            
+ 
+
+      // ************************************************************************
+      // ***************************** RGB LOGICS *******************************
+      // ************************************************************************
+
+      // ---------------------- CAPACITIVE BUTTONS FOR RGB ----------------------          
             if(L1 == RGB_MODE && L2 == RGB_MODE && L3 == RGB_MODE){
                 if(button0) LowDigIn(0, Souliss_T1n_ToggleCmd, LEDRGB);
                 if(S41 == CAPACITIVE){
@@ -484,8 +603,9 @@ void fastGeneral(){
                 }
                 if(S52 == CAPACITIVE){
                     Souliss_CapSense(LEDRGB,Souliss_T1n_ToggleCmd,Souliss_T1n_BrightSwitch,BUT3P, cap_thresold, 1500);
-                }   
-                
+                }  
+
+      // --------------------------- BUTTONS FOR RGB ---------------------------
                 if(S41 == BUTTONS){
                     DigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDRGB);
                 }
@@ -498,7 +618,8 @@ void fastGeneral(){
                 if(S52 == BUTTONS){
                     DigIn(BUT3P, Souliss_T1n_BrightSwitch, LEDRGB);
                 }
-                
+
+      // ------------------------ PULLUP BUTTONS FOR RGB -----------------------                
                 if(S41 == BUTTONS_PULLUP){
                     LowDigIn(BUT0P, Souliss_T1n_ToggleCmd, LEDRGB);
                 }
@@ -511,19 +632,27 @@ void fastGeneral(){
                 if(S52 == BUTTONS_PULLUP){
                     LowDigIn(BUT3P, Souliss_T1n_BrightSwitch, LEDRGB);
                 }
-                
-                
+               
+
+      // ---------------------- IR BUTTONS FOR RGB ----------------------                
                 if(IR_ENABLE){
                     irButtons(ir_RGB);
                 } 
                              
+     
+
+      // -------------------- LOGIC AND OUTPUT RGB ----------------------                 
                 Logic_LED_Strip(LEDRGB);
 
                 analogWrite(LEDRP, mOutput(LEDRGB+1));
                 analogWrite(LEDGP, mOutput(LEDRGB+2));
                 analogWrite(LEDBP, mOutput(LEDRGB+3));       
-            } 
-           
+            }
+
+      // ************************************************************************
+      // ********************** OPTO AND RELAY LOGIC ****************************
+      // ************************************************************************
+          
             if(S51 == OPTO_AND_RELAY){
                 //CODE MISSING get from here:
                 //https://github.com/juanpintom/Souliss_Examples/blob/master/E00_Souliss_Wall_Switch_with_PLC_Reading.ino
@@ -532,6 +661,11 @@ void fastGeneral(){
             }
                 
         }
+
+
+      // ************************************************************************
+      // ***************** CAPACITIVE DEBUG LOGIC AND READS *********************
+      // ************************************************************************
         
         FAST_110ms(){
                     
@@ -568,6 +702,11 @@ void fastGeneral(){
               if(S41 == CAPACITIVE || S42 == CAPACITIVE || S51 == CAPACITIVE || S52 == CAPACITIVE) Read_T51(THRE);
            }
            
+      // ************************************************************************
+      // *************** GARAGE DOOR AND CURTAIN LOGIC **************************
+      // ************************************************************************
+
+
            if(S51 == GARAGE_DOOR){
                 //*** ENDSTOPS TEST MISSING ***
                 LowDigIn(BUT0P, Souliss_T2n_LimSwitch_Open,  T2X);
@@ -583,6 +722,11 @@ void fastGeneral(){
                 DigOut(RELAY1P, Souliss_T2n_Coil_Close, T2X);
             }
         }
+
+      // ************************************************************************
+      // ********************** PULSE OUTPUT LOGICS *****************************
+      // ************************************************************************
+
         FAST_x10ms(PULSE_TIMER/10){
             
             if(L1 == PULSE_MODE){
@@ -596,7 +740,7 @@ void fastGeneral(){
             if(L3 == PULSE_MODE){
                 Logic_PulseOutput(LED3);
                 DigOut(LEDPWMP2, Souliss_T1n_Coil,LED3);              
-            }                        
+            }                       
 
             if(S51 == PULSE_OUTPUT){
                 Logic_PulseOutput(PULSE0);
@@ -607,6 +751,12 @@ void fastGeneral(){
                 DigOut(RELAY1P, Souliss_T1n_Coil,PULSE1);     
             }
         }
+
+      // ************************************************************************
+      // *********************** DALLAS SENSOR LOGIC ****************************
+      // ************************************************************************
+ 
+
         FAST_9110ms()    {
 
             if(S1 == DALLAS_SENSOR){ 
@@ -627,8 +777,17 @@ void fastGeneral(){
             } 
             
         }
+
+
+      // ************************************************************************
+      // **************** SENSORS LOGIC AND SEND TO EMONCMS *********************
+      // ************************************************************************
+
+
         FAST_2110ms()
         {
+
+      // -------------------- DHT LOGIC AND SEND TO EMONCMS ---------------------
             if(S2 == DHT_SENSOR){
                   if( Logic_Temperature(TEMPERATURE) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("DHT_Temp_Sensor", TEMPERATURE);
                   if( Logic_Humidity(HUMIDITY) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("DHT_Hum_Sensor", HUMIDITY);
@@ -637,25 +796,33 @@ void fastGeneral(){
                   //}
                   
             }
+
+      // -------------------------- LDR TO EMONCMS -------------------------------
             
             if(S3 == LDR_SENSOR){
                   if( Logic_T54(LDR) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("Lux_Sensor", LDR);
             }
-            
+      
+      // ----------------- DALLAS LOGIC AND SEND TO EMONCMS -----------------------
+      
             if(S1 == DALLAS_SENSOR){
-            	for(int i=0; i < dallas_qty; i++){
+             for(int i=0; i < dallas_qty; i++){
                   String stringDallas = "Dallas_sensor_";
                   stringDallas += i;
                   if( Logic_Temperature(DALLAS + (i*2)) == Souliss_TRIGGED && Send_Emon ) SendEmoncms(stringDallas, DALLAS + (i*2));
-            	}
-            }                  
-            
+             }
+            }                 
+
+      // ----------------- BMP180 LOGIC AND SEND TO EMONCMS------------------------           
             if(S51 == BMP180){
                   if( Logic_Pressure(PRESSURE0) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("BMP180_Pressure", PRESSURE0); 
                   if( Logic_Temperature(BMP180TEMP) == Souliss_TRIGGED && Send_Emon ) SendEmoncms("BMP180_Temp", BMP180TEMP);   
             }
-        } 
-        
+        }
+
+ 
+
+     // ----------------------------- LDR LOGIC  ----------------------------------        
         FAST_x10ms(50)
         { 
             if(S3 == LDR_SENSOR){
@@ -669,6 +836,14 @@ void fastGeneral(){
                 //if(Send_Emon) SendEmoncms("Lux_Sensor", LDR);
             }
         }
+
+ 
+
+      // ************************************************************************
+      // ***************************** TIMERS ***********************************
+      // ************************************************************************
+
+      // ----------------------- WINDOWS TIMER  ---------------------------------        
         FAST_x10ms(WINDOW_TIMER) { 
             if(S51 == WINDOW_CURTAIN){
                 Timer_Windows(T2X);               
@@ -680,7 +855,8 @@ void fastGeneral(){
 void slowGeneral(){
   
     SLOW_10s() {  // Read temperature and humidity from DHT every 110 seconds  
-        
+
+      // ----------------------- RELAY TIMER  ---------------------------------        
         if(S51 == RELAY || S51 == INVRELAY){
             Timer_SimpleLight(RELAY0);
         }
@@ -688,13 +864,17 @@ void slowGeneral(){
             Timer_SimpleLight(RELAY1);
         }
 
+
+      // ----------------------- TRIAC TIMER  ---------------------------------        
         if(S51 == TRIAC){
             Timer_DimmableLight(RELAY0);
         }
         if(S52 == TRIAC){
             Timer_DimmableLight(RELAY1);
         }
-        
+ 
+
+      // -------------------- L1 L2 L3 TIMERS ---------------------------------               
         switch (L1) {
           case 1:
             Timer_SimpleLight(LED1);
@@ -727,17 +907,27 @@ void slowGeneral(){
           case 4:
             Timer_AutoLight(LED3);
             break;                                   
-        } 
+        }
+
+      // ----------------------- ALARM TIMER  ---------------------------------         
         if(ALARM_MODE || S41 == ALARM_ENDSTOP || S42 == ALARM_ENDSTOP || S51 == ALARM_ENDSTOP || S52 == ALARM_ENDSTOP) {
             Timer_Antitheft_Main(ALARM);
+
+      // ----------------------- RGB  TIMER  ---------------------------------        
         }
         if(L1 == RGB_MODE && L2 == RGB_MODE && L3 == RGB_MODE){
             Timer_LED_Strip(LEDRGB);
-        }     
+        }
+
+      // ------------------- GARAGE DOOR TIMER  ------------------------------             
         if(S51 == GARAGE_DOOR){
             Timer_GarageDoor(T2X);
         }
-    }            
+    }           
+
+    // ************************************************************************
+    // *********************** SENSORS READING ********************************
+    // ************************************************************************
 
     SLOW_x10s(3) {
         

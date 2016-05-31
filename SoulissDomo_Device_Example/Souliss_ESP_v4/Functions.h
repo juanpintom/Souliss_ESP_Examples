@@ -3,12 +3,16 @@
 
 int valorPWM;
 
-boolean Emonlib = 0;
+boolean Emonlib = 0;      
 
-#define STORE_CUSTOM 430
+#define STORE_CUSTOM 430   // START BYTE ON EEPROM TO STORE CUSTOM VALUES.
 
 //Autocalibrate Capacitive Sensors ON
 #define AUTOCALIBRATE         1
+
+// **********************************************************************
+// **************************** DEBUG OPTIONS ***************************
+// **********************************************************************
 
 boolean DEBUG_LOG           = 0;  //CHANGED TO WEBCONFIG
 boolean DEBUG_CAPSENSE      = 0;
@@ -27,58 +31,79 @@ boolean DEBUG_PLC           = 0;
 //INSIDE BUTTON ON GPIO0 VARIABLE:
 boolean button0 = false;
 
-//VALUES FOR CONFIGURATION STORED ON THE EEPROM.
-byte L1;
-byte L2;
-byte L3;
+// **********************************************************************
+// ************************* CONFIG VARIABLES ***************************
+// **********************************************************************
+byte L1; //L1 OUTPUT --> LIGHT 1
+byte L2; //L2 OUTPUT --> LIGHT 2
+byte L3; //L3 OUTPUT --> LIGHT 3
 
-byte S1;
-byte S2;
-byte S3;
-byte S41;
-byte S42;
-byte S51;
-byte S52;
-byte S6;
-byte L1PIR;
-byte L2PIR;
-byte L3PIR;
-boolean L1PIREN;
-boolean L2PIREN;
-boolean L3PIREN;
+byte S1; //S1 --> SENSOR 1 INPUT (DALLAS)
+byte S2; //S2 --> SENSOR 2 INPUT (DHT)
+byte S3; //S3 --> SENSOR 3 INPUT (LDR)
+byte S41; //S4 --> SENSOR 41 INPUT/OUTPUT
+byte S42; //S4 --> SENSOR 42 INPUT/OUTPUT
+byte S51; //S5 --> SENSOR 51 INPUT/OUTPUT
+byte S52; //S5 --> SENSOR 52 INPUT/OUTPUT
+byte S6; //S6 --> IR REMOTE SENSOR 
+byte L1PIR; //PIR ASSIGNED TO L1
+byte L2PIR; //PIR ASSIGNED TO L2
+byte L3PIR; //PIR ASSIGNED TO L3
+boolean L1PIREN;//PIR ENABLED ON L1
+boolean L2PIREN;//PIR ENABLED ON L1
+boolean L3PIREN;//PIR ENABLED ON L1
 
-byte OPTIONS1;   //STORE BOOLEAN OPTIONS
-// BOOLEAN OPTIONS
+
+// **********************************************************************
+// ************************** BOOLEAN OPTIONS ***************************
+// **********************************************************************
+
+// -------------------------  OPTIONS 1 VARIABLE ------------------------
+byte OPTIONS1;  
+
 boolean usartbridge = false;
 boolean Send_Emon = true;
 boolean IR_ENABLE = true;
 boolean dht_type = true;  //FALSE = DHT11 , TRUE = DHT22
-// ******************
+
+// ---------------------  OPTIONS 2 AND 3 VARIABLES ---------------------
 byte OPTIONS2;   //STORE DEBUG OPTIONS
 byte OPTIONS3;   //STORE DEBUG OPTIONS
 boolean ALARM_MODE = false;
 boolean cap_debug = false;
+
+// --------------------------  OTHER VARIABLES ---------------------------
 byte cap_thresold;
 int ALTITUDE = 20;
 byte dallas_qty = 1;
 
-//S1 DEFINE
-#define DALLAS_SENSOR 1 
 
-//S2
+// **********************************************************************
+// ************************** #DEFINE OPTIONS ***************************
+// **********************************************************************
+
+
+// -------------------------- S1 #DEFINES ------------------------------
+#define DALLAS_SENSOR 1
+
+// -------------------------- S2 #DEFINES ------------------------------
 #define DHT_SENSOR    1
 
-//S3
+// -------------------------- S3 #DEFINES ------------------------------
 #define LDR_SENSOR    1
 
+// ---------------------- L1 L2 L3 #DEFINES ----------------------------
 #define ONOFF_MODE    1
 #define PWM_MODE      2    
 #define RGB_MODE      3
 #define PIR_MODE      4
 #define PULSE_MODE    5
 
-#define LIGHT_ON_CYCLE 10    		// Light ON for 10 cycles if triggered by a PIR sensor
+// -------------------------- PIR LIGHT ON DEFINE ------------------------------
+#define LIGHT_ON_CYCLE 10  //Light ON for 10 cycles if triggered by a PIR sensor
 
+
+// ----------------------- S41 S42 S51 S52 #DEFINES ----------------------------
 #define CAPACITIVE        1     
 #define BUTTONS           2
 #define BUTTONS_PULLUP    3
@@ -95,22 +120,41 @@ byte dallas_qty = 1;
 #define WINDOW_CURTAIN    13 
 #define OPTO_AND_RELAY    14
 #define OLED              15
- 
+
+
+// **********************************************************************
+// ******************** WINDOW TIMER #DEFINE OPTION *********************
+// ********************************************************************** 
 // Define the hold time of the outputs, by default the timer hold the relays for 16 times, so:
 // 221x10x16ms that is about 35 seconds. Change the parameter inside FAST_x10ms() to change this time.
 int WINDOW_TIMER = 211;  // MOVE THIS TO WEBCONFIG
 
+ 
+
+// **********************************************************************
+// ********************* PULSE TIMER #DEFINE OPTION *********************
+// **********************************************************************
 int PULSE_TIMER = 1500;  // MOVE THIS TO WEBCONFIG
 
+ 
+
+
+// **********************************************************************
+// ********************* INCLUDE PINSCONFIG.H ***************************
+// **********************************************************************
 #include "PinsConfig.h"
 
-//**********************  SLOTS VARIABLES  ***********************
+ 
+
+// **********************************************************************
+// *********************** SLOTS VARIABLES ******************************
+// **********************************************************************
 byte ALARM;
 byte TEMPERATURE;
 byte HUMIDITY;
-byte LED1; //byte LEDPWM0;
-byte LED2; //byte LEDPWM1;
-byte LED3; //byte LEDPWM2;
+byte LED1; 
+byte LED2; 
+byte LED3; 
 byte LED;
 byte LEDRGB;
 byte LDR;
@@ -130,30 +174,10 @@ byte T2X;         //To use with Garage and Curtain Mode
 byte OPTO;        //To use with Opto + Relay Mode
 
 float temp;       // Temporal Float Variable to store CAPx Readings
-//
-//DHT dht11(DHTPIN, DHT11, 15);
-//DHT dht22(DHTPIN, DHT22, 15);
-//
-//// Light calibration data
-//// out[] holds the values wanted in lux/10
-//#define SIZEOF 10
-//static const unsigned int out[] = { 1, 7, 30, 45, 65, 150, 300, 450, 2100, 13000};  // x10  //ULTIMO VALOR REFERENCIA
-//static const unsigned int in[]  = { 1, 100, 350, 430, 500, 680, 780, 950, 1005, 1024 };  // 0 - 1024
-//
-////#include <OneWire.h>
-////#include <DallasTemperature.h>
-//OneWire ourWire(DALLASPIN); //Se establece el pin declarado como bus para la comunicaciÃ³n OneWire
-//DallasTemperature sensors(&ourWire); //Se instancia la librerÃ­a DallasTemperature
-//
-////SDA 5  SCL 4  PINS
-////#include <SFE_BMP180.h>
-////#include <Wire.h>
-////#define ALTITUDE 20.0 // Altitude of reading location in meters
-//// You will need to create an SFE_BMP180 object, here called "pressure":
-//SFE_BMP180 pressure;
+
 
 // ******************************************************************************************************************
-// *************************************************  EMONCMS FUNCTION ***************************************************
+// *************************************************  EMONCMS FUNCTION **********************************************
 // ******************************************************************************************************************
 char serveremon[] = "emoncms.org";
 char path[] = "/input/post.json?json=";
@@ -317,14 +341,16 @@ void SendThingspeakAll(){
 // ******************************************************************************************************************
 void SLOT_CONFIG(){
   int NEXTSLOT = 0;
-  DEBUG.println("SLOT CONFIG");  
+  DEBUG.println("SLOT CONFIG"); 
 
+// --------------------------------- ALARM SLOTS --------------------------------
   if(ALARM_MODE == 1 || S41 == ALARM_ENDSTOP || S42 == ALARM_ENDSTOP || S51 == ALARM_ENDSTOP || S52 == ALARM_ENDSTOP){
       ALARM = NEXTSLOT;
       NEXTSLOT = ALARM + 1;
       DEBUG.print("ALARM: "); DEBUG.println(ALARM);
   }
-  
+
+// --------------------------------- S2 SLOTS -----------------------------------  
   switch (S2) {  
         case 0:
             //NONE
@@ -337,7 +363,9 @@ void SLOT_CONFIG(){
             DEBUG.print("HUMI: "); DEBUG.println(HUMIDITY);  
             break;
   }
-        
+
+
+// --------------------------------- L1 SLOTS -----------------------------------        
   if(L1 == ONOFF_MODE || L1 == PIR_MODE || L1 == PULSE_MODE){
         LED1 = NEXTSLOT;
         NEXTSLOT = LED1 + 1;
@@ -348,6 +376,8 @@ void SLOT_CONFIG(){
         DEBUG.print("LED1: PWM "); DEBUG.println(LED1);         
   }
 
+// --------------------------------- L2 SLOTS -----------------------------------       
+
   if(L2 == ONOFF_MODE || L2 == PIR_MODE || L2 == PULSE_MODE){
         LED2 = NEXTSLOT;
         NEXTSLOT = LED2 + 1;
@@ -357,7 +387,8 @@ void SLOT_CONFIG(){
         NEXTSLOT = LED2 + 2;
         DEBUG.print("LED2: PWM "); DEBUG.println(LED2);          
   }
-  
+ 
+// --------------------------------- L3 SLOTS -----------------------------------         
   if(L3 == ONOFF_MODE || L3 == PIR_MODE || L3 == PULSE_MODE){
         LED3 = NEXTSLOT;
         NEXTSLOT = LED3 + 1;
@@ -366,14 +397,16 @@ void SLOT_CONFIG(){
         LED3 = NEXTSLOT;
         NEXTSLOT = LED3 + 2;
         DEBUG.print("LED3: PWM "); DEBUG.println(LED3);         
-  } 
-  // RGB MODE
+  }
+
+// -------------------------------- RGB SLOT -----------------------------------        
   if(L1 == RGB_MODE && L2 == RGB_MODE && L3 == RGB_MODE){
         LEDRGB = NEXTSLOT;
         NEXTSLOT = LEDRGB + 4;
         DEBUG.print("LEDRGB: "); DEBUG.println(LEDRGB);  
   }
 
+// --------------------------------- S3 SLOTS -----------------------------------        
   switch (S3) {  
         case 0:
             //NONE
@@ -385,6 +418,7 @@ void SLOT_CONFIG(){
             break;
   }
 
+// --------------------------------- S1 SLOTS -----------------------------------        
   switch (S1) {  
         case 0:
             //NONE
@@ -395,9 +429,9 @@ void SLOT_CONFIG(){
             DEBUG.print("DALLAS: "); DEBUG.println(DALLAS);  
             break;
   }
-  
-  //GPIO 4-5 SLOT DEFINITIONS
+ 
 
+// --------------------------- CAPACITIVE DEBUG SLOTS ---------------------------        
   if(cap_debug){
       if(S41 == CAPACITIVE){
         CAP0 = NEXTSLOT;
@@ -426,6 +460,8 @@ void SLOT_CONFIG(){
       }  
   }
 
+
+// ------------------------- RELAY-PULSE-TRIAC SLOTS -----------------------------        
   if(S51 == RELAY || S51 == INVRELAY){
     RELAY0 = NEXTSLOT;
     NEXTSLOT = RELAY0 + 1;
@@ -457,6 +493,7 @@ void SLOT_CONFIG(){
     DEBUG.print("TRIAC1: ");  DEBUG.println(RELAY1);  
   }
 
+// --------------------------------- S52 SLOTS -----------------------------------        
   switch (S52) {       
         case BMP180:
             PRESSURE0 = NEXTSLOT;  
@@ -485,6 +522,7 @@ void SLOT_CONFIG(){
 // ************************************** END OF SLOT_CONFIG() **************************
 }
 
+ 
 
 // ******************************************************************************************************************
 // *******************************************       setColor FUNCTION          *************************************
@@ -523,7 +561,11 @@ static unsigned long souliss_time;
 static unsigned long souliss_lastTime;
 static unsigned long souliss_lastUpTime;
 
+ 
 
+// ******************************************************************************************************************
+// *************************************       DigIn3Action FUNCTION          ***************************************
+// ******************************************************************************************************************
 /*!
   Link an hardware pin to the shared memory map, active on rising edge
         or on long press hold.
@@ -596,3 +638,5 @@ U8 Souliss_DigIn3Action(U8 pin, U8 value_single, U8 value_long, U8 value_double,
 
 
 #endif
+
+ 
