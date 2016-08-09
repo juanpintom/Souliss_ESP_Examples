@@ -14,15 +14,15 @@ boolean Emonlib = 0;
 // **************************** DEBUG OPTIONS ***************************
 // **********************************************************************
 
-boolean DEBUG_LOG           = 0;  //CHANGED TO WEBCONFIG
+boolean DEBUG_LOG           = 1;  //CHANGED TO WEBCONFIG
 boolean DEBUG_CAPSENSE      = 0;
 boolean DEBUG_CAPSENSE_ALL  = 0;
-boolean DEBUG_DHT           = 0;
-boolean DEBUG_PRESSURE      = 0;
-boolean DEBUG_GETLUX        = 0;
-boolean DEBUG_DALLAS        = 0;
+boolean DEBUG_DHT           = 1;
+boolean DEBUG_PRESSURE      = 1;
+boolean DEBUG_GETLUX        = 1;
+boolean DEBUG_DALLAS        = 1;
 boolean DEBUG_EMONCMS       = 0;
-boolean DEBUG_IR            = 0;
+boolean DEBUG_IR            = 1;
 boolean DEBUG_IR_FULL       = 0;
 boolean DEBUG_PLC           = 0;
 

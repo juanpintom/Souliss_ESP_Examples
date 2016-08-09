@@ -8,6 +8,7 @@
 	This example is only supported on ESP8266.
  
 ***************************************************************************/
+#define TESTMODE 1
 
 //#define SERIALPORT_INSKETCH
 //  #define LOG Serial
@@ -191,7 +192,7 @@ void setup()
     EEPROM.begin(512);   //TENGO COMENTADO EL EEPROM.begin DE SOULISS EN STORE.CPP
     ReadConfig_Slots();
     DEBUG.begin(115200);
-    DEBUG.println(""); DEBUG.println("Node Started V.1.0.2");
+    DEBUG.println(""); DEBUG.println("Node Started V.1.0.3");
     showConfig();
     //ReadConfig_Slots();
 
@@ -349,7 +350,7 @@ void loop()
 //        }        
         //Serial.println("FAST");
           FAST_x10ms(100){
-              DEBUG_UDP("Test"); 
+//              DEBUG_UDP("Test"); 
           }
         fastGeneral();
          
